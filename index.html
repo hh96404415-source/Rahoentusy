@@ -2,23 +2,31 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>CheckerLaboratory (GitHub Edition)</title>
   
   <meta property="og:title" content="Inventory Checker" />
   <meta property="og:description" content="WMS Inventory Check & Restock System" />
   <meta property="og:type" content="website" />
 
+  <!-- 引入 Google Fonts: Roboto Condensed 字體 -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+
   <!-- 引入強大的條碼掃描庫 html5-qrcode -->
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <style>
-    /* 全域盒模型重置，防止 padding 撐破版面 */
-    * { box-sizing: border-box; }
+    /* 全域盒模型重置與移動端觸控優化：禁止雙擊放大、消除延遲 */
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
+    }
+
     html, body {
       width: 100%; min-height: 100vh; margin: 0; padding: 0;
       -webkit-text-size-adjust: 100%;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      /* 採用 Roboto Condensed 字體，中文字體會自動切換為系統預設字型 */
+      font-family: 'Roboto Condensed', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       padding: 6px; background-color: #020703; color: #00ff66;
     }
 
@@ -102,7 +110,7 @@
     }
     .audit-step-title { font-size: 12px; color: #00ff66; font-weight: bold; margin-bottom: 6px; }
     
-    /* 相機預覽區塊優化：限制高度為 180px，防止畫面過大 */
+    /* 相機預覽區塊：限制高度為 180px */
     #reader {
         width: 100%; max-height: 180px; border-radius: 4px; overflow: hidden; background: #000;
         box-shadow: 0 0 10px rgba(0,255,65,0.3); margin-top: 8px;
@@ -1200,7 +1208,7 @@
       const rowClass = isLastScanned ? 'last-scanned-highlight' : '';
 
       const diffDisplay = item.diff > 0 ? `+${item.diff}` : item.diff;
-      const diffColor = item.status === 'missing' ? '#ff2a6d' : (item.status === 'extra' ? '#ffea00' : '#00ff41');
+      const diffColor = item.status === 'missing' ? '#ff2a6d' : (item.status === 'extra' ? '#ffea00' : '#00ff66');
       
       let borderLeft = '3px solid #00ff41';
       if (item.status === 'missing') borderLeft = '3px solid #ff2a6d';
