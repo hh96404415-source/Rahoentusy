@@ -384,44 +384,60 @@
 <script>
   // =======================================================================
   // Fetch API 通訊層 (取代 google.script.run，解決 GitHub 串接問題)
+  // 升級版：加入工廠模式與 Promise 順序隊列，防止併發請求卡頓與資料串線
   // =======================================================================
   const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxn95iB72ljeNugSzIT7vpviDp-bwXiA8HnPQ3UXxLFOnxafBc8imVU5oyvhjOSdcaX/exec";
 
-  function createGasRunner() {
+  let globalRequestQueue = Promise.resolve(); // 建立全域執行隊列
+
+  function createGasApiRunner() {
     return {
       _onSuccess: null,
       _onFailure: null,
       withSuccessHandler: function(callback) { this._onSuccess = callback; return this; },
       withFailureHandler: function(callback) { this._onFailure = callback; return this; },
+      
+      _queueRequest: function(fetchPromiseFactory) {
+        const successCb = this._onSuccess;
+        const failureCb = this._onFailure;
+        
+        // 將每一個新的請求「排隊」到隊列的最後面
+        globalRequestQueue = globalRequestQueue.then(() => {
+           return fetchPromiseFactory()
+            .then(data => {
+              if (data && data.error) throw new Error(data.error);
+              if (successCb) successCb(data);
+            })
+            .catch(err => {
+              if (failureCb) failureCb(err);
+            });
+        });
+      },
+
       _get: function(action, params = {}) {
-        let url = new URL(GAS_WEB_APP_URL);
-        url.searchParams.append('action', action);
-        for (let key in params) { url.searchParams.append(key, params[key]); }
-        // 將當下的回呼函數綁定在區域變數，確保 fetch 執行完後呼叫到正確的 callback
-        let successCb = this._onSuccess;
-        let failureCb = this._onFailure;
-        fetch(url, { method: 'GET', mode: 'cors' })
-          .then(res => { if (!res.ok) throw new Error('Network Error'); return res.json(); })
-          .then(data => {
-            if (data && data.error) throw new Error(data.error);
-            if (successCb) successCb(data);
-          })
-          .catch(err => { if (failureCb) failureCb(err); });
+        this._queueRequest(() => {
+          let url = new URL(GAS_WEB_APP_URL);
+          url.searchParams.append('action', action);
+          for (let key in params) { url.searchParams.append(key, params[key]); }
+          return fetch(url, { method: 'GET', mode: 'cors' }).then(res => {
+            if(!res.ok) throw new Error('Network Error');
+            return res.json();
+          });
+        });
       },
+
       _post: function(action, payload) {
-        let successCb = this._onSuccess;
-        let failureCb = this._onFailure;
-        fetch(GAS_WEB_APP_URL, {
-          method: 'POST', mode: 'cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: action, payload: payload })
-        })
-        .then(res => { if (!res.ok) throw new Error('Network Error'); return res.json(); })
-        .then(data => {
-          if (data && data.error) throw new Error(data.error);
-          if (successCb) successCb(data);
-        })
-        .catch(err => { if (failureCb) failureCb(err); });
+        this._queueRequest(() => {
+          return fetch(GAS_WEB_APP_URL, {
+            method: 'POST', mode: 'cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: action, payload: payload })
+          }).then(res => {
+            if(!res.ok) throw new Error('Network Error');
+            return res.json();
+          });
+        });
       },
+
       searchSupplierSku: function(sku) { this._get('searchSupplierSku', { sku: sku }); },
       searchLocation: function(loc) { this._get('searchLocation', { loc: loc }); },
       getAlQtyList: function() { this._get('getAlQtyList'); },
@@ -433,10 +449,10 @@
     };
   }
 
-  // 透過 Getter 確保每次呼叫 google.script.run 都會產生一個全新的獨立連線物件，徹底隔離非同步請求，解決資料串線(Race Condition)問題
+  // 使用 Getter 確保每次呼叫 google.script.run 都能拿到全新的 Runner，徹底隔離回呼函數
   window.google = { 
     script: { 
-      get run() { return createGasRunner(); } 
+      get run() { return createGasApiRunner(); } 
     } 
   };
 
