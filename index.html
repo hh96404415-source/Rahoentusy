@@ -102,12 +102,12 @@
     }
     .audit-step-title { font-size: 12px; color: #00ff66; font-weight: bold; margin-bottom: 6px; }
     
-    /* 掃描相機容器樣式優化 */
+    /* 相機預覽區塊優化：限制高度為 180px，防止畫面過大 */
     #reader {
-        width: 100%; border-radius: 4px; overflow: hidden; background: #000;
+        width: 100%; max-height: 180px; border-radius: 4px; overflow: hidden; background: #000;
         box-shadow: 0 0 10px rgba(0,255,65,0.3); margin-top: 8px;
     }
-    #reader video { object-fit: cover; }
+    #reader video { width: 100% !important; height: 180px !important; object-fit: cover !important; }
     
     /* 表格與卡片共用設定 */
     .card-list { display: flex; flex-direction: column; gap: 8px; }
@@ -150,7 +150,6 @@
     .flash-green { animation: greenFlash 0.5s ease-out forwards; }
     .flash-yellow { animation: yellowFlash 0.5s ease-out forwards; }
     
-    /* 剛掃描的高亮特效改編為支援表格 row (tr) */
     .last-scanned-highlight { background-color: rgba(0, 255, 255, 0.15) !important; box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.8) !important; }
     .last-scanned-highlight td { border-top: 1px solid #00ffff !important; border-bottom: 1px solid #00ffff !important; }
 
@@ -262,12 +261,12 @@
       <div class="audit-step-title">步驟 1: 設定盤點目標儲位</div>
       <div class="search-box" style="margin-bottom: 0;">
         <input type="text" id="auditLocInput" placeholder="輸入儲位 (例如: LOC-A01)">
-        <!-- 📷 掃描相機按鈕 (改為純圖示) -->
-        <button id="auditScanLocBtn" onclick="startLocationScanner()" style="background:#00ffff; color:#000; font-size: 16px; padding: 6px 12px;" title="使用相機掃描儲位條碼">📷</button>
-        <!-- 🔍 載入庫存按鈕 (改為純圖示) -->
-        <button id="auditLoadBtn" onclick="startAuditSession()" style="font-size: 16px; padding: 6px 12px;" title="載入庫存">🔍</button>
+        <!-- 📷 純圖示按鈕：掃描 -->
+        <button id="auditScanLocBtn" onclick="startLocationScanner()" style="background:#00ffff; color:#000;" title="使用相機掃描儲位條碼">📷</button>
+        <!-- 🔍 純圖示按鈕：載入庫存 -->
+        <button id="auditLoadBtn" onclick="startAuditSession()" title="載入庫存">🔍</button>
       </div>
-      <!-- 📷 相機預覽區塊 -->
+      <!-- 📷 相機預覽區塊 (已限制最大高度 180px) -->
       <div id="reader" style="display:none;"></div>
       <button id="stopScanLocBtn" onclick="stopLocationScanner()" style="display:none; width: 100%; margin-top: 5px; background: #ff2a6d; color: #fff;">停止相機掃描</button>
     </div>
@@ -384,57 +383,46 @@
 
 <script>
   // =======================================================================
-  // Fetch API 通訊層 (純前端佇列機制 Queue 機制，解決並發與串線 Bug)
+  // 純前端序列化佇列 API 通訊層 (防堵競態條件與 302 卡頓)
   // =======================================================================
   const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxn95iB72ljeNugSzIT7vpviDp-bwXiA8HnPQ3UXxLFOnxafBc8imVU5oyvhjOSdcaX/exec";
 
-  // 全域 Promise 隊列，強制所有網路請求依序執行 (Sequential Execution)
-  let globalRequestQueue = Promise.resolve();
+  let apiQueue = Promise.resolve();
 
-  const gasApiRun = {
-    _onSuccess: null,
-    _onFailure: null,
-    withSuccessHandler: function(callback) { this._onSuccess = callback; return this; },
-    withFailureHandler: function(callback) { this._onFailure = callback; return this; },
-    
-    _queueRequest: function(fetchPromiseFactory) {
-      const successCb = this._onSuccess;
-      const failureCb = this._onFailure;
-      
-      // 將每一個新的請求「排隊」到隊列的最後面
-      globalRequestQueue = globalRequestQueue.then(() => {
-         return fetchPromiseFactory()
+  function queueApiFetch(url, options) {
+    return new Promise((resolve, reject) => {
+      apiQueue = apiQueue.then(() => {
+        return fetch(url, options)
+          .then(res => { if (!res.ok) throw new Error('Network Error'); return res.json(); })
           .then(data => {
             if (data && data.error) throw new Error(data.error);
-            if (successCb) successCb(data);
+            resolve(data);
           })
-          .catch(err => {
-            if (failureCb) failureCb(err);
-          });
+          .catch(err => reject(err));
       });
-    },
+    });
+  }
 
+  const gasApiRun = {
+    withSuccessHandler: function(callback) { this._onSuccess = callback; return this; },
+    withFailureHandler: function(callback) { this._onFailure = callback; return this; },
     _get: function(action, params = {}) {
-      this._queueRequest(() => {
-        let url = new URL(GAS_WEB_APP_URL);
-        url.searchParams.append('action', action);
-        for (let key in params) { url.searchParams.append(key, params[key]); }
-        
-        return fetch(url, { method: 'GET', mode: 'cors' })
-          .then(res => { if (!res.ok) throw new Error('Network Error'); return res.json(); });
-      });
+      let url = new URL(GAS_WEB_APP_URL);
+      url.searchParams.append('action', action);
+      for (let key in params) { url.searchParams.append(key, params[key]); }
+      
+      queueApiFetch(url, { method: 'GET', mode: 'cors' })
+        .then(data => { if (this._onSuccess) this._onSuccess(data); })
+        .catch(err => { if (this._onFailure) this._onFailure(err); });
     },
-    
     _post: function(action, payload) {
-      this._queueRequest(() => {
-        return fetch(GAS_WEB_APP_URL, {
-          method: 'POST', mode: 'cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: action, payload: payload })
-        })
-        .then(res => { if (!res.ok) throw new Error('Network Error'); return res.json(); });
-      });
+      queueApiFetch(GAS_WEB_APP_URL, {
+        method: 'POST', mode: 'cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: action, payload: payload })
+      })
+      .then(data => { if (this._onSuccess) this._onSuccess(data); })
+      .catch(err => { if (this._onFailure) this._onFailure(err); });
     },
-
     searchSupplierSku: function(sku) { this._get('searchSupplierSku', { sku: sku }); },
     searchLocation: function(loc) { this._get('searchLocation', { loc: loc }); },
     getAlQtyList: function() { this._get('getAlQtyList'); },
@@ -445,7 +433,6 @@
     saveAuditRecord: function(payload) { this._post('saveAuditRecord', payload); }
   };
 
-  // 替換 GAS 內建方法
   window.google = { script: { run: gasApiRun } };
 
   // =======================================================================
@@ -460,13 +447,13 @@
 
     if (!html5QrCode) { html5QrCode = new Html5Qrcode("reader"); }
     html5QrCode.start(
-      { facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 100 } },
+      { facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 80 } },
       (decodedText, decodedResult) => {
         document.getElementById('auditLocInput').value = decodedText;
         stopLocationScanner();
-        startAuditSession(); // 掃描成功後自動觸發載入庫存
+        startAuditSession();
       },
-      (errorMessage) => { /* Ignore errors during active scan */ }
+      (errorMessage) => { /* Ignore errors */ }
     ).catch((err) => {
       alert("無法存取相機，請確認瀏覽器已允許使用相機權限。錯誤: " + err);
       stopLocationScanner();
@@ -483,7 +470,7 @@
   }
 
   // ==========================================
-  // 完全恢復的 國旗、工具、排版邏輯
+  // 完整國旗、工具、排版邏輯
   // ==========================================
   const COUNTRY_FLAG_CODES = {
     "BRA": "br", "巴西": "br", "CAN": "ca", "加拿大": "ca", "CHN": "cn", "中國": "cn", "中国": "cn",
@@ -977,7 +964,7 @@
   }
 
   // ==========================================
-  // GM 盤點比較邏輯與渲染 (精準 10 欄位 Table)
+  // 盤點比較渲染邏輯
   // ==========================================
   let auditState = { location: '', systemItemsMap: {}, scannedCounts: {}, scanHistoryStack: [], lastRawCodeMap: {}, lastLookupCodeMap: {}, activeFilter: 'all', lastScannedKey: null };
 
@@ -986,14 +973,11 @@
     if (!loc) return;
     const loadBtn = document.getElementById('auditLoadBtn');
     const msg = document.getElementById('auditMsgArea');
-    
-    // 點擊後改為漏斗沙漏圖示
     loadBtn.disabled = true; loadBtn.textContent = "⏳"; msg.textContent = "";
     document.getElementById('scanFeedbackBanner').style.display = 'none';
 
     window.google.script.run
       .withSuccessHandler(function(res) {
-        // 完成後恢復放大鏡圖示
         loadBtn.disabled = false; loadBtn.textContent = "🔍";
         if (!res || !res.data || res.data.length === 0) msg.textContent = `⚠️ 系統中該儲位 (${loc}) 無庫存記錄，將進入盲盤模式`;
         auditState = { location: loc, systemItemsMap: {}, scannedCounts: {}, scanHistoryStack: [], lastRawCodeMap: {}, lastLookupCodeMap: {}, activeFilter: 'all', lastScannedKey: null };
@@ -1194,7 +1178,6 @@
         return;
     }
 
-    // 建立精確依照您要求的 10 個欄位 Table HTML
     let html = `<div class="order-table-wrapper"><table class="order-compact-table">
       <thead>
         <tr>
@@ -1217,7 +1200,7 @@
       const rowClass = isLastScanned ? 'last-scanned-highlight' : '';
 
       const diffDisplay = item.diff > 0 ? `+${item.diff}` : item.diff;
-      const diffColor = item.status === 'missing' ? '#ff2a6d' : (item.status === 'extra' ? '#ffea00' : '#00ff66');
+      const diffColor = item.status === 'missing' ? '#ff2a6d' : (item.status === 'extra' ? '#ffea00' : '#00ff41');
       
       let borderLeft = '3px solid #00ff41';
       if (item.status === 'missing') borderLeft = '3px solid #ff2a6d';
