@@ -262,9 +262,10 @@
       <div class="audit-step-title">步驟 1: 設定盤點目標儲位</div>
       <div class="search-box" style="margin-bottom: 0;">
         <input type="text" id="auditLocInput" placeholder="輸入儲位 (例如: LOC-A01)">
-        <!-- 📷 掃描相機按鈕 -->
-        <button id="auditScanLocBtn" onclick="startLocationScanner()" style="background:#00ffff; color:#000;" title="使用相機掃描儲位條碼">📷 掃描</button>
-        <button id="auditLoadBtn" onclick="startAuditSession()">載入庫存</button>
+        <!-- 📷 掃描相機按鈕 (改為純圖示) -->
+        <button id="auditScanLocBtn" onclick="startLocationScanner()" style="background:#00ffff; color:#000; font-size: 16px; padding: 6px 12px;" title="使用相機掃描儲位條碼">📷</button>
+        <!-- 🔍 載入庫存按鈕 (改為純圖示) -->
+        <button id="auditLoadBtn" onclick="startAuditSession()" style="font-size: 16px; padding: 6px 12px;" title="載入庫存">🔍</button>
       </div>
       <!-- 📷 相機預覽區塊 -->
       <div id="reader" style="display:none;"></div>
@@ -383,78 +384,69 @@
 
 <script>
   // =======================================================================
-  // Fetch API 通訊層 (取代 google.script.run，解決 GitHub 串接問題)
-  // 升級版：加入工廠模式與 Promise 順序隊列，防止併發請求卡頓與資料串線
+  // Fetch API 通訊層 (純前端佇列機制 Queue 機制，解決並發與串線 Bug)
   // =======================================================================
   const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxn95iB72ljeNugSzIT7vpviDp-bwXiA8HnPQ3UXxLFOnxafBc8imVU5oyvhjOSdcaX/exec";
 
-  let globalRequestQueue = Promise.resolve(); // 建立全域執行隊列
+  // 全域 Promise 隊列，強制所有網路請求依序執行 (Sequential Execution)
+  let globalRequestQueue = Promise.resolve();
 
-  function createGasApiRunner() {
-    return {
-      _onSuccess: null,
-      _onFailure: null,
-      withSuccessHandler: function(callback) { this._onSuccess = callback; return this; },
-      withFailureHandler: function(callback) { this._onFailure = callback; return this; },
+  const gasApiRun = {
+    _onSuccess: null,
+    _onFailure: null,
+    withSuccessHandler: function(callback) { this._onSuccess = callback; return this; },
+    withFailureHandler: function(callback) { this._onFailure = callback; return this; },
+    
+    _queueRequest: function(fetchPromiseFactory) {
+      const successCb = this._onSuccess;
+      const failureCb = this._onFailure;
       
-      _queueRequest: function(fetchPromiseFactory) {
-        const successCb = this._onSuccess;
-        const failureCb = this._onFailure;
+      // 將每一個新的請求「排隊」到隊列的最後面
+      globalRequestQueue = globalRequestQueue.then(() => {
+         return fetchPromiseFactory()
+          .then(data => {
+            if (data && data.error) throw new Error(data.error);
+            if (successCb) successCb(data);
+          })
+          .catch(err => {
+            if (failureCb) failureCb(err);
+          });
+      });
+    },
+
+    _get: function(action, params = {}) {
+      this._queueRequest(() => {
+        let url = new URL(GAS_WEB_APP_URL);
+        url.searchParams.append('action', action);
+        for (let key in params) { url.searchParams.append(key, params[key]); }
         
-        // 將每一個新的請求「排隊」到隊列的最後面
-        globalRequestQueue = globalRequestQueue.then(() => {
-           return fetchPromiseFactory()
-            .then(data => {
-              if (data && data.error) throw new Error(data.error);
-              if (successCb) successCb(data);
-            })
-            .catch(err => {
-              if (failureCb) failureCb(err);
-            });
-        });
-      },
+        return fetch(url, { method: 'GET', mode: 'cors' })
+          .then(res => { if (!res.ok) throw new Error('Network Error'); return res.json(); });
+      });
+    },
+    
+    _post: function(action, payload) {
+      this._queueRequest(() => {
+        return fetch(GAS_WEB_APP_URL, {
+          method: 'POST', mode: 'cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: action, payload: payload })
+        })
+        .then(res => { if (!res.ok) throw new Error('Network Error'); return res.json(); });
+      });
+    },
 
-      _get: function(action, params = {}) {
-        this._queueRequest(() => {
-          let url = new URL(GAS_WEB_APP_URL);
-          url.searchParams.append('action', action);
-          for (let key in params) { url.searchParams.append(key, params[key]); }
-          return fetch(url, { method: 'GET', mode: 'cors' }).then(res => {
-            if(!res.ok) throw new Error('Network Error');
-            return res.json();
-          });
-        });
-      },
-
-      _post: function(action, payload) {
-        this._queueRequest(() => {
-          return fetch(GAS_WEB_APP_URL, {
-            method: 'POST', mode: 'cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action: action, payload: payload })
-          }).then(res => {
-            if(!res.ok) throw new Error('Network Error');
-            return res.json();
-          });
-        });
-      },
-
-      searchSupplierSku: function(sku) { this._get('searchSupplierSku', { sku: sku }); },
-      searchLocation: function(loc) { this._get('searchLocation', { loc: loc }); },
-      getAlQtyList: function() { this._get('getAlQtyList'); },
-      getOrderStatusData: function() { this._get('getOrderStatusData'); },
-      getGaoData: function() { this._get('getGaoData'); },
-      getRecData: function() { this._get('getRecData'); },
-      getDbData: function() { this._get('getDbData'); },
-      saveAuditRecord: function(payload) { this._post('saveAuditRecord', payload); }
-    };
-  }
-
-  // 使用 Getter 確保每次呼叫 google.script.run 都能拿到全新的 Runner，徹底隔離回呼函數
-  window.google = { 
-    script: { 
-      get run() { return createGasApiRunner(); } 
-    } 
+    searchSupplierSku: function(sku) { this._get('searchSupplierSku', { sku: sku }); },
+    searchLocation: function(loc) { this._get('searchLocation', { loc: loc }); },
+    getAlQtyList: function() { this._get('getAlQtyList'); },
+    getOrderStatusData: function() { this._get('getOrderStatusData'); },
+    getGaoData: function() { this._get('getGaoData'); },
+    getRecData: function() { this._get('getRecData'); },
+    getDbData: function() { this._get('getDbData'); },
+    saveAuditRecord: function(payload) { this._post('saveAuditRecord', payload); }
   };
+
+  // 替換 GAS 內建方法
+  window.google = { script: { run: gasApiRun } };
 
   // =======================================================================
   // HTML5 QR Code Scanner 相機掃描儲位整合
@@ -472,9 +464,9 @@
       (decodedText, decodedResult) => {
         document.getElementById('auditLocInput').value = decodedText;
         stopLocationScanner();
-        startAuditSession();
+        startAuditSession(); // 掃描成功後自動觸發載入庫存
       },
-      (errorMessage) => { /* Ignore errors */ }
+      (errorMessage) => { /* Ignore errors during active scan */ }
     ).catch((err) => {
       alert("無法存取相機，請確認瀏覽器已允許使用相機權限。錯誤: " + err);
       stopLocationScanner();
@@ -985,7 +977,7 @@
   }
 
   // ==========================================
-  // GM 新增：列表式 (Table) 盤點比較渲染邏輯
+  // GM 盤點比較邏輯與渲染 (精準 10 欄位 Table)
   // ==========================================
   let auditState = { location: '', systemItemsMap: {}, scannedCounts: {}, scanHistoryStack: [], lastRawCodeMap: {}, lastLookupCodeMap: {}, activeFilter: 'all', lastScannedKey: null };
 
@@ -994,12 +986,15 @@
     if (!loc) return;
     const loadBtn = document.getElementById('auditLoadBtn');
     const msg = document.getElementById('auditMsgArea');
-    loadBtn.disabled = true; loadBtn.textContent = "載入中..."; msg.textContent = "";
+    
+    // 點擊後改為漏斗沙漏圖示
+    loadBtn.disabled = true; loadBtn.textContent = "⏳"; msg.textContent = "";
     document.getElementById('scanFeedbackBanner').style.display = 'none';
 
     window.google.script.run
       .withSuccessHandler(function(res) {
-        loadBtn.disabled = false; loadBtn.textContent = "載入庫存";
+        // 完成後恢復放大鏡圖示
+        loadBtn.disabled = false; loadBtn.textContent = "🔍";
         if (!res || !res.data || res.data.length === 0) msg.textContent = `⚠️ 系統中該儲位 (${loc}) 無庫存記錄，將進入盲盤模式`;
         auditState = { location: loc, systemItemsMap: {}, scannedCounts: {}, scanHistoryStack: [], lastRawCodeMap: {}, lastLookupCodeMap: {}, activeFilter: 'all', lastScannedKey: null };
 
@@ -1023,7 +1018,7 @@
         renderAuditComparison();
       })
       .withFailureHandler(function(err) {
-        loadBtn.disabled = false; loadBtn.textContent = "載入庫存"; msg.textContent = "載入失敗: " + err.message;
+        loadBtn.disabled = false; loadBtn.textContent = "🔍"; msg.textContent = "載入失敗: " + err.message;
       })
       .searchLocation(loc);
   }
@@ -1163,7 +1158,6 @@
     renderAuditComparison();
   }
 
-  // 根據使用者明確指令，修改盤點結果清單欄位
   function renderAuditComparison() {
     const container = document.getElementById('auditResultContainer'); container.innerHTML = "";
     let totalSysQty = 0, totalScannedQty = 0, missingQtyCount = 0, extraQtyCount = 0;
@@ -1229,7 +1223,6 @@
       if (item.status === 'missing') borderLeft = '3px solid #ff2a6d';
       else if (item.status === 'extra') borderLeft = '3px solid #ffea00';
 
-      // 取出真實的 tag 與 barcode 值
       const tagDisplay = (item.tag && item.tag !== "-") ? item.tag : "";
       const barcodeDisplay = (item.barcode && item.barcode !== "-") ? item.barcode : "";
 
