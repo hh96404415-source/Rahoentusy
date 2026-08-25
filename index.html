@@ -71,28 +71,33 @@
       background-color: #081a0c; color: #005c18; border-color: #00330e; cursor: not-allowed; box-shadow: none;
     }
 
+    /* 針對圖示按鈕的專屬樣式 (避免按鈕被撐太寬) */
+    .icon-btn {
+      padding: 4px 8px !important; font-size: 16px !important; 
+      display: flex; align-items: center; justify-content: center;
+    }
+
     .undo-btn {
-      padding: 6px 10px !important; font-size: 12px !important; background: #1a0d00 !important;
-      color: #ff9900 !important; border: 1.5px solid #ff9900 !important; border-radius: 4px;
-      cursor: pointer; font-weight: 900; box-shadow: 0 0 8px rgba(255, 153, 0, 0.4) !important;
+      background: #1a0d00 !important; color: #ff9900 !important; 
+      border: 1.5px solid #ff9900 !important;
+      box-shadow: 0 0 8px rgba(255, 153, 0, 0.4) !important;
     }
 
     .finish-btn {
-      padding: 6px 10px !important; font-size: 12px !important; background: #001a24 !important;
-      color: #00c6ff !important; border: 1.5px solid #00c6ff !important; border-radius: 4px;
-      cursor: pointer; font-weight: 900; box-shadow: 0 0 8px rgba(0, 198, 255, 0.4) !important;
-      display: flex; align-items: center; gap: 3px;
+      background: #001a24 !important; color: #00c6ff !important; 
+      border: 1.5px solid #00c6ff !important;
+      box-shadow: 0 0 8px rgba(0, 198, 255, 0.4) !important;
     }
 
     .row-add-btn {
-      padding: 2px 6px !important; font-size: 12px !important; background: #03210d !important;
+      padding: 0px 4px !important; font-size: 12px !important; background: #03210d !important;
       color: #00ff66 !important; border: 1px solid #00ff41 !important; border-radius: 3px;
-      cursor: pointer; font-weight: 900; box-shadow: 0 0 6px rgba(0, 255, 65, 0.3) !important;
+      cursor: pointer; font-weight: 900; box-shadow: 0 0 4px rgba(0, 255, 65, 0.3) !important;
     }
     
     .summary-box {
       display: flex; justify-content: space-around; align-items: center; margin-bottom: 6px;
-      padding: 6px; background-color: #020a04; border-radius: 4px; border: 1.5px solid #00ff41;
+      padding: 4px 6px; background-color: #020a04; border-radius: 4px; border: 1.5px solid #00ff41;
       box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.1); flex-wrap: wrap; gap: 8px; font-size: 12px;
     }
     .summary-item { font-size: 12px; font-weight: bold; color: #a0f0ba; text-align: center; }
@@ -104,10 +109,10 @@
 
     /* 盤點 (AUDIT) 區塊樣式 */
     .audit-step-box {
-      background: #040e06; border: 1.5px solid #00ff41; padding: 8px; border-radius: 4px;
-      margin-bottom: 8px; transition: all 0.3s ease;
+      background: #040e06; border: 1.5px solid #00ff41; padding: 6px; border-radius: 4px;
+      margin-bottom: 6px; transition: all 0.3s ease;
     }
-    .audit-step-title { font-size: 12px; color: #00ff66; font-weight: bold; margin-bottom: 6px; }
+    .audit-step-title { font-size: 12px; color: #00ff66; font-weight: bold; margin-bottom: 4px; }
     
     /* 相機預覽區塊限制高度為 180px */
     #reader {
@@ -128,10 +133,10 @@
     .concat-item:last-child:nth-child(odd) { grid-column: span 2; }
     .field-label { font-weight: bold; color: #00ff66; }
 
-    /* 緊湊型列表樣式 */
-    .al-table, .order-compact-table { width: 100%; border-collapse: collapse; margin-top: 2px; background: #020a04; font-size: 13px; line-height: 1.1; letter-spacing: -0.5px; }
-    .al-table th, .order-compact-table th { background: #081f0e; color: #00ff66; padding: 2px 4px; border: 1px solid #00a82d; text-align: center; font-size: 8px !important; font-weight: 900; position: sticky; top: 0; z-index: 3; box-shadow: 0 1px 0 #00ff41; }
-    .al-table td, .order-compact-table td { padding: 3px 4px; border: 1px solid #003b10; color: #e0ffe6; word-break: keep-all; font-weight: bold; text-align: center; white-space: nowrap; font-size: 13px; }
+    /* 極限緊湊型列表樣式 (Padding 極小、行高縮減) */
+    .al-table, .order-compact-table { width: 100%; border-collapse: collapse; margin-top: 2px; background: #020a04; font-size: 13px; line-height: 1; letter-spacing: -0.5px; }
+    .al-table th, .order-compact-table th { background: #081f0e; color: #00ff66; padding: 2px 2px; border: 1px solid #00a82d; text-align: center; font-size: 8px !important; font-weight: 900; position: sticky; top: 0; z-index: 3; box-shadow: 0 1px 0 #00ff41; }
+    .al-table td, .order-compact-table td { padding: 1px 2px; border: 1px solid #003b10; color: #e0ffe6; word-break: keep-all; font-weight: bold; text-align: center; white-space: nowrap; font-size: 13px; }
     .al-table tr:nth-child(even), .order-compact-table tr:nth-child(even) td { background-color: #041206; }
     .order-table-wrapper { width: 100%; overflow-x: auto; overflow-y: auto; border: 1px solid #00ff41; border-radius: 4px; background: #020a04; max-height: 72vh; }
 
@@ -143,7 +148,7 @@
     .highlight-liability-red { color: #ff2a6d !important; font-weight: 900 !important; text-shadow: 0 0 6px rgba(255, 42, 109, 0.4); }
 
     .filter-btn-group { display: flex; gap: 4px; margin-bottom: 8px; }
-    .filter-btn { flex: 1; padding: 4px; font-size: 10px !important; background: #020a04; border: 1px solid #005c18; color: #a0f0ba; cursor: pointer; border-radius: 3px; font-weight: bold; }
+    .filter-btn { flex: 1; padding: 3px 0; font-size: 10px !important; background: #020a04; border: 1px solid #005c18; color: #a0f0ba; cursor: pointer; border-radius: 3px; font-weight: bold; }
     .filter-btn.active { border-color: #00ff41; color: #00ff41; background: #09240f; box-shadow: 0 0 8px rgba(0, 255, 65, 0.4); }
 
     @keyframes greenFlash { 0% { border-color: #00ff41; box-shadow: 0 0 30px rgba(0, 255, 65, 1); background-color: #093313; } 100% { border-color: #00ff41; box-shadow: 0 0 0px transparent; background-color: #040e06; } }
@@ -151,8 +156,17 @@
     .flash-green { animation: greenFlash 0.5s ease-out forwards; }
     .flash-yellow { animation: yellowFlash 0.5s ease-out forwards; }
     
-    .last-scanned-highlight { background-color: rgba(0, 255, 255, 0.15) !important; box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.8) !important; }
-    .last-scanned-highlight td { border-top: 1px solid #00ffff !important; border-bottom: 1px solid #00ffff !important; }
+    /* 強化版：最新掃描行高亮 (文字變亮綠色) */
+    .last-scanned-highlight { 
+      background-color: rgba(0, 255, 255, 0.20) !important; 
+      box-shadow: inset 0 0 12px rgba(0, 255, 255, 0.8) !important; 
+    }
+    .last-scanned-highlight td { 
+      border-top: 1px solid #00ffff !important; 
+      border-bottom: 1px solid #00ffff !important; 
+      color: #00ff66 !important; /* 強制整行文字變為亮綠色 */
+      text-shadow: 0 0 5px rgba(0, 255, 102, 0.8) !important;
+    }
 
     /* Modal 視窗 */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: flex; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(2px); }
@@ -163,15 +177,20 @@
     .modal-btn-confirm { background: #ff2a6d; color: #ffffff; border: none; padding: 8px 16px; font-size: 12px !important; font-weight: 900; border-radius: 4px; cursor: pointer; }
     .modal-btn-cancel { background: #144020; color: #00ff66; border: 1px solid #00ff41; padding: 8px 16px; font-size: 12px !important; font-weight: 900; border-radius: 4px; cursor: pointer; }
     
-    /* 掃描回饋橫幅：常駐顯示、單行 8px */
+    /* 掃描回饋橫幅：常駐顯示、單行 10px */
     .scan-feedback-banner { 
-      background: #021a08; border: 1px solid #00ff41; border-radius: 4px; 
-      padding: 4px 6px; margin-top: 8px; display: flex; 
+      background: #021a08; border: 1px solid #00ff41; border-radius: 3px; 
+      padding: 4px 6px; margin-top: 4px; display: flex; 
       justify-content: space-between; align-items: center; 
-      font-size: 8px; font-weight: bold; color: #a0f0ba;
+      font-size: 10px; font-weight: bold; color: #a0f0ba;
     }
     .scan-feedback-banner.extra-mode { background: #1a1802; border-color: #ffea00; color: #ffea00; }
-    .scan-feedback-banner.undo-mode { background: #241400; border-color: #ff9900; color: #ff9900; }
+    
+    /* 強化版：UNDO 警示橫幅 */
+    .scan-feedback-banner.undo-mode { 
+      background: #330000; border-color: #ff2a6d; color: #ff7396; 
+      box-shadow: 0 0 10px rgba(255, 42, 109, 0.6);
+    }
   </style>
 </head>
 <body>
@@ -270,21 +289,18 @@
         <button id="auditLoadBtn" onclick="startAuditSession()" title="載入庫存">🔍</button>
       </div>
       <div id="reader" style="display:none;"></div>
-      <button id="stopScanLocBtn" onclick="stopLocationScanner()" style="display:none; width: 100%; margin-top: 5px; background: #ff2a6d; color: #fff;">停止相機掃描</button>
+      <button id="stopScanLocBtn" onclick="stopLocationScanner()" style="display:none; width: 100%; margin-top: 4px; background: #ff2a6d; color: #fff;">停止相機</button>
     </div>
 
-    <div id="auditScanSection" class="audit-step-box" style="display: none;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-        <div class="audit-step-title" style="margin-bottom:0;">步驟 2: 現場掃描實物條碼</div>
-        <div style="display:flex; gap:6px; align-items:center;">
-          <button id="soundToggleBtn" onclick="toggleAuditSound()" style="padding: 2px 6px; font-size: 11px; background:#082410; color:#00ff66; border:1px solid #00ff41;">🔊 音效: 開</button>
-          <button onclick="resetAuditSession()" style="padding: 2px 6px; font-size: 11px; background:#144020; color:#00ff66; border:1px solid #00ff41;">重新盤點</button>
-        </div>
-      </div>
+    <!-- 步驟 2 區塊：極致壓縮的一行流 -->
+    <div id="auditScanSection" class="audit-step-box" style="display: none; padding: 4px;">
       <div class="search-box" style="margin-bottom: 0;">
-        <input type="text" id="auditScanInput" placeholder="請連續掃描實物條碼..." onkeydown="handleAuditScan(event)">
-        <button id="auditUndoBtn" class="undo-btn" onclick="undoLastScan()" title="復原 (UNDO)">↩️-1</button>
-        <button id="auditFinishBtn" class="finish-btn" onclick="openSyncConfirmModal()" title="同步寫入盤點紀錄">⚡同步</button>
+        <input type="text" id="auditScanInput" placeholder="請掃描..." onkeydown="handleAuditScan(event)">
+        <!-- 復原 / 重盤 / 同步 / 音效 -->
+        <button id="auditUndoBtn" class="icon-btn undo-btn" onclick="undoLastScan()" title="復原">↩️</button>
+        <button class="icon-btn" onclick="resetAuditSession()" title="重新盤點" style="background:#1a1400; border-color:#ffea00;">⚠️</button>
+        <button id="auditFinishBtn" class="icon-btn finish-btn" onclick="openSyncConfirmModal()" title="同步寫入">☁️</button>
+        <button id="soundToggleBtn" class="icon-btn" onclick="toggleAuditSound()" title="切換音效">🔊</button>
       </div>
 
       <!-- 常駐單行顯示的掃描回饋橫幅 -->
@@ -468,7 +484,7 @@
   }
 
   // ==========================================
-  // 完整國旗、工具、排版邏輯
+  // 工具與音效邏輯
   // ==========================================
   const COUNTRY_FLAG_CODES = {
     "BRA": "br", "巴西": "br", "CAN": "ca", "加拿大": "ca", "CHN": "cn", "中國": "cn", "中国": "cn",
@@ -514,7 +530,7 @@
   function toggleAuditSound() {
     auditSoundEnabled = !auditSoundEnabled;
     const btn = document.getElementById('soundToggleBtn');
-    btn.textContent = auditSoundEnabled ? "🔊 音效: 開" : "🔇 音效: 關";
+    btn.textContent = auditSoundEnabled ? "🔊" : "🔇";
     btn.style.background = auditSoundEnabled ? "#082410" : "#2e080e";
   }
 
@@ -1068,15 +1084,24 @@
     const statusText = isExtra ? '🟡 盤盈' : '✅ 實盤+1';
     const displayTag = sysInfo && sysInfo.tag && sysInfo.tag !== "-" ? sysInfo.tag : targetKey;
     
-    document.getElementById('feedbackTitle').innerHTML = `<span>${statusText} (${rawScanned}) | 標籤: ${displayTag}</span>`;
+    document.getElementById('feedbackTitle').innerHTML = `<span>${statusText} (${rawScanned}) | TAG: ${displayTag}</span>`;
     document.getElementById('feedbackDetails').innerHTML = `<span style="background:${isExtra ? '#ffea00' : '#00ff41'}; color:#000; padding:1px 4px; border-radius:3px;">應盤: ${sysQty} | 實盤: ${curCount}</span>`;
   }
 
+  // UNDO 強化：警示橫幅顯示
   function undoLastScan() {
     if (auditState.scanHistoryStack.length === 0) return;
     const lastAction = auditState.scanHistoryStack.pop();
     if (auditState.scannedCounts[lastAction.targetKey] > 0) auditState.scannedCounts[lastAction.targetKey]--;
+    
     auditState.lastScannedKey = auditState.scanHistoryStack.length > 0 ? auditState.scanHistoryStack[auditState.scanHistoryStack.length - 1].targetKey : null;
+    
+    // 更新 UNDO 紅色橫幅
+    const banner = document.getElementById('scanFeedbackBanner');
+    banner.className = 'scan-feedback-banner undo-mode';
+    document.getElementById('feedbackTitle').innerHTML = `<span>⛔ 實盤-1 (${lastAction.rawScanned})</span>`;
+    document.getElementById('feedbackDetails').innerHTML = ``; // UNDO 時簡化，不顯示數量
+
     playScanSound('undo'); triggerVibration([60, 40, 60]);
     renderAuditComparison();
   }
@@ -1094,7 +1119,7 @@
   function confirmFinishAuditSync() { closeSyncModal(); finishAuditSync(); }
 
   function finishAuditSync() {
-    const finishBtn = document.getElementById('auditFinishBtn'); finishBtn.disabled = true; finishBtn.innerHTML = "⏳ 上傳中...";
+    const finishBtn = document.getElementById('auditFinishBtn'); finishBtn.disabled = true; finishBtn.innerHTML = "⏳";
     document.getElementById('auditMsgArea').textContent = "⚡ 同步上傳中...";
 
     const diffItems = [];
@@ -1118,13 +1143,13 @@
 
     window.google.script.run
       .withSuccessHandler(function(res) {
-        finishBtn.disabled = false; finishBtn.innerHTML = "⚡同步";
+        finishBtn.disabled = false; finishBtn.innerHTML = "☁️";
         document.getElementById('auditMsgArea').style.color = "#00ff66";
         document.getElementById('auditMsgArea').textContent = res.message || "✅ 同步成功！";
         playScanSound('sync_success');
       })
       .withFailureHandler(function(err) {
-        finishBtn.disabled = false; finishBtn.innerHTML = "⚡同步";
+        finishBtn.disabled = false; finishBtn.innerHTML = "☁️";
         document.getElementById('auditMsgArea').style.color = "#ff2a6d";
         document.getElementById('auditMsgArea').textContent = "❌ 同步失敗: " + err.message;
         playScanSound('error');
@@ -1188,7 +1213,7 @@
     let html = `<div class="order-table-wrapper"><table class="order-compact-table">
       <thead>
         <tr>
-          <th style="width: 30px;">操作</th>
+          <th style="width: 24px;">操作</th>
           <th>應盤</th>
           <th>實盤</th>
           <th>Pallet ID</th>
@@ -1214,11 +1239,16 @@
       const barcodeDisplay = (item.barcode && item.barcode !== "-") ? item.barcode : "";
       const palletDisplay = (item.palletId && item.palletId !== "-") ? item.palletId : "";
 
+      // 修復：實盤數字變色邏輯 (0為暗灰，盤盈為黃色，其他為亮青色)
+      let scannedQtyColor = '#00ffff'; 
+      if (item.scannedQty === 0) scannedQtyColor = '#4a5c50';
+      else if (item.scannedQty > item.sysQty) scannedQtyColor = '#ffea00';
+
       html += `
         <tr class="${rowClass}" style="border-left: ${borderLeft};">
           <td><button class="row-add-btn" onclick="incrementAuditItem('${item.key}')">+</button></td>
           <td style="color:#00ff66;">${item.sysQty}</td>
-          <td style="color:#00ffff; font-size:14px; font-weight:bold;">${item.scannedQty}</td>
+          <td style="color:${scannedQtyColor}; font-weight:900;">${item.scannedQty}</td>
           <td>${palletDisplay}</td>
           <td style="color:#ffea00; font-size:12px;">${barcodeDisplay}</td>
           <td style="text-align:left;">${tagDisplay}</td>
