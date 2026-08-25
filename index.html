@@ -460,14 +460,43 @@
   let pendingBarcode = null;
   let lastDetected = null;
 
+  // 定義要強制開啟支援的所有格式 (包含倉儲常用的長條碼 Code128, Code39 等)
+  const formatsToSupport = [
+    Html5QrcodeSupportedFormats.QR_CODE,
+    Html5QrcodeSupportedFormats.UPC_A,
+    Html5QrcodeSupportedFormats.UPC_E,
+    Html5QrcodeSupportedFormats.UPC_EAN_EXTENSION,
+    Html5QrcodeSupportedFormats.EAN_8,
+    Html5QrcodeSupportedFormats.EAN_13,
+    Html5QrcodeSupportedFormats.CODE_39,
+    Html5QrcodeSupportedFormats.CODE_93,
+    Html5QrcodeSupportedFormats.CODE_128,
+    Html5QrcodeSupportedFormats.ITF,
+    Html5QrcodeSupportedFormats.CODABAR
+  ];
+
   function startLocationScanner() {
     const readerDiv = document.getElementById('reader');
     const stopBtn = document.getElementById('stopScanLocBtn');
     readerDiv.style.display = 'block'; stopBtn.style.display = 'block';
 
-    if (!html5QrCode) { html5QrCode = new Html5Qrcode("reader"); }
+    // 加入 formatsToSupport 參數
+    if (!html5QrCode) { html5QrCode = new Html5Qrcode("reader", { formatsToSupport: formatsToSupport }); }
+    
+    // 使用進階設定要求高解析度與對焦
+    const config = { 
+      fps: 10, 
+      qrbox: { width: 220, height: 60 },
+      videoConstraints: {
+        facingMode: "environment",
+        width: { min: 1280, ideal: 1920 },
+        height: { min: 720, ideal: 1080 }
+      }
+    };
+
     html5QrCode.start(
-      { facingMode: "environment" }, { fps: 10, qrbox: { width: 220, height: 60 } },
+      { facingMode: "environment" }, // 若 videoConstraints 不被支援，這行是備案
+      config,
       (decodedText, decodedResult) => {
         document.getElementById('auditLocInput').value = decodedText;
         stopLocationScanner();
@@ -495,13 +524,26 @@
     const stopBtn = document.getElementById('stopBarcodeScanBtn');
     readerDiv.style.display = 'block'; stopBtn.style.display = 'block';
 
-    if (!barcodeHtml5QrCode) { barcodeHtml5QrCode = new Html5Qrcode("barcodeReader"); }
+    // 加入 formatsToSupport 參數
+    if (!barcodeHtml5QrCode) { barcodeHtml5QrCode = new Html5Qrcode("barcodeReader", { formatsToSupport: formatsToSupport }); }
     
     lastDetected = null;
     pendingBarcode = null;
 
+    // 使用進階設定要求高解析度
+    const config = { 
+      fps: 10, 
+      qrbox: { width: 220, height: 60 },
+      videoConstraints: {
+        facingMode: "environment",
+        width: { min: 1280, ideal: 1920 },
+        height: { min: 720, ideal: 1080 }
+      }
+    };
+
     barcodeHtml5QrCode.start(
-      { facingMode: "environment" }, { fps: 10, qrbox: { width: 220, height: 60 } },
+      { facingMode: "environment" },
+      config,
       (decodedText, decodedResult) => {
         const cleanCode = decodedText.trim().toUpperCase();
         
@@ -900,7 +942,7 @@
             }
             let cellClass = "";
             const valStr = String(val).trim().toUpperCase();
-            if (valStr === "MON" || valStr.endsWith("MON") || valStr.endsWith("-MON") || valStr.endsWith("/MON")) {
+            if (valStr === "MON" || valStr.endsWith(" MON") || valStr.endsWith("-MON") || valStr.endsWith("/MON")) {
               cellClass = "highlight-mon";
             }
             if (cleanHeader === "SCND") cellClass += " highlight-trend-green";
