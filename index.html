@@ -160,9 +160,9 @@
     .flash-green { animation: greenFlash 0.5s ease-out forwards; }
     .flash-yellow { animation: yellowFlash 0.5s ease-out forwards; }
     
-    /* 修正iOS背景消失問題：必須將背景色強制套用到 td 身上 */
+    /* 修正iOS背景消失問題：必須將背景色強制套用到 td 身上，否則會被 Safari 吃掉 */
     .last-scanned-highlight td { 
-      background-color: rgba(0, 255, 255, 0.28) !important; 
+      background-color: rgba(0, 255, 255, 0.28) !important; /* 加強背景發光透明度 */
       border-top: 1px solid #00ffff !important; 
       border-bottom: 1px solid #00ffff !important; 
     }
@@ -460,26 +460,43 @@
   let pendingBarcode = null;
   let lastDetected = null;
 
+  // 定義要強制開啟支援的所有格式 (包含倉儲常用的長條碼 Code128, Code39 等)
+  const formatsToSupport = [
+    Html5QrcodeSupportedFormats.QR_CODE,
+    Html5QrcodeSupportedFormats.UPC_A,
+    Html5QrcodeSupportedFormats.UPC_E,
+    Html5QrcodeSupportedFormats.UPC_EAN_EXTENSION,
+    Html5QrcodeSupportedFormats.EAN_8,
+    Html5QrcodeSupportedFormats.EAN_13,
+    Html5QrcodeSupportedFormats.CODE_39,
+    Html5QrcodeSupportedFormats.CODE_93,
+    Html5QrcodeSupportedFormats.CODE_128,
+    Html5QrcodeSupportedFormats.ITF,
+    Html5QrcodeSupportedFormats.CODABAR
+  ];
+
   function startLocationScanner() {
     const readerDiv = document.getElementById('reader');
     const stopBtn = document.getElementById('stopScanLocBtn');
     readerDiv.style.display = 'block'; stopBtn.style.display = 'block';
 
-    if (!html5QrCode) { 
-        html5QrCode = new Html5Qrcode("reader", { experimentalFeatures: { useBarCodeDetectorIfSupported: true } }); 
-    }
+    // 加入 formatsToSupport 參數
+    if (!html5QrCode) { html5QrCode = new Html5Qrcode("reader", { formatsToSupport: formatsToSupport }); }
     
-    // 安全強制：第一參數只傳 facingMode 確保開啟主鏡頭。高解析度與對焦要求移至第二參數的 videoConstraints 中！
+    // 使用進階設定要求高解析度與對焦
+    const config = { 
+      fps: 10, 
+      qrbox: { width: 220, height: 60 },
+      videoConstraints: {
+        facingMode: "environment",
+        width: { min: 1280, ideal: 1920 },
+        height: { min: 720, ideal: 1080 }
+      }
+    };
+
     html5QrCode.start(
-      { facingMode: "environment" }, 
-      { 
-          fps: 10,
-          videoConstraints: {
-              width: { min: 1280 },
-              height: { min: 720 },
-              advanced: [{ focusMode: "continuous" }]
-          }
-      },
+      { facingMode: "environment" }, // 若 videoConstraints 不被支援，這行是備案
+      config,
       (decodedText, decodedResult) => {
         document.getElementById('auditLocInput').value = decodedText;
         stopLocationScanner();
@@ -507,40 +524,36 @@
     const stopBtn = document.getElementById('stopBarcodeScanBtn');
     readerDiv.style.display = 'block'; stopBtn.style.display = 'block';
 
-    if (!barcodeHtml5QrCode) { 
-        barcodeHtml5QrCode = new Html5Qrcode("barcodeReader", { experimentalFeatures: { useBarCodeDetectorIfSupported: true } }); 
-    }
+    // 加入 formatsToSupport 參數
+    if (!barcodeHtml5QrCode) { barcodeHtml5QrCode = new Html5Qrcode("barcodeReader", { formatsToSupport: formatsToSupport }); }
     
     lastDetected = null;
     pendingBarcode = null;
 
-    // 安全強制：第一參數確保主鏡頭。第二參數注入 720p 解析度、持續對焦、並開啟所有格式支援！
+    // 使用進階設定要求高解析度
+    const config = { 
+      fps: 10, 
+      qrbox: { width: 220, height: 60 },
+      videoConstraints: {
+        facingMode: "environment",
+        width: { min: 1280, ideal: 1920 },
+        height: { min: 720, ideal: 1080 }
+      }
+    };
+
     barcodeHtml5QrCode.start(
-      { facingMode: "environment" }, 
-      { 
-          fps: 10,
-          videoConstraints: {
-              width: { min: 1280 },
-              height: { min: 720 },
-              advanced: [{ focusMode: "continuous" }]
-          },
-          formatsToSupport: [ 
-              Html5QrcodeSupportedFormats.CODE_128, 
-              Html5QrcodeSupportedFormats.CODE_39, 
-              Html5QrcodeSupportedFormats.EAN_13, 
-              Html5QrcodeSupportedFormats.QR_CODE 
-          ] 
-      },
+      { facingMode: "environment" },
+      config,
       (decodedText, decodedResult) => {
         const cleanCode = decodedText.trim().toUpperCase();
         
-        // 防重複鎖定
+        // 防重複鎖定：如果正在等待確認，或是剛剛才掃過這個碼 (Cooldown中)，則忽略
         if (pendingBarcode === cleanCode || lastDetected === cleanCode) return;
 
         lastDetected = cleanCode;
         pendingBarcode = cleanCode;
 
-        playScanSound('pending'); // 短嗶聲
+        playScanSound('pending'); // 智慧音效 1：短嗶聲 (待確認)
         triggerVibration(60);
 
         // 顯示確認攔截面板
@@ -577,7 +590,7 @@
     document.getElementById('barcodeConfirmPanel').style.display = 'none';
     pendingBarcode = null;
 
-    // 加入 1 秒冷卻時間 (Cooldown)
+    // 加入 1 秒冷卻時間 (Cooldown)，1秒後自動解鎖防重複機制，允許連續掃描同一個條碼
     setTimeout(() => {
         if (lastDetected === codeToProcess) {
             lastDetected = null;
@@ -929,7 +942,7 @@
             }
             let cellClass = "";
             const valStr = String(val).trim().toUpperCase();
-            if (valStr === "MON" || valStr.endsWith("MON") || valStr.endsWith("-MON") || valStr.endsWith("/MON")) {
+            if (valStr === "MON" || valStr.endsWith(" MON") || valStr.endsWith("-MON") || valStr.endsWith("/MON")) {
               cellClass = "highlight-mon";
             }
             if (cleanHeader === "SCND") cellClass += " highlight-trend-green";
@@ -1357,7 +1370,7 @@
       const barcodeDisplay = (item.barcode && item.barcode !== "-") ? item.barcode : "";
       const palletDisplay = (item.palletId && item.palletId !== "-") ? item.palletId : "";
 
-      // 實盤數量動態變色 (保持原狀)
+      // 實盤數量動態變色
       let scannedColor = "#00ffff";
       if (item.scannedQty > item.sysQty) {
         scannedColor = "#ffea00";
