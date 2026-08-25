@@ -454,7 +454,6 @@
 
   // =======================================================================
   // HTML5 QR Code Scanner 相機掃描儲位與獨立條碼掃描整合
-  // ( Pro 級修正：強制 720p 以上高解析度 + 持續對焦 + 安全的單一第一參數 )
   // =======================================================================
   let html5QrCode = null;
   let barcodeHtml5QrCode = null;
@@ -470,7 +469,7 @@
         html5QrCode = new Html5Qrcode("reader", { experimentalFeatures: { useBarCodeDetectorIfSupported: true } }); 
     }
     
-    // 強制要求 720p 以上高畫質，並避開 cameraIdOrConfig 報錯
+    // 安全強制：第一參數只傳 facingMode 確保開啟主鏡頭。高解析度與對焦要求移至第二參數的 videoConstraints 中！
     html5QrCode.start(
       { facingMode: "environment" }, 
       { 
@@ -488,7 +487,7 @@
       },
       (errorMessage) => { /* Ignore errors */ }
     ).catch((err) => {
-      alert("無法存取相機，請確認權限。錯誤: " + err);
+      alert("無法存取相機，請確認瀏覽器已允許使用相機權限。錯誤: " + err);
       stopLocationScanner();
     });
   }
@@ -515,7 +514,7 @@
     lastDetected = null;
     pendingBarcode = null;
 
-    // 強制要求 720p 以上高畫質，全格式支援，無 qrbox 限制
+    // 安全強制：第一參數確保主鏡頭。第二參數注入 720p 解析度、持續對焦、並開啟所有格式支援！
     barcodeHtml5QrCode.start(
       { facingMode: "environment" }, 
       { 
