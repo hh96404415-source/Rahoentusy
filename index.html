@@ -2,7 +2,8 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- Front-end Developer 更新：移除 user-scalable=no，允許雙指縮放，靠 CSS 阻擋雙擊放大 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CheckerLaboratory (GitHub Edition)</title>
   
   <meta property="og:title" content="Inventory Checker" />
@@ -16,7 +17,7 @@
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <style>
-    /* 全域盒模型重置與移動端觸控優化：禁止雙擊放大、消除延遲 */
+    /* 全域盒模型重置與移動端觸控優化：禁止雙擊放大(保留雙指縮放)、消除延遲 */
     * {
       box-sizing: border-box;
       touch-action: manipulation;
@@ -85,19 +86,21 @@
       display: flex; align-items: center; gap: 3px;
     }
 
+    /* 表格內操作按鈕：縮小並統一字體 */
     .row-add-btn {
-      padding: 4px 8px !important; font-size: 12px !important; background: #03210d !important;
+      padding: 2px 8px !important; font-size: 13px !important; background: #03210d !important;
       color: #00ff66 !important; border: 1px solid #00ff41 !important; border-radius: 3px;
-      cursor: pointer; font-weight: 900; box-shadow: 0 0 6px rgba(0, 255, 65, 0.3) !important;
+      cursor: pointer; font-weight: 900; box-shadow: 0 0 4px rgba(0, 255, 65, 0.3) !important;
     }
     
+    /* 瘦身後的 Summary Box：單行顯示、字體 14px */
     .summary-box {
       display: flex; justify-content: space-around; align-items: center; margin-bottom: 6px;
-      padding: 6px; background-color: #020a04; border-radius: 4px; border: 1.5px solid #00ff41;
-      box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.1); flex-wrap: wrap; gap: 8px;
+      padding: 4px 6px; background-color: #020a04; border-radius: 4px; border: 1.5px solid #00ff41;
+      box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.1); flex-wrap: wrap; gap: 6px;
     }
-    .summary-item { font-size: 12px; font-weight: bold; color: #a0f0ba; text-align: center; }
-    .summary-value { font-size: 16px; color: #00ff66; font-weight: 900; text-shadow: 0 0 8px rgba(0, 255, 102, 0.6); }
+    .summary-item { font-size: 14px; font-weight: bold; color: #a0f0ba; text-align: center; display: flex; gap: 4px; align-items: baseline; }
+    .summary-value { font-size: 14px; color: #00ff66; font-weight: 900; text-shadow: 0 0 8px rgba(0, 255, 102, 0.6); }
     .message {
       font-size: 13px; color: #ff2a6d; font-weight: bold; margin-bottom: 8px;
       text-align: center; text-shadow: 0 0 8px rgba(255, 42, 109, 0.6);
@@ -105,10 +108,10 @@
 
     /* 盤點 (AUDIT) 區塊樣式 */
     .audit-step-box {
-      background: #040e06; border: 1.5px solid #00ff41; padding: 8px; border-radius: 4px;
-      margin-bottom: 8px; transition: all 0.3s ease;
+      background: #040e06; border: 1.5px solid #00ff41; padding: 6px 8px; border-radius: 4px;
+      margin-bottom: 6px; transition: all 0.3s ease;
     }
-    .audit-step-title { font-size: 12px; color: #00ff66; font-weight: bold; margin-bottom: 6px; }
+    .audit-step-title { font-size: 12px; color: #00ff66; font-weight: bold; margin-bottom: 4px; }
     
     /* 相機預覽區塊：限制高度為 180px */
     #reader {
@@ -129,10 +132,10 @@
     .concat-item:last-child:nth-child(odd) { grid-column: span 2; }
     .field-label { font-weight: bold; color: #00ff66; }
 
-    /* 緊湊型列表樣式 */
-    .al-table, .order-compact-table { width: 100%; border-collapse: collapse; margin-top: 2px; background: #020a04; font-size: 13px; line-height: 1.1; letter-spacing: -0.8px; }
-    .al-table th, .order-compact-table th { background: #081f0e; color: #00ff66; padding: 4px 4px; border: 1px solid #00a82d; text-align: center; font-size: 11px; font-weight: 900; position: sticky; top: 0; z-index: 3; box-shadow: 0 1px 0 #00ff41; }
-    .al-table td, .order-compact-table td { padding: 4px 4px; border: 1px solid #003b10; color: #e0ffe6; word-break: keep-all; font-weight: bold; text-align: center; white-space: nowrap; }
+    /* 緊湊型列表樣式：字體統一為 13px */
+    .al-table, .order-compact-table { width: 100%; border-collapse: collapse; margin-top: 2px; background: #020a04; font-size: 13px; line-height: 1.1; letter-spacing: -0.5px; }
+    .al-table th, .order-compact-table th { background: #081f0e; color: #00ff66; padding: 4px 4px; border: 1px solid #00a82d; text-align: center; font-size: 13px; font-weight: 900; position: sticky; top: 0; z-index: 3; box-shadow: 0 1px 0 #00ff41; }
+    .al-table td, .order-compact-table td { padding: 4px 4px; border: 1px solid #003b10; color: #e0ffe6; word-break: keep-all; font-weight: bold; text-align: center; white-space: nowrap; font-size: 13px; }
     .al-table tr:nth-child(even), .order-compact-table tr:nth-child(even) td { background-color: #041206; }
     .order-table-wrapper { width: 100%; overflow-x: auto; overflow-y: auto; border: 1px solid #00ff41; border-radius: 4px; background: #020a04; max-height: 72vh; }
 
@@ -149,8 +152,9 @@
     .badge-extra { background: rgba(255, 234, 0, 0.25); color: #ffea00; border: 1.5px solid #ffea00; }
     .badge-match { background: rgba(0, 255, 102, 0.25); color: #00ff66; border: 1.5px solid #00ff41; }
     
-    .filter-btn-group { display: flex; gap: 4px; margin-bottom: 8px; }
-    .filter-btn { flex: 1; padding: 4px; font-size: 12px !important; background: #020a04; border: 1px solid #005c18; color: #a0f0ba; cursor: pointer; border-radius: 3px; font-weight: bold; }
+    /* 瘦身後的篩選按鈕列：字體 14px、padding 縮減 */
+    .filter-btn-group { display: flex; gap: 4px; margin-bottom: 6px; }
+    .filter-btn { flex: 1; padding: 3px; font-size: 14px !important; background: #020a04; border: 1px solid #005c18; color: #a0f0ba; cursor: pointer; border-radius: 3px; font-weight: bold; }
     .filter-btn.active { border-color: #00ff41; color: #00ff41; background: #09240f; box-shadow: 0 0 8px rgba(0, 255, 65, 0.4); }
 
     @keyframes greenFlash { 0% { border-color: #00ff41; box-shadow: 0 0 30px rgba(0, 255, 65, 1); background-color: #093313; } 100% { border-color: #00ff41; box-shadow: 0 0 0px transparent; background-color: #040e06; } }
@@ -306,17 +310,19 @@
 
     <div id="auditMsgArea" class="message"></div>
 
+    <!-- Front-end Developer 更新：Summary Box 瘦身為單行，字體 14px -->
     <div class="summary-box" id="auditSummaryBox" style="display: none;">
-      <div class="summary-item">應有 QTY<br><span id="auditSysQty" class="summary-value" style="font-size:16px;">0</span></div>
-      <div class="summary-item">實盤 QTY<br><span id="auditScannedQty" class="summary-value" style="font-size:16px; color:#00ffff;">0</span></div>
-      <div class="summary-item">🔴 盤虧(少)<br><span id="auditMissingQty" class="summary-value" style="color:#ff2a6d; font-size:16px;">0</span></div>
-      <div class="summary-item">🟡 盤盈(多)<br><span id="auditExtraQty" class="summary-value" style="color:#ffea00; font-size:16px;">0</span></div>
+      <div class="summary-item">應有:<span id="auditSysQty" class="summary-value" style="font-size:14px;">0</span></div>
+      <div class="summary-item">實盤:<span id="auditScannedQty" class="summary-value" style="font-size:14px; color:#00ffff;">0</span></div>
+      <div class="summary-item">🔴 少:<span id="auditMissingQty" class="summary-value" style="color:#ff2a6d; font-size:14px;">0</span></div>
+      <div class="summary-item">🟡 多:<span id="auditExtraQty" class="summary-value" style="color:#ffea00; font-size:14px;">0</span></div>
     </div>
 
+    <!-- Front-end Developer 更新：動態篩選按鈕瘦身，字體 14px -->
     <div id="auditFilterGroup" class="filter-btn-group" style="display: none;">
       <button class="filter-btn active" id="filterAll" onclick="filterAuditResult('all')">全部</button>
-      <button class="filter-btn" id="filterMissing" onclick="filterAuditResult('missing')" style="color:#ff2a6d;">🔴 盤虧 (0)</button>
-      <button class="filter-btn" id="filterExtra" onclick="filterAuditResult('extra')" style="color:#ffea00;">🟡 盤盈 (0)</button>
+      <button class="filter-btn" id="filterMissing" onclick="filterAuditResult('missing')" style="color:#ff2a6d;">🔴 少 (0)</button>
+      <button class="filter-btn" id="filterExtra" onclick="filterAuditResult('extra')" style="color:#ffea00;">🟡 多 (0)</button>
       <button class="filter-btn" id="filterMatch" onclick="filterAuditResult('match')" style="color:#00ff66;">🟢 正常 (0)</button>
     </div>
 
@@ -972,7 +978,7 @@
   }
 
   // ==========================================
-  // 盤點比較渲染邏輯
+  // Front-end Developer 更新：盤點比較渲染邏輯
   // ==========================================
   let auditState = { location: '', systemItemsMap: {}, scannedCounts: {}, scanHistoryStack: [], lastRawCodeMap: {}, lastLookupCodeMap: {}, activeFilter: 'all', lastScannedKey: null };
 
@@ -1158,7 +1164,7 @@
     const allKeys = new Set([...Object.keys(auditState.systemItemsMap), ...Object.keys(auditState.scannedCounts)]);
 
     allKeys.forEach(key => {
-      const sysInfo = auditState.systemItemsMap[key] || { key: key, sysQty: 0, tag: key, sku: "-", barcode: "-", style: "-", size: "-" };
+      const sysInfo = auditState.systemItemsMap[key] || { key: key, sysQty: 0, tag: key, sku: "-", barcode: "-", style: "-", size: "-", palletId: "-" };
       const scannedQty = auditState.scannedCounts[key] || 0, diff = scannedQty - sysInfo.sysQty;
       totalSysQty += sysInfo.sysQty; totalScannedQty += scannedQty;
       
@@ -1175,30 +1181,31 @@
     document.getElementById('auditMissingQty').textContent = missingQtyCount; 
     document.getElementById('auditExtraQty').textContent = extraQtyCount;
     
-    document.getElementById('filterMissing').textContent = `🔴 盤虧 (${missingItemsCount})`;
-    document.getElementById('filterExtra').textContent = `🟡 盤盈 (${extraItemsCount})`;
+    document.getElementById('filterMissing').textContent = `🔴 少 (${missingItemsCount})`;
+    document.getElementById('filterExtra').textContent = `🟡 多 (${extraItemsCount})`;
     document.getElementById('filterMatch').textContent = `🟢 正常 (${matchItemsCount})`;
 
     const filtered = itemsToDisplay.filter(item => auditState.activeFilter === 'all' || item.status === auditState.activeFilter);
     
     if (filtered.length === 0) {
-        container.innerHTML = `<div style="text-align:center; padding: 15px; color: #00ff66; font-weight:bold;">無符合該條件之物料</div>`;
+        container.innerHTML = `<div style="text-align:center; padding: 15px; color: #00ff66; font-weight:bold; font-size: 13px;">無符合該條件之物料</div>`;
         return;
     }
 
+    // Front-end Developer 更新：精確調整為 10 個欄位與新順序，並加入 Pallet ID
     let html = `<div class="order-table-wrapper"><table class="order-compact-table">
       <thead>
         <tr>
-          <th style="width: 40px;">操作</th>
-          <th>Location</th>
-          <th>TAG</th>
-          <th>條碼</th>
-          <th>SKU</th>
-          <th>Style</th>
-          <th>Size</th>
+          <th style="width: 30px;">操作</th>
           <th>應盤</th>
           <th>實盤</th>
-          <th>差異</th>
+          <th>Pallet ID</th>
+          <th>條碼</th>
+          <th>TAG</th>
+          <th>Location</th>
+          <th>Style</th>
+          <th>Size</th>
+          <th>SKU</th>
         </tr>
       </thead>
       <tbody>`;
@@ -1206,29 +1213,34 @@
     filtered.forEach(item => {
       const isLastScanned = (item.key === auditState.lastScannedKey);
       const rowClass = isLastScanned ? 'last-scanned-highlight' : '';
-
-      const diffDisplay = item.diff > 0 ? `+${item.diff}` : item.diff;
-      const diffColor = item.status === 'missing' ? '#ff2a6d' : (item.status === 'extra' ? '#ffea00' : '#00ff66');
       
       let borderLeft = '3px solid #00ff41';
-      if (item.status === 'missing') borderLeft = '3px solid #ff2a6d';
-      else if (item.status === 'extra') borderLeft = '3px solid #ffea00';
+      let scannedColor = '#00ffff';
+      
+      if (item.status === 'missing') {
+          borderLeft = '3px solid #ff2a6d';
+          scannedColor = '#ff2a6d';
+      } else if (item.status === 'extra') {
+          borderLeft = '3px solid #ffea00';
+          scannedColor = '#ffea00';
+      }
 
       const tagDisplay = (item.tag && item.tag !== "-") ? item.tag : "";
       const barcodeDisplay = (item.barcode && item.barcode !== "-") ? item.barcode : "";
+      const palletDisplay = (item.palletId && item.palletId !== "-") ? item.palletId : "";
 
       html += `
         <tr class="${rowClass}" style="border-left: ${borderLeft};">
-          <td><button class="row-add-btn" onclick="incrementAuditItem('${item.key}')">+1</button></td>
-          <td style="color:#80cfa0;">${auditState.location}</td>
+          <td><button class="row-add-btn" onclick="incrementAuditItem('${item.key}')">+</button></td>
+          <td style="color:#00ff66;">${item.sysQty}</td>
+          <td style="color:${scannedColor}; font-weight:900;">${item.scannedQty}</td>
+          <td>${palletDisplay}</td>
+          <td style="color:#ffea00;">${barcodeDisplay}</td>
           <td style="text-align:left;">${tagDisplay}</td>
-          <td style="color:#ffea00; font-size:12px;">${barcodeDisplay}</td>
-          <td>${item.sku}</td>
+          <td style="color:#80cfa0;">${auditState.location}</td>
           <td>${item.style}</td>
           <td>${item.size}</td>
-          <td style="color:#00ff66;">${item.sysQty}</td>
-          <td style="color:#00ffff; font-size:14px; font-weight:bold;">${item.scannedQty}</td>
-          <td style="color:${diffColor}; font-weight:bold;">${diffDisplay}</td>
+          <td>${item.sku}</td>
         </tr>
       `;
     });
