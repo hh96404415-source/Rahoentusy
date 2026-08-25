@@ -454,7 +454,7 @@
 
   // =======================================================================
   // HTML5 QR Code Scanner 相機掃描儲位與獨立條碼掃描整合
-  // ( Pro 級修正：確保參數完全符合函式庫安全規範 + 啟用硬體解碼與全寬度掃描 )
+  // ( Pro 級修正：強制 720p 以上高解析度 + 持續對焦 + 安全的單一第一參數 )
   // =======================================================================
   let html5QrCode = null;
   let barcodeHtml5QrCode = null;
@@ -466,15 +466,21 @@
     const stopBtn = document.getElementById('stopScanLocBtn');
     readerDiv.style.display = 'block'; stopBtn.style.display = 'block';
 
-    // 啟用原生硬體加速解碼晶片 (如果手機支援)
     if (!html5QrCode) { 
         html5QrCode = new Html5Qrcode("reader", { experimentalFeatures: { useBarCodeDetectorIfSupported: true } }); 
     }
     
-    // 安全修復：確保第一參數只有 1 個屬性。移除 qrbox 讓相機吃滿 100% 畫面寬度！
+    // 強制要求 720p 以上高畫質，並避開 cameraIdOrConfig 報錯
     html5QrCode.start(
       { facingMode: "environment" }, 
-      { fps: 10 },
+      { 
+          fps: 10,
+          videoConstraints: {
+              width: { min: 1280 },
+              height: { min: 720 },
+              advanced: [{ focusMode: "continuous" }]
+          }
+      },
       (decodedText, decodedResult) => {
         document.getElementById('auditLocInput').value = decodedText;
         stopLocationScanner();
@@ -482,7 +488,7 @@
       },
       (errorMessage) => { /* Ignore errors */ }
     ).catch((err) => {
-      alert("無法存取相機，請確認瀏覽器已允許使用相機權限。錯誤: " + err);
+      alert("無法存取相機，請確認權限。錯誤: " + err);
       stopLocationScanner();
     });
   }
@@ -502,7 +508,6 @@
     const stopBtn = document.getElementById('stopBarcodeScanBtn');
     readerDiv.style.display = 'block'; stopBtn.style.display = 'block';
 
-    // 啟用原生硬體加速解碼晶片 (如果手機支援)
     if (!barcodeHtml5QrCode) { 
         barcodeHtml5QrCode = new Html5Qrcode("barcodeReader", { experimentalFeatures: { useBarCodeDetectorIfSupported: true } }); 
     }
@@ -510,12 +515,16 @@
     lastDetected = null;
     pendingBarcode = null;
 
-    // 安全修復：確保第一參數只有 1 個屬性 ({ facingMode })。
-    // 強制注入全格式支援 (包含 Code 128 / Code 39) 並移除 qrbox 邊界限制！
+    // 強制要求 720p 以上高畫質，全格式支援，無 qrbox 限制
     barcodeHtml5QrCode.start(
       { facingMode: "environment" }, 
       { 
-          fps: 10, 
+          fps: 10,
+          videoConstraints: {
+              width: { min: 1280 },
+              height: { min: 720 },
+              advanced: [{ focusMode: "continuous" }]
+          },
           formatsToSupport: [ 
               Html5QrcodeSupportedFormats.CODE_128, 
               Html5QrcodeSupportedFormats.CODE_39, 
@@ -569,7 +578,7 @@
     document.getElementById('barcodeConfirmPanel').style.display = 'none';
     pendingBarcode = null;
 
-    // 加入 1 秒冷卻時間 (Cooldown)，1秒後自動解鎖防重複機制，允許連續掃描同一個條碼
+    // 加入 1 秒冷卻時間 (Cooldown)
     setTimeout(() => {
         if (lastDetected === codeToProcess) {
             lastDetected = null;
