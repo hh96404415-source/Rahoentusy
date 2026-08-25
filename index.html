@@ -160,9 +160,9 @@
     .flash-green { animation: greenFlash 0.5s ease-out forwards; }
     .flash-yellow { animation: yellowFlash 0.5s ease-out forwards; }
     
-    /* 修正iOS背景消失問題：必須將背景色強制套用到 td 身上，否則會被 Safari 吃掉 */
+    /* 修正iOS背景消失問題：必須將背景色強制套用到 td 身上 */
     .last-scanned-highlight td { 
-      background-color: rgba(0, 255, 255, 0.28) !important; /* 加強背景發光透明度 */
+      background-color: rgba(0, 255, 255, 0.28) !important; 
       border-top: 1px solid #00ffff !important; 
       border-bottom: 1px solid #00ffff !important; 
     }
@@ -454,7 +454,7 @@
 
   // =======================================================================
   // HTML5 QR Code Scanner 相機掃描儲位與獨立條碼掃描整合
-  // ( Pro 級優化：解除限制 + 強制高畫質 + 全格式支援 )
+  // ( Pro 級修正：確保參數完全符合函式庫安全規範 + 啟用硬體解碼與全寬度掃描 )
   // =======================================================================
   let html5QrCode = null;
   let barcodeHtml5QrCode = null;
@@ -466,13 +466,14 @@
     const stopBtn = document.getElementById('stopScanLocBtn');
     readerDiv.style.display = 'block'; stopBtn.style.display = 'block';
 
+    // 啟用原生硬體加速解碼晶片 (如果手機支援)
     if (!html5QrCode) { 
         html5QrCode = new Html5Qrcode("reader", { experimentalFeatures: { useBarCodeDetectorIfSupported: true } }); 
     }
     
-    // 猛藥 1 & 2: 移除 qrbox，強制 720p 最小解析度與持續對焦
+    // 安全修復：確保第一參數只有 1 個屬性。移除 qrbox 讓相機吃滿 100% 畫面寬度！
     html5QrCode.start(
-      { facingMode: "environment", videoConstraints: { width: { min: 1280 }, focusMode: "continuous" } }, 
+      { facingMode: "environment" }, 
       { fps: 10 },
       (decodedText, decodedResult) => {
         document.getElementById('auditLocInput').value = decodedText;
@@ -501,6 +502,7 @@
     const stopBtn = document.getElementById('stopBarcodeScanBtn');
     readerDiv.style.display = 'block'; stopBtn.style.display = 'block';
 
+    // 啟用原生硬體加速解碼晶片 (如果手機支援)
     if (!barcodeHtml5QrCode) { 
         barcodeHtml5QrCode = new Html5Qrcode("barcodeReader", { experimentalFeatures: { useBarCodeDetectorIfSupported: true } }); 
     }
@@ -508,12 +510,18 @@
     lastDetected = null;
     pendingBarcode = null;
 
-    // 猛藥 1, 2 & 3: 移除 qrbox，強制高畫質，強制指定長條碼格式
+    // 安全修復：確保第一參數只有 1 個屬性 ({ facingMode })。
+    // 強制注入全格式支援 (包含 Code 128 / Code 39) 並移除 qrbox 邊界限制！
     barcodeHtml5QrCode.start(
-      { facingMode: "environment", videoConstraints: { width: { min: 1280 }, focusMode: "continuous" } }, 
+      { facingMode: "environment" }, 
       { 
           fps: 10, 
-          formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128, Html5QrcodeSupportedFormats.CODE_39, Html5QrcodeSupportedFormats.EAN_13, Html5QrcodeSupportedFormats.QR_CODE, Html5QrcodeSupportedFormats.ITF ] 
+          formatsToSupport: [ 
+              Html5QrcodeSupportedFormats.CODE_128, 
+              Html5QrcodeSupportedFormats.CODE_39, 
+              Html5QrcodeSupportedFormats.EAN_13, 
+              Html5QrcodeSupportedFormats.QR_CODE 
+          ] 
       },
       (decodedText, decodedResult) => {
         const cleanCode = decodedText.trim().toUpperCase();
@@ -561,7 +569,7 @@
     document.getElementById('barcodeConfirmPanel').style.display = 'none';
     pendingBarcode = null;
 
-    // 加入 1 秒冷卻時間 (Cooldown)
+    // 加入 1 秒冷卻時間 (Cooldown)，1秒後自動解鎖防重複機制，允許連續掃描同一個條碼
     setTimeout(() => {
         if (lastDetected === codeToProcess) {
             lastDetected = null;
