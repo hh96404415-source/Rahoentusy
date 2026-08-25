@@ -51,9 +51,9 @@
     }
 
     /* 輸入框與搜尋按鈕 */
-    .search-box { display: flex; gap: 6px; margin-bottom: 6px; }
+    .search-box { display: flex; gap: 6px; margin-bottom: 6px; flex-wrap: nowrap; }
     input[type="text"], input, select, textarea {
-      flex: 1; padding: 6px 10px; font-size: 16px !important; background-color: #010a03;
+      flex: 1; min-width: 50px; padding: 6px 10px; font-size: 16px !important; background-color: #010a03;
       color: #00ff66; border: 1.5px solid #00ff41; border-radius: 4px; font-weight: bold; width: 100%;
     }
     input[type="text"]:focus, input:focus {
@@ -71,33 +71,26 @@
       background-color: #081a0c; color: #005c18; border-color: #00330e; cursor: not-allowed; box-shadow: none;
     }
 
-    /* 針對圖示按鈕的專屬樣式 (避免按鈕被撐太寬) */
+    /* 控制列專屬圖示按鈕 */
     .icon-btn {
-      padding: 4px 4px !important; font-size: 14px !important; 
-      display: flex; align-items: center; justify-content: center;
+      padding: 0 !important; font-size: 16px !important; background: #020a04 !important;
+      border: 1.5px solid #00ff41 !important; border-radius: 4px; cursor: pointer; font-weight: 900;
+      display: flex; align-items: center; justify-content: center; min-width: 36px; max-width: 36px; box-shadow: 0 0 6px rgba(0,255,65,0.3) !important;
     }
+    .icon-btn:hover { background: #082410 !important; }
 
-    .undo-btn {
-      background: #1a0d00 !important; color: #ff9900 !important; 
-      border: 1.5px solid #ff9900 !important;
-      box-shadow: 0 0 8px rgba(255, 153, 0, 0.4) !important;
-    }
-
-    .finish-btn {
-      background: #001a24 !important; color: #00c6ff !important; 
-      border: 1.5px solid #00c6ff !important;
-      box-shadow: 0 0 8px rgba(0, 198, 255, 0.4) !important;
-    }
+    .undo-btn { background: #1a0d00 !important; color: #ff9900 !important; border-color: #ff9900 !important; box-shadow: 0 0 6px rgba(255, 153, 0, 0.4) !important; }
+    .finish-btn { background: #001a24 !important; color: #00c6ff !important; border-color: #00c6ff !important; box-shadow: 0 0 6px rgba(0, 198, 255, 0.4) !important; }
 
     .row-add-btn {
-      padding: 0px 4px !important; font-size: 12px !important; background: #03210d !important;
+      padding: 0px 4px !important; height: 18px; line-height: 1.2; font-size: 12px !important; background: #03210d !important;
       color: #00ff66 !important; border: 1px solid #00ff41 !important; border-radius: 3px;
-      cursor: pointer; font-weight: 900; box-shadow: 0 0 4px rgba(0, 255, 65, 0.3) !important;
+      cursor: pointer; font-weight: 900; box-shadow: 0 0 6px rgba(0, 255, 65, 0.3) !important;
     }
     
     .summary-box {
       display: flex; justify-content: space-around; align-items: center; margin-bottom: 6px;
-      padding: 4px 6px; background-color: #020a04; border-radius: 4px; border: 1.5px solid #00ff41;
+      padding: 6px; background-color: #020a04; border-radius: 4px; border: 1.5px solid #00ff41;
       box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.1); flex-wrap: wrap; gap: 8px; font-size: 12px;
     }
     .summary-item { font-size: 12px; font-weight: bold; color: #a0f0ba; text-align: center; }
@@ -109,17 +102,28 @@
 
     /* 盤點 (AUDIT) 區塊樣式 */
     .audit-step-box {
-      background: #040e06; border: 1.5px solid #00ff41; padding: 6px; border-radius: 4px;
-      margin-bottom: 6px; transition: all 0.3s ease;
+      background: #040e06; border: 1.5px solid #00ff41; padding: 8px; border-radius: 4px;
+      margin-bottom: 8px; transition: all 0.3s ease;
     }
-    .audit-step-title { font-size: 12px; color: #00ff66; font-weight: bold; margin-bottom: 4px; }
     
-    /* 相機預覽區塊限制高度為 180px */
+    /* 相機預覽區塊限制高度為 140px */
     #reader {
-        width: 100%; max-height: 180px; border-radius: 4px; overflow: hidden; background: #000;
+        width: 100%; max-height: 140px; border-radius: 4px; overflow: hidden; background: #000;
         box-shadow: 0 0 10px rgba(0,255,65,0.3); margin-top: 8px;
     }
-    #reader video { width: 100% !important; height: 180px !important; object-fit: cover !important; }
+    #reader video { width: 100% !important; height: 140px !important; object-fit: cover !important; }
+
+    #barcodeReader {
+        width: 100%; max-height: 140px; border-radius: 4px; overflow: hidden; background: #000;
+        box-shadow: 0 0 10px rgba(0,255,65,0.3); margin-top: 8px;
+    }
+    #barcodeReader video { width: 100% !important; height: 140px !important; object-fit: cover !important; }
+    
+    /* 獨立條碼相機確認攔截面板 */
+    .barcode-confirm-panel {
+      background: #0a1f12; border: 2px solid #00ffff; border-radius: 4px; padding: 8px; margin-top: 6px;
+      display: flex; justify-content: space-between; align-items: center; box-shadow: 0 0 12px rgba(0,255,255,0.4);
+    }
     
     /* 表格與卡片共用設定 */
     .card-list { display: flex; flex-direction: column; gap: 8px; }
@@ -133,9 +137,9 @@
     .concat-item:last-child:nth-child(odd) { grid-column: span 2; }
     .field-label { font-weight: bold; color: #00ff66; }
 
-    /* 極限緊湊型列表樣式 (Padding 極小、行高縮減) */
+    /* 極限緊湊列表樣式 */
     .al-table, .order-compact-table { width: 100%; border-collapse: collapse; margin-top: 2px; background: #020a04; font-size: 13px; line-height: 1; letter-spacing: -0.5px; }
-    .al-table th, .order-compact-table th { background: #081f0e; color: #00ff66; padding: 2px 2px; border: 1px solid #00a82d; text-align: center; font-size: 8px !important; font-weight: 900; position: sticky; top: 0; z-index: 3; box-shadow: 0 1px 0 #00ff41; }
+    .al-table th, .order-compact-table th { background: #081f0e; color: #00ff66; padding: 2px 4px; border: 1px solid #00a82d; text-align: center; font-size: 8px !important; font-weight: 900; position: sticky; top: 0; z-index: 3; box-shadow: 0 1px 0 #00ff41; }
     .al-table td, .order-compact-table td { padding: 1px 2px; border: 1px solid #003b10; color: #e0ffe6; word-break: keep-all; font-weight: bold; text-align: center; white-space: nowrap; font-size: 13px; }
     .al-table tr:nth-child(even), .order-compact-table tr:nth-child(even) td { background-color: #041206; }
     .order-table-wrapper { width: 100%; overflow-x: auto; overflow-y: auto; border: 1px solid #00ff41; border-radius: 4px; background: #020a04; max-height: 72vh; }
@@ -148,7 +152,7 @@
     .highlight-liability-red { color: #ff2a6d !important; font-weight: 900 !important; text-shadow: 0 0 6px rgba(255, 42, 109, 0.4); }
 
     .filter-btn-group { display: flex; gap: 4px; margin-bottom: 8px; }
-    .filter-btn { flex: 1; padding: 3px 0; font-size: 10px !important; background: #020a04; border: 1px solid #005c18; color: #a0f0ba; cursor: pointer; border-radius: 3px; font-weight: bold; }
+    .filter-btn { flex: 1; padding: 4px; font-size: 10px !important; background: #020a04; border: 1px solid #005c18; color: #a0f0ba; cursor: pointer; border-radius: 3px; font-weight: bold; }
     .filter-btn.active { border-color: #00ff41; color: #00ff41; background: #09240f; box-shadow: 0 0 8px rgba(0, 255, 65, 0.4); }
 
     @keyframes greenFlash { 0% { border-color: #00ff41; box-shadow: 0 0 30px rgba(0, 255, 65, 1); background-color: #093313; } 100% { border-color: #00ff41; box-shadow: 0 0 0px transparent; background-color: #040e06; } }
@@ -156,16 +160,11 @@
     .flash-green { animation: greenFlash 0.5s ease-out forwards; }
     .flash-yellow { animation: yellowFlash 0.5s ease-out forwards; }
     
-    /* 強化版：最新掃描行高亮 (文字變亮綠色) */
-    .last-scanned-highlight { 
-      background-color: rgba(0, 255, 255, 0.20) !important; 
-      box-shadow: inset 0 0 12px rgba(0, 255, 255, 0.8) !important; 
-    }
+    /* 修正iOS背景消失問題：必須將背景色強制套用到 td 身上，否則會被 Safari 吃掉 */
     .last-scanned-highlight td { 
+      background-color: rgba(0, 255, 255, 0.28) !important; /* 加強背景發光透明度 */
       border-top: 1px solid #00ffff !important; 
       border-bottom: 1px solid #00ffff !important; 
-      color: #00ff66 !important; /* 強制整行文字變為亮綠色 */
-      text-shadow: 0 0 5px rgba(0, 255, 102, 0.8) !important;
     }
 
     /* Modal 視窗 */
@@ -179,18 +178,13 @@
     
     /* 掃描回饋橫幅：常駐顯示、單行 10px */
     .scan-feedback-banner { 
-      background: #021a08; border: 1px solid #00ff41; border-radius: 3px; 
-      padding: 4px 6px; margin-top: 4px; display: flex; 
+      background: #021a08; border: 1px solid #00ff41; border-radius: 4px; 
+      padding: 4px 6px; margin-top: 6px; display: flex; 
       justify-content: space-between; align-items: center; 
       font-size: 10px; font-weight: bold; color: #a0f0ba;
     }
     .scan-feedback-banner.extra-mode { background: #1a1802; border-color: #ffea00; color: #ffea00; }
-    
-    /* 強化版：UNDO 警示橫幅 */
-    .scan-feedback-banner.undo-mode { 
-      background: #330000; border-color: #ff2a6d; color: #ff7396; 
-      box-shadow: 0 0 10px rgba(255, 42, 109, 0.6);
-    }
+    .scan-feedback-banner.undo-mode { background: #2a0808; border-color: #ff2a6d; color: #ff2a6d; }
   </style>
 </head>
 <body>
@@ -282,25 +276,34 @@
   <!-- AUDIT Stock Counting View (盤點分頁) -->
   <div id="auditView" style="display: none;">
     <div class="audit-step-box">
-      <div class="audit-step-title">步驟 1: 設定盤點目標儲位</div>
+      <div style="font-size: 12px; color: #00ff66; font-weight: bold; margin-bottom: 6px;">步驟 1: 設定盤點目標儲位</div>
       <div class="search-box" style="margin-bottom: 0;">
         <input type="text" id="auditLocInput" placeholder="輸入儲位 (例如: LOC-A01)">
-        <button id="auditScanLocBtn" onclick="startLocationScanner()" style="background:#00ffff; color:#000;" title="使用相機掃描儲位條碼">📷</button>
+        <button id="auditScanLocBtn" class="icon-btn" onclick="startLocationScanner()" style="background:#00ffff !important; color:#000;" title="相機掃描儲位">📷</button>
         <button id="auditLoadBtn" onclick="startAuditSession()" title="載入庫存">🔍</button>
       </div>
       <div id="reader" style="display:none;"></div>
-      <button id="stopScanLocBtn" onclick="stopLocationScanner()" style="display:none; width: 100%; margin-top: 4px; background: #ff2a6d; color: #fff;">停止相機</button>
+      <button id="stopScanLocBtn" onclick="stopLocationScanner()" style="display:none; width: 100%; margin-top: 5px; background: #ff2a6d; color: #fff;">停止相機掃描</button>
     </div>
 
-    <!-- 步驟 2 區塊：極致壓縮的一行流 -->
-    <div id="auditScanSection" class="audit-step-box" style="display: none; padding: 4px;">
+    <!-- 終極一行流控制列 -->
+    <div id="auditScanSection" class="audit-step-box" style="display: none;">
       <div class="search-box" style="margin-bottom: 0;">
-        <input type="text" id="auditScanInput" placeholder="請掃描..." onkeydown="handleAuditScan(event)">
-        <!-- 復原 / 重盤 / 同步 / 音效 -->
-        <button id="auditUndoBtn" class="icon-btn undo-btn" onclick="undoLastScan()" title="復原">↩️</button>
-        <button class="icon-btn" onclick="resetAuditSession()" title="重新盤點" style="background:#1a1400; border-color:#ffea00;">⚠️</button>
-        <button id="auditFinishBtn" class="icon-btn finish-btn" onclick="openSyncConfirmModal()" title="同步寫入">☁️</button>
-        <button id="soundToggleBtn" class="icon-btn" onclick="toggleAuditSound()" title="切換音效">🔊</button>
+        <input type="text" id="auditScanInput" placeholder="連續掃描實物條碼..." onkeydown="handleAuditScan(event)">
+        <button class="icon-btn" onclick="startBarcodeScanner()" title="開鏡頭掃描條碼" style="background:#00ffff !important; color:#000;">📷</button>
+        <button class="icon-btn undo-btn" onclick="undoLastScan()" title="復原 (UNDO)">↩️</button>
+        <button class="icon-btn" onclick="resetAuditSession()" title="重新盤點" style="background:#2a1a00 !important; border-color:#ffea00 !important; color:#ffea00 !important;">⚠️</button>
+        <button class="icon-btn finish-btn" onclick="openSyncConfirmModal()" title="同步寫入">☁️</button>
+        <button id="soundToggleBtn" class="icon-btn" onclick="toggleAuditSound()" title="音效切換" style="background:#082410 !important; color:#00ff66 !important;">🔊</button>
+      </div>
+
+      <!-- 獨立條碼相機預覽與手動確認區塊 -->
+      <div id="barcodeReader" style="display:none;"></div>
+      <button id="stopBarcodeScanBtn" onclick="stopBarcodeScanner()" style="display:none; width: 100%; margin-top: 5px; background: #ff2a6d; color: #fff;">關閉相機</button>
+      
+      <div id="barcodeConfirmPanel" class="barcode-confirm-panel" style="display:none;">
+        <div id="pendingBarcodeText" style="font-size: 12px; font-weight: bold; color: #00ffff;">已識別: --</div>
+        <button onclick="confirmBarcodeScan()" style="padding: 4px 12px; background: #00ff41; color: #000; font-weight: 900; border:none; border-radius:3px;">✔️ 確認</button>
       </div>
 
       <!-- 常駐單行顯示的掃描回饋橫幅 -->
@@ -397,7 +400,7 @@
 
 <script>
   // =======================================================================
-  // 純前端序列化佇列 API 通訊層 (防堵競態條件與 302 卡頓)
+  // 純前端序列化佇列 API 通訊層
   // =======================================================================
   const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxn95iB72ljeNugSzIT7vpviDp-bwXiA8HnPQ3UXxLFOnxafBc8imVU5oyvhjOSdcaX/exec";
 
@@ -450,9 +453,12 @@
   window.google = { script: { run: gasApiRun } };
 
   // =======================================================================
-  // HTML5 QR Code Scanner 相機掃描儲位整合
+  // HTML5 QR Code Scanner 相機掃描儲位與獨立條碼掃描整合
   // =======================================================================
   let html5QrCode = null;
+  let barcodeHtml5QrCode = null;
+  let pendingBarcode = null;
+  let lastDetected = null;
 
   function startLocationScanner() {
     const readerDiv = document.getElementById('reader');
@@ -461,7 +467,7 @@
 
     if (!html5QrCode) { html5QrCode = new Html5Qrcode("reader"); }
     html5QrCode.start(
-      { facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 80 } },
+      { facingMode: "environment" }, { fps: 10, qrbox: { width: 220, height: 60 } },
       (decodedText, decodedResult) => {
         document.getElementById('auditLocInput').value = decodedText;
         stopLocationScanner();
@@ -483,8 +489,83 @@
     }
   }
 
+  // 獨立條碼相機掃描邏輯 (支援手動確認與連續同碼)
+  function startBarcodeScanner() {
+    const readerDiv = document.getElementById('barcodeReader');
+    const stopBtn = document.getElementById('stopBarcodeScanBtn');
+    readerDiv.style.display = 'block'; stopBtn.style.display = 'block';
+
+    if (!barcodeHtml5QrCode) { barcodeHtml5QrCode = new Html5Qrcode("barcodeReader"); }
+    
+    lastDetected = null;
+    pendingBarcode = null;
+
+    barcodeHtml5QrCode.start(
+      { facingMode: "environment" }, { fps: 10, qrbox: { width: 220, height: 60 } },
+      (decodedText, decodedResult) => {
+        const cleanCode = decodedText.trim().toUpperCase();
+        
+        // 防重複鎖定：如果正在等待確認，或是剛剛才掃過這個碼 (Cooldown中)，則忽略
+        if (pendingBarcode === cleanCode || lastDetected === cleanCode) return;
+
+        lastDetected = cleanCode;
+        pendingBarcode = cleanCode;
+
+        playScanSound('pending'); // 智慧音效 1：短嗶聲 (待確認)
+        triggerVibration(60);
+
+        // 顯示確認攔截面板
+        document.getElementById('pendingBarcodeText').textContent = `已識別: ${cleanCode}`;
+        document.getElementById('barcodeConfirmPanel').style.display = 'flex';
+      },
+      (errorMessage) => { /* Ignore errors */ }
+    ).catch((err) => {
+      alert("無法存取條碼相機，請確認權限。錯誤: " + err);
+      stopBarcodeScanner();
+    });
+  }
+
+  function stopBarcodeScanner() {
+    const readerDiv = document.getElementById('barcodeReader'); 
+    const stopBtn = document.getElementById('stopBarcodeScanBtn');
+    const confirmPanel = document.getElementById('barcodeConfirmPanel');
+    pendingBarcode = null;
+    lastDetected = null;
+    confirmPanel.style.display = 'none';
+
+    if (barcodeHtml5QrCode && barcodeHtml5QrCode.isScanning) {
+      barcodeHtml5QrCode.stop().then(() => { readerDiv.style.display = 'none'; stopBtn.style.display = 'none'; }).catch(err => console.error(err));
+    } else {
+      readerDiv.style.display = 'none'; stopBtn.style.display = 'none';
+    }
+  }
+
+  function confirmBarcodeScan() {
+    if (!pendingBarcode) return;
+    const codeToProcess = pendingBarcode;
+    
+    // 隱藏確認面板
+    document.getElementById('barcodeConfirmPanel').style.display = 'none';
+    pendingBarcode = null;
+
+    // 加入 1 秒冷卻時間 (Cooldown)，1秒後自動解鎖防重複機制，允許連續掃描同一個條碼
+    setTimeout(() => {
+        if (lastDetected === codeToProcess) {
+            lastDetected = null;
+        }
+    }, 1000);
+
+    // 將條碼寫入輸入框並觸發盤點邏輯
+    const inputEl = document.getElementById('auditScanInput');
+    inputEl.value = codeToProcess;
+    
+    processScannedCode(codeToProcess);
+    inputEl.value = "";
+    inputEl.focus();
+  }
+
   // ==========================================
-  // 工具與音效邏輯
+  // 完整國旗、工具、排版邏輯
   // ==========================================
   const COUNTRY_FLAG_CODES = {
     "BRA": "br", "巴西": "br", "CAN": "ca", "加拿大": "ca", "CHN": "cn", "中國": "cn", "中国": "cn",
@@ -540,7 +621,13 @@
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') audioCtx.resume();
       const now = audioCtx.currentTime;
-      if (type === 'match') {
+      if (type === 'pending') {
+        const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.type = 'sine'; osc.frequency.setValueAtTime(600, now);
+        gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+        osc.start(now); osc.stop(now + 0.1);
+      } else if (type === 'match') {
         const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
         osc.connect(gain); gain.connect(audioCtx.destination);
         osc.type = 'sine'; osc.frequency.setValueAtTime(880, now); osc.frequency.setValueAtTime(1174.66, now + 0.08);
@@ -577,6 +664,7 @@
     } catch(e) { console.warn("Audio Context error:", e); }
   }
 
+  // 震動 API，注意：iOS Safari 原生完全不支援這個 API
   function triggerVibration(pattern) {
     if ("vibrate" in navigator) { try { navigator.vibrate(pattern); } catch(e) {} }
   }
@@ -812,7 +900,7 @@
             }
             let cellClass = "";
             const valStr = String(val).trim().toUpperCase();
-            if (valStr === "MON" || valStr.endsWith(" MON") || valStr.endsWith("-MON") || valStr.endsWith("/MON")) {
+            if (valStr === "MON" || valStr.endsWith("MON") || valStr.endsWith("-MON") || valStr.endsWith("/MON")) {
               cellClass = "highlight-mon";
             }
             if (cleanHeader === "SCND") cellClass += " highlight-trend-green";
@@ -989,7 +1077,6 @@
     const msg = document.getElementById('auditMsgArea');
     loadBtn.disabled = true; loadBtn.textContent = "⏳"; msg.textContent = "";
 
-    // 載入時將常駐回饋橫幅文字重置
     document.getElementById('scanFeedbackBanner').className = 'scan-feedback-banner';
     document.getElementById('feedbackTitle').innerHTML = '等待掃描...';
     document.getElementById('feedbackDetails').innerHTML = '應盤: 0 | 實盤: 0';
@@ -1031,24 +1118,27 @@
       const inputEl = document.getElementById('auditScanInput');
       let rawScanned = inputEl.value.trim().toUpperCase();
       if (!rawScanned) return;
-
-      const lookupCode = rawScanned.length > 13 ? rawScanned.substring(0, 13) : rawScanned;
-      let targetKey = null;
-
-      const matchingKeys = Object.keys(auditState.systemItemsMap).filter(k => {
-        const item = auditState.systemItemsMap[k];
-        return ((item.barcode && (item.barcode === lookupCode || item.barcode === rawScanned)) || (item.sku && (item.sku === lookupCode || item.sku === rawScanned)));
-      });
-
-      if (matchingKeys.length > 0) {
-        const unfilledKey = matchingKeys.find(k => (auditState.scannedCounts[k] || 0) < auditState.systemItemsMap[k].sysQty);
-        targetKey = unfilledKey ? unfilledKey : matchingKeys[0];
-      }
-      if (!targetKey) targetKey = lookupCode;
-
-      processAuditItem(targetKey, rawScanned, lookupCode);
+      processScannedCode(rawScanned);
       inputEl.value = ""; inputEl.focus();
     }
+  }
+
+  function processScannedCode(rawScanned) {
+    const lookupCode = rawScanned.length > 13 ? rawScanned.substring(0, 13) : rawScanned;
+    let targetKey = null;
+
+    const matchingKeys = Object.keys(auditState.systemItemsMap).filter(k => {
+      const item = auditState.systemItemsMap[k];
+      return ((item.barcode && (item.barcode === lookupCode || item.barcode === rawScanned)) || (item.sku && (item.sku === lookupCode || item.sku === rawScanned)));
+    });
+
+    if (matchingKeys.length > 0) {
+      const unfilledKey = matchingKeys.find(k => (auditState.scannedCounts[k] || 0) < auditState.systemItemsMap[k].sysQty);
+      targetKey = unfilledKey ? unfilledKey : matchingKeys[0];
+    }
+    if (!targetKey) targetKey = lookupCode;
+
+    processAuditItem(targetKey, rawScanned, lookupCode);
   }
 
   function incrementAuditItem(targetKey) {
@@ -1074,35 +1164,34 @@
     const scanBox = document.getElementById('auditScanSection');
     scanBox.classList.remove('flash-green', 'flash-yellow'); void scanBox.offsetWidth; scanBox.classList.add(isExtra ? 'flash-yellow' : 'flash-green');
     
-    showScanFeedbackBanner(targetKey, rawScanned, currentCount, sysQty, isExtra, sysInfo);
+    showScanFeedbackBanner(targetKey, rawScanned, currentCount, sysQty, isExtra, sysInfo, false);
     renderAuditComparison();
   }
 
-  function showScanFeedbackBanner(targetKey, rawScanned, curCount, sysQty, isExtra, sysInfo) {
+  function showScanFeedbackBanner(targetKey, rawScanned, curCount, sysQty, isExtra, sysInfo, isUndo = false) {
     const banner = document.getElementById('scanFeedbackBanner');
-    banner.className = 'scan-feedback-banner ' + (isExtra ? 'extra-mode' : '');
-    const statusText = isExtra ? '🟡 盤盈' : '✅ 實盤+1';
+    banner.className = 'scan-feedback-banner ' + (isUndo ? 'undo-mode' : (isExtra ? 'extra-mode' : ''));
+    
+    let statusText = isUndo ? '⛔ 實盤-1' : (isExtra ? '🟡 盤盈' : '✅ 實盤+1');
     const displayTag = sysInfo && sysInfo.tag && sysInfo.tag !== "-" ? sysInfo.tag : targetKey;
     
     document.getElementById('feedbackTitle').innerHTML = `<span>${statusText} (${rawScanned}) | TAG: ${displayTag}</span>`;
-    document.getElementById('feedbackDetails').innerHTML = `<span style="background:${isExtra ? '#ffea00' : '#00ff41'}; color:#000; padding:1px 4px; border-radius:3px;">應盤: ${sysQty} | 實盤: ${curCount}</span>`;
+    document.getElementById('feedbackDetails').innerHTML = `<span style="background:${isUndo ? '#ff2a6d' : (isExtra ? '#ffea00' : '#00ff41')}; color:#000; padding:1px 4px; border-radius:3px;">應盤: ${sysQty} | 實盤: ${curCount}</span>`;
   }
 
-  // UNDO 強化：警示橫幅顯示
   function undoLastScan() {
     if (auditState.scanHistoryStack.length === 0) return;
     const lastAction = auditState.scanHistoryStack.pop();
     if (auditState.scannedCounts[lastAction.targetKey] > 0) auditState.scannedCounts[lastAction.targetKey]--;
-    
     auditState.lastScannedKey = auditState.scanHistoryStack.length > 0 ? auditState.scanHistoryStack[auditState.scanHistoryStack.length - 1].targetKey : null;
     
-    // 更新 UNDO 紅色橫幅
-    const banner = document.getElementById('scanFeedbackBanner');
-    banner.className = 'scan-feedback-banner undo-mode';
-    document.getElementById('feedbackTitle').innerHTML = `<span>⛔ 實盤-1 (${lastAction.rawScanned})</span>`;
-    document.getElementById('feedbackDetails').innerHTML = ``; // UNDO 時簡化，不顯示數量
-
     playScanSound('undo'); triggerVibration([60, 40, 60]);
+    
+    const sysInfo = auditState.systemItemsMap[lastAction.targetKey];
+    const curCount = auditState.scannedCounts[lastAction.targetKey] || 0;
+    const sysQty = sysInfo ? sysInfo.sysQty : 0;
+    
+    showScanFeedbackBanner(lastAction.targetKey, lastAction.rawScanned, curCount, sysQty, false, sysInfo, true);
     renderAuditComparison();
   }
 
@@ -1119,7 +1208,7 @@
   function confirmFinishAuditSync() { closeSyncModal(); finishAuditSync(); }
 
   function finishAuditSync() {
-    const finishBtn = document.getElementById('auditFinishBtn'); finishBtn.disabled = true; finishBtn.innerHTML = "⏳";
+    const finishBtn = document.querySelector('.finish-btn'); finishBtn.disabled = true; finishBtn.innerHTML = "⏳";
     document.getElementById('auditMsgArea').textContent = "⚡ 同步上傳中...";
 
     const diffItems = [];
@@ -1213,7 +1302,7 @@
     let html = `<div class="order-table-wrapper"><table class="order-compact-table">
       <thead>
         <tr>
-          <th style="width: 24px;">操作</th>
+          <th style="width: 30px;">操作</th>
           <th>應盤</th>
           <th>實盤</th>
           <th>Pallet ID</th>
@@ -1239,16 +1328,19 @@
       const barcodeDisplay = (item.barcode && item.barcode !== "-") ? item.barcode : "";
       const palletDisplay = (item.palletId && item.palletId !== "-") ? item.palletId : "";
 
-      // 修復：實盤數字變色邏輯 (0為暗灰，盤盈為黃色，其他為亮青色)
-      let scannedQtyColor = '#00ffff'; 
-      if (item.scannedQty === 0) scannedQtyColor = '#4a5c50';
-      else if (item.scannedQty > item.sysQty) scannedQtyColor = '#ffea00';
+      // 實盤數量動態變色
+      let scannedColor = "#00ffff";
+      if (item.scannedQty > item.sysQty) {
+        scannedColor = "#ffea00";
+      } else if (item.scannedQty === 0) {
+        scannedColor = "#4a5c50";
+      }
 
       html += `
         <tr class="${rowClass}" style="border-left: ${borderLeft};">
           <td><button class="row-add-btn" onclick="incrementAuditItem('${item.key}')">+</button></td>
           <td style="color:#00ff66;">${item.sysQty}</td>
-          <td style="color:${scannedQtyColor}; font-weight:900;">${item.scannedQty}</td>
+          <td style="color:${scannedColor}; font-size:14px; font-weight:bold;">${item.scannedQty}</td>
           <td>${palletDisplay}</td>
           <td style="color:#ffea00; font-size:12px;">${barcodeDisplay}</td>
           <td style="text-align:left;">${tagDisplay}</td>
