@@ -6,7 +6,7 @@
   <title>CheckerLaboratory (GitHub Edition)</title>
   
   <meta property="og:title" content="Inventory Checker" />
-  <meta property="og:description" content="Rahoentusy" />
+  <meta property="og:description" content="WMS Inventory Check & Restock System" />
   <meta property="og:type" content="website" />
 
   <!-- 引入 Google Fonts: Roboto Condensed 字體 -->
@@ -702,13 +702,44 @@
   // 完整國旗、工具、排版邏輯
   // ==========================================
   const COUNTRY_FLAG_CODES = {
+    // 原有國家
     "BRA": "br", "巴西": "br", "CAN": "ca", "加拿大": "ca", "CHN": "cn", "中國": "cn", "中国": "cn",
     "HKG": "hk", "香港": "hk", "MAC": "mo", "澳門": "mo", "澳门": "mo", "MEX": "mx", "墨西哥": "mx",
     "USA": "us", "美國": "us", "美国": "us", "AUS": "au", "澳大利亞": "au", "澳洲": "au",
     "TWN": "tw", "TW": "tw", "台灣": "tw", "JPN": "jp", "日本": "jp", "KOR": "kr", "韓國": "kr",
     "GBR": "gb", "UK": "gb", "英國": "gb", "DEU": "de", "德國": "de", "FRA": "fr", "法國": "fr",
     "VNM": "vn", "VN": "vn", "越南": "vn", "IND": "in", "印度": "in", "KAZ": "kz", "哈薩克斯坦": "kz",
-    "哈薩克": "kz", "ARE": "ae", "阿聯酋": "ae", "阿拉伯聯合大公國": "ae", "RUS": "ru", "俄羅斯": "ru"
+    "哈薩克": "kz", "ARE": "ae", "阿聯酋": "ae", "阿拉伯聯合大公國": "ae", "RUS": "ru", "俄羅斯": "ru",
+
+    // 新增國家 (根據圖片補充)
+    "IDN": "id", "ID": "id", "印尼": "id",
+    "THA": "th", "TH": "th", "泰國": "th",
+    "KWT": "kw", "KW": "kw", "科威特": "kw",
+    "SAU": "sa", "SA": "sa", "沙特": "sa", "沙烏地阿拉伯": "sa",
+    "BHR": "bh", "BH": "bh", "巴林": "bh",
+    "SGP": "sg", "SG": "sg", "新加坡": "sg",
+    "MYS": "my", "MY": "my", "馬來西亞": "my",
+    "QAT": "qa", "QA": "qa", "卡塔爾": "qa", "卡達": "qa",
+    "KHM": "kh", "KH": "kh", "柬埔寨": "kh",
+    "UZB": "uz", "UZ": "uz", "烏茲別克": "uz",
+    "PAK": "pk", "PK": "pk", "巴基斯坦": "pk",
+    "PHL": "ph", "PH": "ph", "菲律賓": "ph",
+    "ISR": "il", "IL": "il", "以色列": "il",
+    "SUR": "sr", "SR": "sr", "蘇里南": "sr",
+    "GTM": "gt", "GT": "gt", "危地馬拉": "gt", "瓜地馬拉": "gt",
+    "ARM": "am", "AM": "am", "亞美尼亞": "am",
+    "MMR": "mm", "MM": "mm", "緬甸": "mm",
+    "UKR": "ua", "UA": "ua", "烏克蘭": "ua",
+    "ITA": "it", "IT": "it", "意大利": "it", "義大利": "it",
+    "ZAF": "za", "ZA": "za", "南非": "za",
+    "PRY": "py", "PY": "py", "巴拉圭": "py",
+    "EGY": "eg", "EG": "eg", "埃及": "eg",
+    "LBN": "lb", "LB": "lb", "黎巴嫩": "lb",
+    "CHL": "cl", "CL": "cl", "智利": "cl",
+    "VEN": "ve", "VE": "ve", "委內瑞拉": "ve",
+    "MUS": "mu", "MU": "mu", "模里西斯": "mu",
+    "URY": "uy", "UY": "uy", "烏拉圭": "uy",
+    "COL": "co", "CO": "co", "哥倫比亞": "co"
   };
 
   function getFlagHtml(text) {
