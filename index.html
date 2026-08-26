@@ -26,15 +26,14 @@
       width: 100%; min-height: 100vh; margin: 0; padding: 0;
       -webkit-text-size-adjust: 100%;
       font-family: 'Roboto Condensed', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      padding: 6px; background-color: #020703; color: #00ff66;
+      padding: 6px; background-color: #020703; color: #00ff66; /* 保留文字的預設綠色 */
     }
 
     .container {
-      width: 100%; max-width: 800px; margin: 0 auto; background: #09140b;
-      padding: 10px; border-radius: 4px; border: 1.5px solid #00ff41;
-      box-shadow: 0 0 20px rgba(0, 255, 65, 0.25);
-      /* 登入前預設隱藏主容器內容，避免閃爍露出 */
-      display: none; 
+      width: 100%; max-width: 800px; margin: 0 auto; background: #06090d; /* 深藍灰 */
+      padding: 10px; border-radius: 4px; border: 1.5px solid #0a749c; /* 賽博藍 */
+      box-shadow: 0 0 15px rgba(10, 116, 156, 0.15); /* 低調陰影 */
+      display: none; /* 登入前預設隱藏主容器內容 */
     }
     
     /* ==========================================
@@ -42,97 +41,97 @@
        ========================================== */
     #pinLoginOverlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: #010602; z-index: 99999;
+      background: #010406; z-index: 99999;
       display: flex; flex-direction: column; justify-content: center; align-items: center;
-      background-image: linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+      background-image: linear-gradient(rgba(10, 116, 156, 0.02) 1px, transparent 1px);
       background-size: 100% 4px;
     }
     .login-box {
-      background: rgba(4, 14, 6, 0.85); border: 2px solid #00ff41; padding: 25px 20px;
-      border-radius: 8px; box-shadow: 0 0 30px rgba(0, 255, 65, 0.4), inset 0 0 15px rgba(0, 255, 65, 0.1);
+      background: rgba(4, 9, 14, 0.85); border: 2px solid #0a749c; padding: 25px 20px;
+      border-radius: 8px; box-shadow: 0 0 20px rgba(10, 116, 156, 0.3), inset 0 0 10px rgba(10, 116, 156, 0.1);
       text-align: center; max-width: 320px; width: 90%; backdrop-filter: blur(4px);
     }
     .login-title {
       color: #00ff66; font-size: 24px; font-weight: 900; margin-bottom: 5px;
       text-shadow: 0 0 10px rgba(0, 255, 102, 0.8); text-transform: uppercase; letter-spacing: 2px;
     }
-    .login-subtitle { color: #80cfa0; font-size: 12px; margin-bottom: 20px; font-weight: bold; }
+    .login-subtitle { color: #5a8e9e; font-size: 12px; margin-bottom: 20px; font-weight: bold; }
     .pin-input-group { display: flex; gap: 8px; margin-bottom: 15px; }
     #loginPinInput {
       flex: 1; text-align: center; font-size: 24px !important; letter-spacing: 4px;
-      padding: 10px; background: #010a03; color: #00ffff; border: 2px solid #00ff41;
-      border-radius: 4px; font-weight: 900; box-shadow: inset 0 0 10px rgba(0,255,255,0.2);
+      padding: 10px; background: #02080a; color: #00ffff; border: 2px solid #0a749c;
+      border-radius: 4px; font-weight: 900; box-shadow: inset 0 0 10px rgba(0,255,255,0.1);
     }
-    #loginPinInput:focus { border-color: #00ffff; box-shadow: 0 0 15px rgba(0,255,255,0.6), inset 0 0 10px rgba(0,255,255,0.2); outline: none; }
+    #loginPinInput:focus { border-color: #00ffff; box-shadow: 0 0 15px rgba(0,255,255,0.4), inset 0 0 10px rgba(0,255,255,0.2); outline: none; }
     #loginBtn {
-      width: 100%; padding: 12px; font-size: 16px !important; background: #00ff41; color: #000;
+      width: 100%; padding: 12px; font-size: 16px !important; background: #0a749c; color: #ffffff;
       border: none; border-radius: 4px; font-weight: 900; cursor: pointer; text-transform: uppercase;
-      box-shadow: 0 0 15px rgba(0, 255, 65, 0.5); transition: all 0.2s;
+      box-shadow: 0 0 10px rgba(10, 116, 156, 0.4); transition: all 0.2s;
     }
-    #loginBtn:hover { background: #33ff66; box-shadow: 0 0 25px rgba(0, 255, 102, 0.8); }
-    #loginBtn:disabled { background: #082410; color: #005c18; box-shadow: none; cursor: not-allowed; }
+    #loginBtn:hover { background: #1293c4; box-shadow: 0 0 15px rgba(18, 147, 196, 0.6); }
+    #loginBtn:disabled { background: #042533; color: #36657a; box-shadow: none; cursor: not-allowed; }
     #loginMsgArea { font-size: 13px; font-weight: bold; margin-top: 15px; min-height: 18px; text-shadow: 0 0 8px currentColor; }
-    
+
     /* 導覽頁籤 Tab Bar */
     .tab-bar {
-      display: flex; gap: 4px; margin-bottom: 6px; border-bottom: 2px solid #00ff41; overflow-x: auto;
+      display: flex; gap: 4px; margin-bottom: 6px; border-bottom: 2px solid #0a749c; overflow-x: auto;
     }
     .tab-bar::-webkit-scrollbar { display: none; }
     .tab-btn {
       flex: 1; min-width: max-content; padding: 8px 6px; font-size: 13px; font-weight: bold;
-      background: #020a04; color: #80cfa0; border: 1px solid #144020; border-bottom: none;
+      background: #02080a; color: #5a8e9e; border: 1px solid #062c3e; border-bottom: none;
       border-radius: 4px 4px 0 0; cursor: pointer; text-align: center; transition: all 0.2s ease;
-      display: none; /* 預設全部隱藏，靠權限動態開啟 */
+      display: none; /* 預設隱藏，由權限控制開啟 */
     }
     .tab-btn.active {
-      background: #00ff41; color: #000000; border-color: #00ff41; font-weight: 900;
-      box-shadow: 0 0 12px rgba(0, 255, 65, 0.6);
+      background: #0a749c; color: #ffffff; border-color: #0a749c; font-weight: 900;
+      box-shadow: 0 0 10px rgba(10, 116, 156, 0.5);
     }
 
     /* 輸入框與搜尋按鈕 */
     .search-box { display: flex; gap: 6px; margin-bottom: 6px; flex-wrap: nowrap; }
     input[type="text"], input, select, textarea {
-      flex: 1; min-width: 50px; padding: 6px 10px; font-size: 16px !important; background-color: #010a03;
-      color: #00ff66; border: 1.5px solid #00ff41; border-radius: 4px; font-weight: bold; width: 100%;
+      flex: 1; min-width: 50px; padding: 6px 10px; font-size: 16px !important; background-color: #02080a;
+      color: #00ff66; border: 1.5px solid #0a749c; border-radius: 4px; font-weight: bold; width: 100%;
     }
     input[type="text"]:focus, input:focus {
-      outline: none; border-color: #00ff66; box-shadow: 0 0 12px rgba(0, 255, 102, 0.6);
+      outline: none; border-color: #00ffff; box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
     }
 
     button {
-      padding: 6px 10px; font-size: 12px !important; background-color: #00ff41; color: #000000;
+      padding: 6px 10px; font-size: 12px !important; background-color: #0a749c; color: #ffffff;
       border: none; border-radius: 4px; cursor: pointer; font-weight: 900;
-      text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 0 10px rgba(0, 255, 65, 0.4);
+      text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 0 8px rgba(10, 116, 156, 0.3);
       transition: all 0.2s ease;
     }
-    button:hover { background-color: #33ff66; box-shadow: 0 0 16px rgba(0, 255, 102, 0.8); }
+    button:hover { background-color: #1293c4; box-shadow: 0 0 12px rgba(18, 147, 196, 0.6); }
     button:disabled, input:disabled {
-      background-color: #081a0c; color: #005c18; border-color: #00330e; cursor: not-allowed; box-shadow: none;
+      background-color: #042533; color: #36657a; border-color: #031821; cursor: not-allowed; box-shadow: none;
     }
 
     /* 控制列專屬圖示按鈕 */
     .icon-btn {
-      padding: 0 !important; font-size: 16px !important; background: #020a04 !important;
-      border: 1.5px solid #00ff41 !important; border-radius: 4px; cursor: pointer; font-weight: 900;
-      display: flex; align-items: center; justify-content: center; min-width: 36px; max-width: 36px; box-shadow: 0 0 6px rgba(0,255,65,0.3) !important;
+      padding: 0 !important; font-size: 16px !important; background: #02080a !important;
+      border: 1.5px solid #0a749c !important; border-radius: 4px; cursor: pointer; font-weight: 900;
+      display: flex; align-items: center; justify-content: center; min-width: 36px; max-width: 36px; box-shadow: 0 0 6px rgba(10,116,156,0.2) !important;
     }
-    .icon-btn:hover { background: #082410 !important; }
+    .icon-btn:hover { background: #042533 !important; }
 
     .undo-btn { background: #1a0d00 !important; color: #ff9900 !important; border-color: #ff9900 !important; box-shadow: 0 0 6px rgba(255, 153, 0, 0.4) !important; }
     .finish-btn { background: #001a24 !important; color: #00c6ff !important; border-color: #00c6ff !important; box-shadow: 0 0 6px rgba(0, 198, 255, 0.4) !important; }
 
     .row-add-btn {
-      padding: 0px 4px !important; height: 18px; line-height: 1.2; font-size: 12px !important; background: #03210d !important;
-      color: #00ff66 !important; border: 1px solid #00ff41 !important; border-radius: 3px;
-      cursor: pointer; font-weight: 900; box-shadow: 0 0 6px rgba(0, 255, 65, 0.3) !important;
+      padding: 0px 4px !important; height: 18px; line-height: 1.2; font-size: 12px !important; background: #01141c !important;
+      color: #00ff66 !important; border: 1px solid #0a749c !important; border-radius: 3px;
+      cursor: pointer; font-weight: 900; box-shadow: 0 0 4px rgba(10, 116, 156, 0.2) !important;
     }
     
     .summary-box {
       display: flex; justify-content: space-around; align-items: center; margin-bottom: 6px;
-      padding: 6px; background-color: #020a04; border-radius: 4px; border: 1.5px solid #00ff41;
-      box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.1); flex-wrap: wrap; gap: 8px; font-size: 12px;
+      padding: 6px; background-color: #02080a; border-radius: 4px; border: 1.5px solid #0a749c;
+      box-shadow: inset 0 0 8px rgba(10, 116, 156, 0.1); flex-wrap: wrap; gap: 8px; font-size: 12px;
     }
-    .summary-item { font-size: 12px; font-weight: bold; color: #a0f0ba; text-align: center; }
+    .summary-item { font-size: 12px; font-weight: bold; color: #5a8e9e; text-align: center; }
     .summary-value { font-size: 12px; color: #00ff66; font-weight: 900; text-shadow: 0 0 8px rgba(0, 255, 102, 0.6); }
     .message {
       font-size: 13px; color: #ff2a6d; font-weight: bold; margin-bottom: 8px;
@@ -141,7 +140,7 @@
 
     /* 盤點 (AUDIT) 區塊樣式 */
     .audit-step-box {
-      background: #040e06; border: 1.5px solid #00ff41; padding: 8px; border-radius: 4px;
+      background: #030d12; border: 1.5px solid #0a749c; padding: 8px; border-radius: 4px;
       margin-bottom: 8px; transition: all 0.3s ease;
     }
     
@@ -191,15 +190,15 @@
     .highlight-liability-red { color: #ff2a6d !important; font-weight: 900 !important; text-shadow: 0 0 6px rgba(255, 42, 109, 0.4); }
 
     .filter-btn-group { display: flex; gap: 4px; margin-bottom: 8px; }
-    .filter-btn { flex: 1; padding: 4px; font-size: 10px !important; background: #020a04; border: 1px solid #005c18; color: #a0f0ba; cursor: pointer; border-radius: 3px; font-weight: bold; }
-    .filter-btn.active { border-color: #00ff41; color: #00ff41; background: #09240f; box-shadow: 0 0 8px rgba(0, 255, 65, 0.4); }
+    .filter-btn { flex: 1; padding: 4px; font-size: 8px !important; background: #02080a; border: 1px solid #062c3e; color: #5a8e9e; cursor: pointer; border-radius: 3px; font-weight: bold; transition: all 0.2s ease;}
+    .filter-btn.active { border-color: #00ffff; color: #00ffff; background: rgba(0, 255, 255, 0.1); box-shadow: 0 0 8px rgba(0, 255, 255, 0.3); }
 
-    @keyframes greenFlash { 0% { border-color: #00ff41; box-shadow: 0 0 30px rgba(0, 255, 65, 1); background-color: #093313; } 100% { border-color: #00ff41; box-shadow: 0 0 0px transparent; background-color: #040e06; } }
-    @keyframes yellowFlash { 0% { border-color: #ffea00; box-shadow: 0 0 30px rgba(255, 234, 0, 1); background-color: #333000; } 100% { border-color: #00ff41; box-shadow: 0 0 0px transparent; background-color: #040e06; } }
+    @keyframes greenFlash { 0% { border-color: #00ff41; box-shadow: 0 0 30px rgba(0, 255, 65, 1); background-color: #093313; } 100% { border-color: #0a749c; box-shadow: 0 0 0px transparent; background-color: #030d12; } }
+    @keyframes yellowFlash { 0% { border-color: #ffea00; box-shadow: 0 0 30px rgba(255, 234, 0, 1); background-color: #333000; } 100% { border-color: #0a749c; box-shadow: 0 0 0px transparent; background-color: #030d12; } }
     .flash-green { animation: greenFlash 0.5s ease-out forwards; }
     .flash-yellow { animation: yellowFlash 0.5s ease-out forwards; }
     
-    /* 修正iOS背景消失問題：必須將背景色強制套用到 td 身上 */
+    /* 修正iOS背景消失問題 */
     .last-scanned-highlight td { 
       background-color: rgba(0, 255, 255, 0.28) !important; 
       border-top: 1px solid #00ffff !important; 
@@ -228,7 +227,7 @@
 </head>
 <body>
 
-<!-- PIN 碼登入全螢幕遮罩 -->
+<!-- PIN 碼登入全螢幕遮罩 (Hacker Style) -->
 <div id="pinLoginOverlay">
   <div class="login-box">
     <div class="login-title">SYSTEM LOCKED</div>
@@ -285,20 +284,20 @@
 
   <h2 id="sysHeaderTitle" style="color: #00ff66; text-shadow: 0 0 10px rgba(0, 255, 102, 0.6); margin-top: 0; font-size:20px;">Rahoentusy</h2>
   
-  <div class="tab-bar" id="mainTabBar">
-    <div id="tabsearchBtn" class="tab-btn active" onclick="switchTab('search')">🔍 查詢</div>
-    <div id="tablistBtn" class="tab-btn" onclick="switchTab('list')">♻️ 補貨</div>
-    <div id="tabauditBtn" class="tab-btn" onclick="switchTab('audit')">📋 盤點</div>
-    <div id="taborderStatusBtn" class="tab-btn" onclick="switchTab('orderStatus')">📦 訂單</div>
-    <div id="tabgaoBtn" class="tab-btn" onclick="switchTab('gao')">🚚 DI</div>
-    <div id="tabrecBtn" class="tab-btn" onclick="switchTab('rec')">🎯 REC</div>
-    <div id="tabdbBtn" class="tab-btn" onclick="switchTab('db')">👁️ DB</div>
+  <div class="tab-bar">
+    <div id="tabSearchBtn" class="tab-btn active" onclick="switchTab('search')">🔍 查詢</div>
+    <div id="tabListBtn" class="tab-btn" onclick="switchTab('list')">♻️ 補貨</div>
+    <div id="tabAuditBtn" class="tab-btn" onclick="switchTab('audit')">📋 盤點</div>
+    <div id="tabOrderStatusBtn" class="tab-btn" onclick="switchTab('orderStatus')">📦 訂單</div>
+    <div id="tabGaoBtn" class="tab-btn" onclick="switchTab('gao')">🚚 DI</div>
+    <div id="tabRecBtn" class="tab-btn" onclick="switchTab('rec')">🎯 REC</div>
+    <div id="tabDbBtn" class="tab-btn" onclick="switchTab('db')">👁️ DB</div>
   </div>
 
   <!-- Search View (查詢分頁) -->
   <div id="searchView">
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="掃描或輸入 LOCATION_ID 或 條碼">
+      <input type="text" id="searchInput" placeholder="掃描或輸入 LOCATION_ID 或 條碼" autofocus>
       <button id="searchBtn" onclick="fetchData()">搜尋</button>
     </div>
     <div id="msgArea" class="message"></div>
@@ -328,9 +327,8 @@
   <!-- AUDIT Stock Counting View (盤點分頁) -->
   <div id="auditView" style="display: none;">
     <div class="audit-step-box">
-      <div style="font-size: 12px; color: #00ff66; font-weight: bold; margin-bottom: 6px;">步驟 1: 設定盤點目標儲位</div>
       <div class="search-box" style="margin-bottom: 0;">
-        <input type="text" id="auditLocInput" placeholder="輸入儲位 (例如: LOC-A01)">
+        <input type="text" id="auditLocInput" placeholder="輸入LOCATION">
         <button id="auditScanLocBtn" class="icon-btn" onclick="startLocationScanner()" style="background:#00ffff !important; color:#000;" title="相機掃描儲位">📷</button>
         <button id="auditLoadBtn" onclick="startAuditSession()" title="載入庫存">🔍</button>
       </div>
@@ -367,18 +365,23 @@
 
     <div id="auditMsgArea" class="message"></div>
 
-    <div class="summary-box" id="auditSummaryBox" style="display: none;">
-      <div class="summary-item">應有: <span id="auditSysQty" class="summary-value">0</span></div>
-      <div class="summary-item">實盤: <span id="auditScannedQty" class="summary-value" style="color:#00ffff;">0</span></div>
-      <div class="summary-item" style="color:#ff2a6d;">🔴盤虧: <span id="auditMissingQty" class="summary-value" style="color:#ff2a6d;">0</span></div>
-      <div class="summary-item" style="color:#ffea00;">🟡盤盈: <span id="auditExtraQty" class="summary-value" style="color:#ffea00;">0</span></div>
+    <!-- 盤點總計摘要區 (字體 10px, 數字 12px, 極小 padding) -->
+    <div class="summary-box" id="auditSummaryBox" style="display: none; flex-wrap: wrap; gap: 4px; padding: 2px 4px;">
+      <div class="summary-item" style="font-size: 10px !important;">PLC: <span id="auditPlc" class="summary-value" style="font-size: 12px !important;">0</span></div>
+      <div class="summary-item" style="font-size: 10px !important;">TAGC: <span id="auditTagc" class="summary-value" style="font-size: 12px !important;">0</span></div>
+      <div class="summary-item" style="font-size: 10px !important;">LOCAC: <span id="auditLocac" class="summary-value" style="font-size: 12px !important;">0</span></div>
+      <div class="summary-item" style="font-size: 10px !important;">TQTY: <span id="auditSysQty" class="summary-value" style="font-size: 12px !important;">0</span></div>
+      <div class="summary-item" style="font-size: 10px !important;">TSCND: <span id="auditScannedQty" class="summary-value" style="color:#00ffff; font-size: 12px !important;">0</span></div>
+      <div class="summary-item" style="font-size: 10px !important; color:#ff2a6d;">🔴虧: <span id="auditMissingQty" class="summary-value" style="color:#ff2a6d; font-size: 12px !important;">0</span></div>
+      <div class="summary-item" style="font-size: 10px !important; color:#ffea00;">🟡盈: <span id="auditExtraQty" class="summary-value" style="color:#ffea00; font-size: 12px !important;">0</span></div>
     </div>
 
-    <div id="auditFilterGroup" class="filter-btn-group" style="display: none;">
-      <button class="filter-btn active" id="filterAll" onclick="filterAuditResult('all')">全部</button>
-      <button class="filter-btn" id="filterMissing" onclick="filterAuditResult('missing')" style="color:#ff2a6d;">🔴 盤虧 (0)</button>
-      <button class="filter-btn" id="filterExtra" onclick="filterAuditResult('extra')" style="color:#ffea00;">🟡 盤盈 (0)</button>
-      <button class="filter-btn" id="filterMatch" onclick="filterAuditResult('match')" style="color:#00ff66;">🟢 正常 (0)</button>
+    <!-- 動態篩選按鈕列 (字體 10px, 數字 12px, 極小 padding) -->
+    <div id="auditFilterGroup" class="filter-btn-group" style="display: none; margin-bottom: 4px;">
+      <button class="filter-btn active" id="filterAll" onclick="filterAuditResult('all')" style="font-size: 10px !important; padding: 2px 4px;">全部</button>
+      <button class="filter-btn" id="filterMissing" onclick="filterAuditResult('missing')" style="color:#ff2a6d; font-size: 10px !important; padding: 2px 4px;">🔴 盤虧 (<span style="font-size: 12px;">0</span>)</button>
+      <button class="filter-btn" id="filterExtra" onclick="filterAuditResult('extra')" style="color:#ffea00; font-size: 10px !important; padding: 2px 4px;">🟡 盤盈 (<span style="font-size: 12px;">0</span>)</button>
+      <button class="filter-btn" id="filterMatch" onclick="filterAuditResult('match')" style="color:#00ff66; font-size: 10px !important; padding: 2px 4px;">🟢 正常 (<span style="font-size: 12px;">0</span>)</button>
     </div>
 
     <div id="auditResultContainer"></div>
@@ -492,7 +495,7 @@
       .then(data => { if (this._onSuccess) this._onSuccess(data); })
       .catch(err => { if (this._onFailure) this._onFailure(err); });
     },
-    verifyPinCode: function(pin) { this._get('verifyPinCode', { pin: pin }); }, // 新增 PIN 驗證路由
+    verifyPinCode: function(pin) { this._get('verifyPinCode', { pin: pin }); },
     searchSupplierSku: function(sku) { this._get('searchSupplierSku', { sku: sku }); },
     searchLocation: function(loc) { this._get('searchLocation', { loc: loc }); },
     getAlQtyList: function() { this._get('getAlQtyList'); },
@@ -510,12 +513,10 @@
   // =======================================================================
   let currentUserPermissions = [];
 
-  // 檢查登入金鑰 (Enter 鍵觸發)
   function handleLoginKey(e) {
     if (e.key === 'Enter') submitPinCode();
   }
 
-  // 送出 PIN 碼驗證
   function submitPinCode() {
     const pin = document.getElementById('loginPinInput').value.trim();
     if (!pin) return;
@@ -524,8 +525,7 @@
     const msg = document.getElementById('loginMsgArea');
     const pinInput = document.getElementById('loginPinInput');
     
-    btn.disabled = true;
-    pinInput.disabled = true;
+    btn.disabled = true; pinInput.disabled = true;
     btn.textContent = "VERIFYING...";
     msg.style.color = "#00ff41";
     msg.textContent = "Connecting to database...";
@@ -534,14 +534,7 @@
       .withSuccessHandler(function(res) {
         if (res.success && res.permissions) {
           msg.textContent = "ACCESS GRANTED.";
-          
-          // 儲存權限與名稱至 sessionStorage
-          sessionStorage.setItem('rahoentusy_auth', JSON.stringify({
-            name: res.name,
-            permissions: res.permissions
-          }));
-          
-          // 執行解鎖並套用權限
+          sessionStorage.setItem('rahoentusy_auth', JSON.stringify({ name: res.name, permissions: res.permissions }));
           unlockSystem(res.name, res.permissions);
         } else {
           btn.disabled = false; pinInput.disabled = false;
@@ -561,17 +554,10 @@
       .verifyPinCode(pin);
   }
 
-  // 解鎖系統並套用動態權限
   function unlockSystem(name, permissions) {
     currentUserPermissions = permissions;
-    
-    // 更新標題
     document.getElementById('sysHeaderTitle').textContent = `Rahoentusy - ${name}`;
-    
-    // 套用 Tab Bar 顯示權限
     applyPermissions(permissions);
-    
-    // 隱藏黑客遮罩，顯示主內容
     document.getElementById('pinLoginOverlay').style.display = 'none';
     document.getElementById('mainContainer').style.display = 'block';
   }
@@ -581,38 +567,32 @@
     let firstAllowedTabId = null;
 
     allTabBtns.forEach(btn => {
-      // 從 btn 的 id 中擷取分頁名稱 (例如從 'tabsearchBtn' 擷取 'search')
       const tabNameMatch = btn.id.match(/^tab(.*?)Btn$/);
       if (tabNameMatch && tabNameMatch[1]) {
-        const tabName = tabNameMatch[1]; // e.g., 'search', 'list', 'audit'
-        
-        // 如果權限陣列中包含此分頁名稱，則顯示，否則隱藏
+        let tabName = tabNameMatch[1]; 
+        tabName = tabName.charAt(0).toLowerCase() + tabName.slice(1);
         if (permissions.includes(tabName)) {
           btn.style.display = 'block';
-          if (!firstAllowedTabId) firstAllowedTabId = tabName; // 記錄第一個可用的分頁
+          if (!firstAllowedTabId) firstAllowedTabId = tabName; 
         } else {
           btn.style.display = 'none';
         }
       }
     });
 
-    // 自動切換到第一個被允許的分頁
     if (firstAllowedTabId) {
       switchTab(firstAllowedTabId);
     } else {
-      // 異常狀況防呆：萬一權限清單全空
       alert("您的帳號尚未被配置任何分頁權限。");
     }
   }
 
-  // 網頁載入時檢查快取
   window.onload = function() {
     const authDataStr = sessionStorage.getItem('rahoentusy_auth');
     if (authDataStr) {
       try {
         const authData = JSON.parse(authDataStr);
         if (authData && authData.permissions && authData.permissions.length > 0) {
-          // 若快取中已有權限，直接解鎖系統
           unlockSystem(authData.name, authData.permissions);
           return;
         }
@@ -620,7 +600,6 @@
         sessionStorage.removeItem('rahoentusy_auth');
       }
     }
-    // 若無快取或無效，焦點鎖定在 PIN 輸入框
     document.getElementById('loginPinInput').focus();
   };
 
@@ -637,9 +616,7 @@
     const stopBtn = document.getElementById('stopScanLocBtn');
     readerDiv.style.display = 'block'; stopBtn.style.display = 'block';
 
-    if (!html5QrCode) { 
-        html5QrCode = new Html5Qrcode("reader"); 
-    }
+    if (!html5QrCode) { html5QrCode = new Html5Qrcode("reader"); }
     
     html5QrCode.start(
       { facingMode: "environment" }, 
@@ -665,35 +642,24 @@
     }
   }
 
-  // 獨立條碼相機掃描邏輯 (支援手動確認與連續同碼)
   function startBarcodeScanner() {
     const readerDiv = document.getElementById('barcodeReader');
     const stopBtn = document.getElementById('stopBarcodeScanBtn');
     readerDiv.style.display = 'block'; stopBtn.style.display = 'block';
 
-    if (!barcodeHtml5QrCode) { 
-        barcodeHtml5QrCode = new Html5Qrcode("barcodeReader"); 
-    }
+    if (!barcodeHtml5QrCode) { barcodeHtml5QrCode = new Html5Qrcode("barcodeReader"); }
     
-    lastDetected = null;
-    pendingBarcode = null;
+    lastDetected = null; pendingBarcode = null;
 
     barcodeHtml5QrCode.start(
       { facingMode: "environment" }, 
       { fps: 10 },
       (decodedText, decodedResult) => {
         const cleanCode = decodedText.trim().toUpperCase();
-        
-        // 防重複鎖定
         if (pendingBarcode === cleanCode || lastDetected === cleanCode) return;
+        lastDetected = cleanCode; pendingBarcode = cleanCode;
+        playScanSound('pending'); triggerVibration(60);
 
-        lastDetected = cleanCode;
-        pendingBarcode = cleanCode;
-
-        playScanSound('pending'); // 短嗶聲
-        triggerVibration(60);
-
-        // 顯示確認攔截面板
         document.getElementById('pendingBarcodeText').textContent = `已識別: ${cleanCode}`;
         document.getElementById('barcodeConfirmPanel').style.display = 'flex';
       },
@@ -708,9 +674,7 @@
     const readerDiv = document.getElementById('barcodeReader'); 
     const stopBtn = document.getElementById('stopBarcodeScanBtn');
     const confirmPanel = document.getElementById('barcodeConfirmPanel');
-    pendingBarcode = null;
-    lastDetected = null;
-    confirmPanel.style.display = 'none';
+    pendingBarcode = null; lastDetected = null; confirmPanel.style.display = 'none';
 
     if (barcodeHtml5QrCode && barcodeHtml5QrCode.isScanning) {
       barcodeHtml5QrCode.stop().then(() => { readerDiv.style.display = 'none'; stopBtn.style.display = 'none'; }).catch(err => console.error(err));
@@ -723,24 +687,15 @@
     if (!pendingBarcode) return;
     const codeToProcess = pendingBarcode;
     
-    // 隱藏確認面板
     document.getElementById('barcodeConfirmPanel').style.display = 'none';
     pendingBarcode = null;
 
-    // 加入 1 秒冷卻時間 (Cooldown)，1秒後自動解鎖防重複機制，允許連續掃描同一個條碼
-    setTimeout(() => {
-        if (lastDetected === codeToProcess) {
-            lastDetected = null;
-        }
-    }, 1000);
+    setTimeout(() => { if (lastDetected === codeToProcess) { lastDetected = null; } }, 1000);
 
-    // 將條碼寫入輸入框並觸發盤點邏輯
     const inputEl = document.getElementById('auditScanInput');
     inputEl.value = codeToProcess;
-    
     processScannedCode(codeToProcess);
-    inputEl.value = "";
-    inputEl.focus();
+    inputEl.value = ""; inputEl.focus();
   }
 
   // ==========================================
@@ -843,7 +798,6 @@
     } catch(e) { console.warn("Audio Context error:", e); }
   }
 
-  // 震動 API，注意：iOS Safari 原生完全不支援這個 API
   function triggerVibration(pattern) {
     if ("vibrate" in navigator) { try { navigator.vibrate(pattern); } catch(e) {} }
   }
@@ -870,7 +824,7 @@
     return (val !== undefined && val !== null && val !== "" && val !== "-") ? val : "NA";
   }
 
-  let currentTab = ''; // 清空預設，由 applyPermissions 決定
+  let currentTab = '';
   let isAlListLoaded = false, isOrderStatusLoaded = false, isGaoLoaded = false, isRecLoaded = false, isDbLoaded = false;
 
   const searchInput = document.getElementById('searchInput');
@@ -879,14 +833,12 @@
   });
 
   function switchTab(tab) {
-    // 權限二次檢查：防止透過 console 呼叫
     if (!currentUserPermissions.includes(tab)) return;
-    
     currentTab = tab;
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     
-    const targetBtn = document.getElementById('tab' + tab + 'Btn');
-    if(targetBtn) targetBtn.classList.add('active');
+    let targetBtn = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Btn');
+    if (targetBtn) targetBtn.classList.add('active');
 
     ['searchView', 'listView', 'auditView', 'orderStatusView', 'gaoView', 'recView', 'dbView'].forEach(view => {
       document.getElementById(view).style.display = 'none';
@@ -987,6 +939,313 @@
     document.getElementById('msgArea').textContent = "System Error: " + (error ? error.message : "Unknown error");
   }
 
+  // ==========================================
+  // 盤點比較渲染邏輯
+  // ==========================================
+  let auditState = { location: '', systemItemsMap: {}, scannedCounts: {}, scanHistoryStack: [], lastRawCodeMap: {}, lastLookupCodeMap: {}, activeFilter: 'all', lastScannedKey: null };
+
+  function startAuditSession() {
+    const loc = document.getElementById('auditLocInput').value.trim().toUpperCase();
+    if (!loc) return;
+    const loadBtn = document.getElementById('auditLoadBtn');
+    const msg = document.getElementById('auditMsgArea');
+    loadBtn.disabled = true; loadBtn.textContent = "⏳"; msg.textContent = "";
+
+    document.getElementById('scanFeedbackBanner').className = 'scan-feedback-banner';
+    document.getElementById('feedbackTitle').innerHTML = '等待掃描...';
+    document.getElementById('feedbackDetails').innerHTML = '應盤: 0 | 實盤: 0';
+
+    window.google.script.run
+      .withSuccessHandler(function(res) {
+        loadBtn.disabled = false; loadBtn.textContent = "🔍";
+        if (!res || !res.data || res.data.length === 0) msg.textContent = `⚠️ 系統中該儲位 (${loc}) 無庫存記錄，將進入盲盤模式`;
+        auditState = { location: loc, systemItemsMap: {}, scannedCounts: {}, scanHistoryStack: [], lastRawCodeMap: {}, lastLookupCodeMap: {}, activeFilter: 'all', lastScannedKey: null };
+
+        if (res && res.data) {
+          res.data.forEach(item => {
+            const key = (item["TAG_ID"] || item["SUPPLIER_SKU"] || item["SKU_ID"] || "UNKNOWN").toString().trim().toUpperCase();
+            const qty = parseFloat(item["QTY"]) || 0;
+            if (!auditState.systemItemsMap[key]) {
+              auditState.systemItemsMap[key] = {
+                key: key, sysQty: 0, tag: item["TAG_ID"] || "-", sku: item["SKU_ID"] || "-",
+                barcode: item["SUPPLIER_SKU"] || "-", style: item["Style"] || "-", size: item["Size"] || "-", coo: item["User Def Type 1"] || "-", palletId: item["Pallet ID"] || "-",
+                location: item["LOCATION_ID"] || loc // 紀錄各物件的實際儲位
+              };
+            }
+            auditState.systemItemsMap[key].sysQty += qty;
+          });
+        }
+        document.getElementById('auditScanSection').style.display = 'block';
+        document.getElementById('auditSummaryBox').style.display = 'flex';
+        document.getElementById('auditFilterGroup').style.display = 'flex';
+        document.getElementById('auditScanInput').focus();
+        renderAuditComparison();
+      })
+      .withFailureHandler(function(err) {
+        loadBtn.disabled = false; loadBtn.textContent = "🔍"; msg.textContent = "載入失敗: " + err.message;
+      })
+      .searchLocation(loc);
+  }
+
+  function handleAuditScan(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const inputEl = document.getElementById('auditScanInput');
+      let rawScanned = inputEl.value.trim().toUpperCase();
+      if (!rawScanned) return;
+      processScannedCode(rawScanned);
+      inputEl.value = ""; inputEl.focus();
+    }
+  }
+
+  function processScannedCode(rawScanned) {
+    const lookupCode = rawScanned.length > 13 ? rawScanned.substring(0, 13) : rawScanned;
+    let targetKey = null;
+
+    const matchingKeys = Object.keys(auditState.systemItemsMap).filter(k => {
+      const item = auditState.systemItemsMap[k];
+      return ((item.barcode && (item.barcode === lookupCode || item.barcode === rawScanned)) || (item.sku && (item.sku === lookupCode || item.sku === rawScanned)));
+    });
+
+    if (matchingKeys.length > 0) {
+      const unfilledKey = matchingKeys.find(k => (auditState.scannedCounts[k] || 0) < auditState.systemItemsMap[k].sysQty);
+      targetKey = unfilledKey ? unfilledKey : matchingKeys[0];
+    }
+    if (!targetKey) targetKey = lookupCode;
+
+    processAuditItem(targetKey, rawScanned, lookupCode);
+  }
+
+  function incrementAuditItem(targetKey) {
+    const sysInfo = auditState.systemItemsMap[targetKey];
+    const rawScanned = (sysInfo && sysInfo.barcode && sysInfo.barcode !== '-') ? sysInfo.barcode : targetKey;
+    const lookupCode = rawScanned.length > 13 ? rawScanned.substring(0, 13) : rawScanned;
+    processAuditItem(targetKey, rawScanned, lookupCode);
+  }
+
+  function processAuditItem(targetKey, rawScanned, lookupCode) {
+    auditState.lastRawCodeMap[targetKey] = rawScanned;
+    auditState.lastLookupCodeMap[targetKey] = lookupCode;
+    auditState.scannedCounts[targetKey] = (auditState.scannedCounts[targetKey] || 0) + 1;
+    auditState.lastScannedKey = targetKey;
+    auditState.scanHistoryStack.push({ targetKey: targetKey, rawScanned: rawScanned, lookupCode: lookupCode });
+
+    const currentCount = auditState.scannedCounts[targetKey];
+    const sysInfo = auditState.systemItemsMap[targetKey];
+    const sysQty = sysInfo ? sysInfo.sysQty : 0;
+    const isExtra = currentCount > sysQty;
+
+    if (isExtra) { playScanSound('extra'); triggerVibration([80, 50, 80]); } else { playScanSound('match'); triggerVibration(60); }
+    const scanBox = document.getElementById('auditScanSection');
+    scanBox.classList.remove('flash-green', 'flash-yellow'); void scanBox.offsetWidth; scanBox.classList.add(isExtra ? 'flash-yellow' : 'flash-green');
+    
+    showScanFeedbackBanner(targetKey, rawScanned, currentCount, sysQty, isExtra, sysInfo, false);
+    renderAuditComparison();
+  }
+
+  function showScanFeedbackBanner(targetKey, rawScanned, curCount, sysQty, isExtra, sysInfo, isUndo = false) {
+    const banner = document.getElementById('scanFeedbackBanner');
+    banner.className = 'scan-feedback-banner ' + (isUndo ? 'undo-mode' : (isExtra ? 'extra-mode' : ''));
+    
+    let statusText = isUndo ? '⛔ 實盤-1' : (isExtra ? '🟡 盤盈' : '✅ 實盤+1');
+    const displayTag = sysInfo && sysInfo.tag && sysInfo.tag !== "-" ? sysInfo.tag : targetKey;
+    
+    document.getElementById('feedbackTitle').innerHTML = `<span>${statusText} (${rawScanned}) | TAG: ${displayTag}</span>`;
+    document.getElementById('feedbackDetails').innerHTML = `<span style="background:${isUndo ? '#ff2a6d' : (isExtra ? '#ffea00' : '#00ff41')}; color:#000; padding:1px 4px; border-radius:3px;">應盤: ${sysQty} | 實盤: ${curCount}</span>`;
+  }
+
+  function undoLastScan() {
+    if (auditState.scanHistoryStack.length === 0) return;
+    const lastAction = auditState.scanHistoryStack.pop();
+    if (auditState.scannedCounts[lastAction.targetKey] > 0) auditState.scannedCounts[lastAction.targetKey]--;
+    auditState.lastScannedKey = auditState.scanHistoryStack.length > 0 ? auditState.scanHistoryStack[auditState.scanHistoryStack.length - 1].targetKey : null;
+    
+    playScanSound('undo'); triggerVibration([60, 40, 60]);
+    
+    const sysInfo = auditState.systemItemsMap[lastAction.targetKey];
+    const curCount = auditState.scannedCounts[lastAction.targetKey] || 0;
+    const sysQty = sysInfo ? sysInfo.sysQty : 0;
+    
+    showScanFeedbackBanner(lastAction.targetKey, lastAction.rawScanned, curCount, sysQty, false, sysInfo, true);
+    renderAuditComparison();
+  }
+
+  function openSyncConfirmModal() {
+    if (!auditState.location) { document.getElementById('auditMsgArea').textContent = "⚠️ 請先設定並載入儲位庫存！"; return; }
+    document.getElementById('modalSysQty').textContent = document.getElementById('auditSysQty').textContent;
+    document.getElementById('modalScannedQty').textContent = document.getElementById('auditScannedQty').textContent;
+    document.getElementById('modalMissingQty').textContent = document.getElementById('auditMissingQty').textContent;
+    document.getElementById('modalExtraQty').textContent = document.getElementById('auditExtraQty').textContent;
+    document.getElementById('syncConfirmModal').style.display = 'flex';
+  }
+
+  function closeSyncModal() { document.getElementById('syncConfirmModal').style.display = 'none'; }
+  function confirmFinishAuditSync() { closeSyncModal(); finishAuditSync(); }
+
+  function finishAuditSync() {
+    const finishBtn = document.querySelector('.finish-btn'); finishBtn.disabled = true; finishBtn.innerHTML = "⏳";
+    document.getElementById('auditMsgArea').textContent = "⚡ 同步上傳中...";
+
+    const diffItems = [];
+    let totalSysQty = 0, totalScannedQty = 0;
+    const allKeys = new Set([...Object.keys(auditState.systemItemsMap), ...Object.keys(auditState.scannedCounts)]);
+
+    allKeys.forEach(key => {
+      const sysInfo = auditState.systemItemsMap[key] || { key: key, sysQty: 0, tag: "", sku: "-", barcode: "-", style: "-", size: "-", coo: "-", palletId: "-" };
+      const sysQty = sysInfo.sysQty, scannedQty = auditState.scannedCounts[key] || 0, diff = scannedQty - sysQty;
+      totalSysQty += sysQty; totalScannedQty += scannedQty;
+      if (diff !== 0) {
+        const rawScanned = auditState.lastRawCodeMap[key] || "";
+        diffItems.push({
+          key: key, tagId: sysInfo.tag && sysInfo.tag !== "-" ? sysInfo.tag : "",
+          palletId: sysInfo.palletId || "-", rawScannedCode: rawScanned,
+          lookupCode: sysInfo.barcode && sysInfo.barcode !== "-" ? sysInfo.barcode : key,
+          sku: sysInfo.sku, style: sysInfo.style, size: sysInfo.size, sysQty: sysQty, scannedQty: scannedQty, diff: diff
+        });
+      }
+    });
+
+    window.google.script.run
+      .withSuccessHandler(function(res) {
+        finishBtn.disabled = false; finishBtn.innerHTML = "☁️";
+        document.getElementById('auditMsgArea').style.color = "#00ff66";
+        document.getElementById('auditMsgArea').textContent = res.message || "✅ 同步成功！";
+        playScanSound('sync_success');
+      })
+      .withFailureHandler(function(err) {
+        finishBtn.disabled = false; finishBtn.innerHTML = "☁️";
+        document.getElementById('auditMsgArea').style.color = "#ff2a6d";
+        document.getElementById('auditMsgArea').textContent = "❌ 同步失敗: " + err.message;
+        playScanSound('error');
+      })
+      .saveAuditRecord({ location: auditState.location, totalSysQty: totalSysQty, totalScannedQty: totalScannedQty, hasDiff: diffItems.length > 0, items: diffItems });
+  }
+
+  function resetAuditSession() { document.getElementById('resetConfirmModal').style.display = 'flex'; }
+  function closeResetModal() { document.getElementById('resetConfirmModal').style.display = 'none'; }
+  function confirmResetAuditSession() {
+    closeResetModal(); auditState.scannedCounts = {}; auditState.scanHistoryStack = [];
+    document.getElementById('scanFeedbackBanner').className = 'scan-feedback-banner';
+    document.getElementById('feedbackTitle').innerHTML = '等待掃描...';
+    document.getElementById('feedbackDetails').innerHTML = '應盤: 0 | 實盤: 0';
+    renderAuditComparison();
+  }
+
+  function filterAuditResult(filterType) {
+    auditState.activeFilter = filterType;
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('filter' + filterType.charAt(0).toUpperCase() + filterType.slice(1)).classList.add('active');
+    renderAuditComparison();
+  }
+
+  function renderAuditComparison() {
+    const container = document.getElementById('auditResultContainer'); container.innerHTML = "";
+    let totalSysQty = 0, totalScannedQty = 0, missingQtyCount = 0, extraQtyCount = 0;
+    let missingItemsCount = 0, extraItemsCount = 0, matchItemsCount = 0;
+    let uniquePallets = new Set();
+    let uniqueTags = new Set();
+    let uniqueLocs = new Set();
+
+    const itemsToDisplay = [];
+    const allKeys = new Set([...Object.keys(auditState.systemItemsMap), ...Object.keys(auditState.scannedCounts)]);
+
+    allKeys.forEach(key => {
+      const sysInfo = auditState.systemItemsMap[key] || { key: key, sysQty: 0, tag: key, sku: "-", barcode: "-", style: "-", size: "-", palletId: "-", location: auditState.location };
+      const scannedQty = auditState.scannedCounts[key] || 0, diff = scannedQty - sysInfo.sysQty;
+      totalSysQty += sysInfo.sysQty; totalScannedQty += scannedQty;
+      
+      // 計算不重複屬性
+      if (sysInfo.palletId && sysInfo.palletId !== "-") uniquePallets.add(sysInfo.palletId);
+      if (sysInfo.tag && sysInfo.tag !== "-") uniqueTags.add(sysInfo.tag);
+      if (sysInfo.location && sysInfo.location !== "-") uniqueLocs.add(sysInfo.location);
+      
+      let status = 'match'; 
+      if (diff < 0) { status = 'missing'; missingQtyCount += Math.abs(diff); missingItemsCount++; } 
+      else if (diff > 0) { status = 'extra'; extraQtyCount += diff; extraItemsCount++; }
+      else { matchItemsCount++; }
+      
+      itemsToDisplay.push({ ...sysInfo, scannedQty, diff, status });
+    });
+
+    // 更新 8px 的摘要區塊
+    document.getElementById('auditPlc').textContent = uniquePallets.size;
+    document.getElementById('auditTagc').textContent = uniqueTags.size;
+    document.getElementById('auditLocac').textContent = uniqueLocs.size;
+    document.getElementById('auditSysQty').textContent = totalSysQty; 
+    document.getElementById('auditScannedQty').textContent = totalScannedQty;
+    document.getElementById('auditMissingQty').textContent = missingQtyCount; 
+    document.getElementById('auditExtraQty').textContent = extraQtyCount;
+    
+    // 更新篩選按鈕列數字 (使用 innerHTML 套用 12px 數字)
+    document.getElementById('filterMissing').innerHTML = `🔴 盤虧 (<span style="font-size: 12px;">${missingItemsCount}</span>)`;
+    document.getElementById('filterExtra').innerHTML = `🟡 盤盈 (<span style="font-size: 12px;">${extraItemsCount}</span>)`;
+    document.getElementById('filterMatch').innerHTML = `🟢 正常 (<span style="font-size: 12px;">${matchItemsCount}</span>)`;
+
+    const filtered = itemsToDisplay.filter(item => auditState.activeFilter === 'all' || item.status === auditState.activeFilter);
+    
+    if (filtered.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding: 15px; color: #00ff66; font-weight:bold;">無符合該條件之物料</div>`;
+        return;
+    }
+
+    let html = `<div class="order-table-wrapper"><table class="order-compact-table">
+      <thead>
+        <tr>
+          <th style="width: 30px;">操作</th>
+          <th>應盤</th>
+          <th>實盤</th>
+          <th>Pallet ID</th>
+          <th>條碼</th>
+          <th>TAG</th>
+          <th>Location</th>
+          <th>Style</th>
+          <th>Size</th>
+          <th>SKU</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+    filtered.forEach(item => {
+      const isLastScanned = (item.key === auditState.lastScannedKey);
+      const rowClass = isLastScanned ? 'last-scanned-highlight' : '';
+      
+      let borderLeft = '3px solid #0a749c';
+      if (item.status === 'missing') borderLeft = '3px solid #ff2a6d';
+      else if (item.status === 'extra') borderLeft = '3px solid #ffea00';
+
+      const tagDisplay = (item.tag && item.tag !== "-") ? item.tag : "";
+      const barcodeDisplay = (item.barcode && item.barcode !== "-") ? item.barcode : "";
+      const palletDisplay = (item.palletId && item.palletId !== "-") ? item.palletId : "";
+      const locDisplay = (item.location && item.location !== "-") ? item.location : auditState.location;
+
+      let scannedColor = "#00ffff";
+      if (item.scannedQty > item.sysQty) {
+        scannedColor = "#ffea00";
+      } else if (item.scannedQty === 0) {
+        scannedColor = "#4a5c50";
+      }
+
+      html += `
+        <tr class="${rowClass}" style="border-left: ${borderLeft};">
+          <td><button class="row-add-btn" onclick="incrementAuditItem('${item.key}')">+</button></td>
+          <td style="color:#00ff66;">${item.sysQty}</td>
+          <td style="color:${scannedColor}; font-size:14px; font-weight:bold;">${item.scannedQty}</td>
+          <td>${palletDisplay}</td>
+          <td style="color:#ffea00; font-size:12px;">${barcodeDisplay}</td>
+          <td style="text-align:left;">${tagDisplay}</td>
+          <td style="color:#80cfa0;">${locDisplay}</td>
+          <td>${item.style}</td>
+          <td>${item.size}</td>
+          <td>${item.sku}</td>
+        </tr>
+      `;
+    });
+
+    html += `</tbody></table></div>`;
+    container.innerHTML = html;
+  }
+
+  // 其他各分頁讀取函式 (List, OrderStatus, Gao, Rec, Db) 保持不變
   function loadAlList(forceRefresh) {
     if (isAlListLoaded && !forceRefresh) return;
     const msgArea = document.getElementById('listMsgArea');
@@ -1247,297 +1506,6 @@
       })
       .withFailureHandler(err => msgArea.textContent = "載入失敗: " + err.message)
       .getDbData();
-  }
-
-  // ==========================================
-  // 盤點比較渲染邏輯
-  // ==========================================
-  let auditState = { location: '', systemItemsMap: {}, scannedCounts: {}, scanHistoryStack: [], lastRawCodeMap: {}, lastLookupCodeMap: {}, activeFilter: 'all', lastScannedKey: null };
-
-  function startAuditSession() {
-    const loc = document.getElementById('auditLocInput').value.trim().toUpperCase();
-    if (!loc) return;
-    const loadBtn = document.getElementById('auditLoadBtn');
-    const msg = document.getElementById('auditMsgArea');
-    loadBtn.disabled = true; loadBtn.textContent = "⏳"; msg.textContent = "";
-
-    document.getElementById('scanFeedbackBanner').className = 'scan-feedback-banner';
-    document.getElementById('feedbackTitle').innerHTML = '等待掃描...';
-    document.getElementById('feedbackDetails').innerHTML = '應盤: 0 | 實盤: 0';
-
-    window.google.script.run
-      .withSuccessHandler(function(res) {
-        loadBtn.disabled = false; loadBtn.textContent = "🔍";
-        if (!res || !res.data || res.data.length === 0) msg.textContent = `⚠️ 系統中該儲位 (${loc}) 無庫存記錄，將進入盲盤模式`;
-        auditState = { location: loc, systemItemsMap: {}, scannedCounts: {}, scanHistoryStack: [], lastRawCodeMap: {}, lastLookupCodeMap: {}, activeFilter: 'all', lastScannedKey: null };
-
-        if (res && res.data) {
-          res.data.forEach(item => {
-            const key = (item["TAG_ID"] || item["SUPPLIER_SKU"] || item["SKU_ID"] || "UNKNOWN").toString().trim().toUpperCase();
-            const qty = parseFloat(item["QTY"]) || 0;
-            if (!auditState.systemItemsMap[key]) {
-              auditState.systemItemsMap[key] = {
-                key: key, sysQty: 0, tag: item["TAG_ID"] || "-", sku: item["SKU_ID"] || "-",
-                barcode: item["SUPPLIER_SKU"] || "-", style: item["Style"] || "-", size: item["Size"] || "-", coo: item["User Def Type 1"] || "-", palletId: item["Pallet ID"] || "-"
-              };
-            }
-            auditState.systemItemsMap[key].sysQty += qty;
-          });
-        }
-        document.getElementById('auditScanSection').style.display = 'block';
-        document.getElementById('auditSummaryBox').style.display = 'flex';
-        document.getElementById('auditFilterGroup').style.display = 'flex';
-        document.getElementById('auditScanInput').focus();
-        renderAuditComparison();
-      })
-      .withFailureHandler(function(err) {
-        loadBtn.disabled = false; loadBtn.textContent = "🔍"; msg.textContent = "載入失敗: " + err.message;
-      })
-      .searchLocation(loc);
-  }
-
-  function handleAuditScan(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const inputEl = document.getElementById('auditScanInput');
-      let rawScanned = inputEl.value.trim().toUpperCase();
-      if (!rawScanned) return;
-      processScannedCode(rawScanned);
-      inputEl.value = ""; inputEl.focus();
-    }
-  }
-
-  function processScannedCode(rawScanned) {
-    const lookupCode = rawScanned.length > 13 ? rawScanned.substring(0, 13) : rawScanned;
-    let targetKey = null;
-
-    const matchingKeys = Object.keys(auditState.systemItemsMap).filter(k => {
-      const item = auditState.systemItemsMap[k];
-      return ((item.barcode && (item.barcode === lookupCode || item.barcode === rawScanned)) || (item.sku && (item.sku === lookupCode || item.sku === rawScanned)));
-    });
-
-    if (matchingKeys.length > 0) {
-      const unfilledKey = matchingKeys.find(k => (auditState.scannedCounts[k] || 0) < auditState.systemItemsMap[k].sysQty);
-      targetKey = unfilledKey ? unfilledKey : matchingKeys[0];
-    }
-    if (!targetKey) targetKey = lookupCode;
-
-    processAuditItem(targetKey, rawScanned, lookupCode);
-  }
-
-  function incrementAuditItem(targetKey) {
-    const sysInfo = auditState.systemItemsMap[targetKey];
-    const rawScanned = (sysInfo && sysInfo.barcode && sysInfo.barcode !== '-') ? sysInfo.barcode : targetKey;
-    const lookupCode = rawScanned.length > 13 ? rawScanned.substring(0, 13) : rawScanned;
-    processAuditItem(targetKey, rawScanned, lookupCode);
-  }
-
-  function processAuditItem(targetKey, rawScanned, lookupCode) {
-    auditState.lastRawCodeMap[targetKey] = rawScanned;
-    auditState.lastLookupCodeMap[targetKey] = lookupCode;
-    auditState.scannedCounts[targetKey] = (auditState.scannedCounts[targetKey] || 0) + 1;
-    auditState.lastScannedKey = targetKey;
-    auditState.scanHistoryStack.push({ targetKey: targetKey, rawScanned: rawScanned, lookupCode: lookupCode });
-
-    const currentCount = auditState.scannedCounts[targetKey];
-    const sysInfo = auditState.systemItemsMap[targetKey];
-    const sysQty = sysInfo ? sysInfo.sysQty : 0;
-    const isExtra = currentCount > sysQty;
-
-    if (isExtra) { playScanSound('extra'); triggerVibration([80, 50, 80]); } else { playScanSound('match'); triggerVibration(60); }
-    const scanBox = document.getElementById('auditScanSection');
-    scanBox.classList.remove('flash-green', 'flash-yellow'); void scanBox.offsetWidth; scanBox.classList.add(isExtra ? 'flash-yellow' : 'flash-green');
-    
-    showScanFeedbackBanner(targetKey, rawScanned, currentCount, sysQty, isExtra, sysInfo, false);
-    renderAuditComparison();
-  }
-
-  function showScanFeedbackBanner(targetKey, rawScanned, curCount, sysQty, isExtra, sysInfo, isUndo = false) {
-    const banner = document.getElementById('scanFeedbackBanner');
-    banner.className = 'scan-feedback-banner ' + (isUndo ? 'undo-mode' : (isExtra ? 'extra-mode' : ''));
-    
-    let statusText = isUndo ? '⛔ 實盤-1' : (isExtra ? '🟡 盤盈' : '✅ 實盤+1');
-    const displayTag = sysInfo && sysInfo.tag && sysInfo.tag !== "-" ? sysInfo.tag : targetKey;
-    
-    document.getElementById('feedbackTitle').innerHTML = `<span>${statusText} (${rawScanned}) | TAG: ${displayTag}</span>`;
-    document.getElementById('feedbackDetails').innerHTML = `<span style="background:${isUndo ? '#ff2a6d' : (isExtra ? '#ffea00' : '#00ff41')}; color:#000; padding:1px 4px; border-radius:3px;">應盤: ${sysQty} | 實盤: ${curCount}</span>`;
-  }
-
-  function undoLastScan() {
-    if (auditState.scanHistoryStack.length === 0) return;
-    const lastAction = auditState.scanHistoryStack.pop();
-    if (auditState.scannedCounts[lastAction.targetKey] > 0) auditState.scannedCounts[lastAction.targetKey]--;
-    auditState.lastScannedKey = auditState.scanHistoryStack.length > 0 ? auditState.scanHistoryStack[auditState.scanHistoryStack.length - 1].targetKey : null;
-    
-    playScanSound('undo'); triggerVibration([60, 40, 60]);
-    
-    const sysInfo = auditState.systemItemsMap[lastAction.targetKey];
-    const curCount = auditState.scannedCounts[lastAction.targetKey] || 0;
-    const sysQty = sysInfo ? sysInfo.sysQty : 0;
-    
-    showScanFeedbackBanner(lastAction.targetKey, lastAction.rawScanned, curCount, sysQty, false, sysInfo, true);
-    renderAuditComparison();
-  }
-
-  function openSyncConfirmModal() {
-    if (!auditState.location) { document.getElementById('auditMsgArea').textContent = "⚠️ 請先設定並載入儲位庫存！"; return; }
-    document.getElementById('modalSysQty').textContent = document.getElementById('auditSysQty').textContent;
-    document.getElementById('modalScannedQty').textContent = document.getElementById('auditScannedQty').textContent;
-    document.getElementById('modalMissingQty').textContent = document.getElementById('auditMissingQty').textContent;
-    document.getElementById('modalExtraQty').textContent = document.getElementById('auditExtraQty').textContent;
-    document.getElementById('syncConfirmModal').style.display = 'flex';
-  }
-
-  function closeSyncModal() { document.getElementById('syncConfirmModal').style.display = 'none'; }
-  function confirmFinishAuditSync() { closeSyncModal(); finishAuditSync(); }
-
-  function finishAuditSync() {
-    const finishBtn = document.querySelector('.finish-btn'); finishBtn.disabled = true; finishBtn.innerHTML = "⏳";
-    document.getElementById('auditMsgArea').textContent = "⚡ 同步上傳中...";
-
-    const diffItems = [];
-    let totalSysQty = 0, totalScannedQty = 0;
-    const allKeys = new Set([...Object.keys(auditState.systemItemsMap), ...Object.keys(auditState.scannedCounts)]);
-
-    allKeys.forEach(key => {
-      const sysInfo = auditState.systemItemsMap[key] || { key: key, sysQty: 0, tag: "", sku: "-", barcode: "-", style: "-", size: "-", coo: "-", palletId: "-" };
-      const sysQty = sysInfo.sysQty, scannedQty = auditState.scannedCounts[key] || 0, diff = scannedQty - sysQty;
-      totalSysQty += sysQty; totalScannedQty += scannedQty;
-      if (diff !== 0) {
-        const rawScanned = auditState.lastRawCodeMap[key] || "";
-        diffItems.push({
-          key: key, tagId: sysInfo.tag && sysInfo.tag !== "-" ? sysInfo.tag : "",
-          palletId: sysInfo.palletId || "-", rawScannedCode: rawScanned,
-          lookupCode: sysInfo.barcode && sysInfo.barcode !== "-" ? sysInfo.barcode : key,
-          sku: sysInfo.sku, style: sysInfo.style, size: sysInfo.size, sysQty: sysQty, scannedQty: scannedQty, diff: diff
-        });
-      }
-    });
-
-    window.google.script.run
-      .withSuccessHandler(function(res) {
-        finishBtn.disabled = false; finishBtn.innerHTML = "☁️";
-        document.getElementById('auditMsgArea').style.color = "#00ff66";
-        document.getElementById('auditMsgArea').textContent = res.message || "✅ 同步成功！";
-        playScanSound('sync_success');
-      })
-      .withFailureHandler(function(err) {
-        finishBtn.disabled = false; finishBtn.innerHTML = "☁️";
-        document.getElementById('auditMsgArea').style.color = "#ff2a6d";
-        document.getElementById('auditMsgArea').textContent = "❌ 同步失敗: " + err.message;
-        playScanSound('error');
-      })
-      .saveAuditRecord({ location: auditState.location, totalSysQty: totalSysQty, totalScannedQty: totalScannedQty, hasDiff: diffItems.length > 0, items: diffItems });
-  }
-
-  function resetAuditSession() { document.getElementById('resetConfirmModal').style.display = 'flex'; }
-  function closeResetModal() { document.getElementById('resetConfirmModal').style.display = 'none'; }
-  function confirmResetAuditSession() {
-    closeResetModal(); auditState.scannedCounts = {}; auditState.scanHistoryStack = [];
-    document.getElementById('scanFeedbackBanner').className = 'scan-feedback-banner';
-    document.getElementById('feedbackTitle').innerHTML = '等待掃描...';
-    document.getElementById('feedbackDetails').innerHTML = '應盤: 0 | 實盤: 0';
-    renderAuditComparison();
-  }
-
-  function filterAuditResult(filterType) {
-    auditState.activeFilter = filterType;
-    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById('filter' + filterType.charAt(0).toUpperCase() + filterType.slice(1)).classList.add('active');
-    renderAuditComparison();
-  }
-
-  function renderAuditComparison() {
-    const container = document.getElementById('auditResultContainer'); container.innerHTML = "";
-    let totalSysQty = 0, totalScannedQty = 0, missingQtyCount = 0, extraQtyCount = 0;
-    let missingItemsCount = 0, extraItemsCount = 0, matchItemsCount = 0;
-    const itemsToDisplay = [];
-    const allKeys = new Set([...Object.keys(auditState.systemItemsMap), ...Object.keys(auditState.scannedCounts)]);
-
-    allKeys.forEach(key => {
-      const sysInfo = auditState.systemItemsMap[key] || { key: key, sysQty: 0, tag: key, sku: "-", barcode: "-", style: "-", size: "-", palletId: "-" };
-      const scannedQty = auditState.scannedCounts[key] || 0, diff = scannedQty - sysInfo.sysQty;
-      totalSysQty += sysInfo.sysQty; totalScannedQty += scannedQty;
-      
-      let status = 'match'; 
-      if (diff < 0) { status = 'missing'; missingQtyCount += Math.abs(diff); missingItemsCount++; } 
-      else if (diff > 0) { status = 'extra'; extraQtyCount += diff; extraItemsCount++; }
-      else { matchItemsCount++; }
-      
-      itemsToDisplay.push({ ...sysInfo, scannedQty, diff, status });
-    });
-
-    document.getElementById('auditSysQty').textContent = totalSysQty; 
-    document.getElementById('auditScannedQty').textContent = totalScannedQty;
-    document.getElementById('auditMissingQty').textContent = missingQtyCount; 
-    document.getElementById('auditExtraQty').textContent = extraQtyCount;
-    
-    document.getElementById('filterMissing').textContent = `🔴 盤虧 (${missingItemsCount})`;
-    document.getElementById('filterExtra').textContent = `🟡 盤盈 (${extraItemsCount})`;
-    document.getElementById('filterMatch').textContent = `🟢 正常 (${matchItemsCount})`;
-
-    const filtered = itemsToDisplay.filter(item => auditState.activeFilter === 'all' || item.status === auditState.activeFilter);
-    
-    if (filtered.length === 0) {
-        container.innerHTML = `<div style="text-align:center; padding: 15px; color: #00ff66; font-weight:bold;">無符合該條件之物料</div>`;
-        return;
-    }
-
-    let html = `<div class="order-table-wrapper"><table class="order-compact-table">
-      <thead>
-        <tr>
-          <th style="width: 30px;">操作</th>
-          <th>應盤</th>
-          <th>實盤</th>
-          <th>Pallet ID</th>
-          <th>條碼</th>
-          <th>TAG</th>
-          <th>Location</th>
-          <th>Style</th>
-          <th>Size</th>
-          <th>SKU</th>
-        </tr>
-      </thead>
-      <tbody>`;
-
-    filtered.forEach(item => {
-      const isLastScanned = (item.key === auditState.lastScannedKey);
-      const rowClass = isLastScanned ? 'last-scanned-highlight' : '';
-      
-      let borderLeft = '3px solid #00ff41';
-      if (item.status === 'missing') borderLeft = '3px solid #ff2a6d';
-      else if (item.status === 'extra') borderLeft = '3px solid #ffea00';
-
-      const tagDisplay = (item.tag && item.tag !== "-") ? item.tag : "";
-      const barcodeDisplay = (item.barcode && item.barcode !== "-") ? item.barcode : "";
-      const palletDisplay = (item.palletId && item.palletId !== "-") ? item.palletId : "";
-
-      // 實盤數量動態變色 (保持原狀)
-      let scannedColor = "#00ffff";
-      if (item.scannedQty > item.sysQty) {
-        scannedColor = "#ffea00";
-      } else if (item.scannedQty === 0) {
-        scannedColor = "#4a5c50";
-      }
-
-      html += `
-        <tr class="${rowClass}" style="border-left: ${borderLeft};">
-          <td><button class="row-add-btn" onclick="incrementAuditItem('${item.key}')">+</button></td>
-          <td style="color:#00ff66;">${item.sysQty}</td>
-          <td style="color:${scannedColor}; font-size:14px; font-weight:bold;">${item.scannedQty}</td>
-          <td>${palletDisplay}</td>
-          <td style="color:#ffea00; font-size:12px;">${barcodeDisplay}</td>
-          <td style="text-align:left;">${tagDisplay}</td>
-          <td style="color:#80cfa0;">${auditState.location}</td>
-          <td>${item.style}</td>
-          <td>${item.size}</td>
-          <td>${item.sku}</td>
-        </tr>
-      `;
-    });
-
-    html += `</tbody></table></div>`;
-    container.innerHTML = html;
   }
 </script>
 </body>
