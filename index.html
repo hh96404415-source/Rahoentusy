@@ -33,7 +33,45 @@
       width: 100%; max-width: 800px; margin: 0 auto; background: #09140b;
       padding: 10px; border-radius: 4px; border: 1.5px solid #00ff41;
       box-shadow: 0 0 20px rgba(0, 255, 65, 0.25);
+      /* 登入前預設隱藏主容器內容，避免閃爍露出 */
+      display: none; 
     }
+    
+    /* ==========================================
+       PIN 碼登入全螢幕遮罩 (Hacker Style)
+       ========================================== */
+    #pinLoginOverlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #010602; z-index: 99999;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      background-image: linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+      background-size: 100% 4px;
+    }
+    .login-box {
+      background: rgba(4, 14, 6, 0.85); border: 2px solid #00ff41; padding: 25px 20px;
+      border-radius: 8px; box-shadow: 0 0 30px rgba(0, 255, 65, 0.4), inset 0 0 15px rgba(0, 255, 65, 0.1);
+      text-align: center; max-width: 320px; width: 90%; backdrop-filter: blur(4px);
+    }
+    .login-title {
+      color: #00ff66; font-size: 24px; font-weight: 900; margin-bottom: 5px;
+      text-shadow: 0 0 10px rgba(0, 255, 102, 0.8); text-transform: uppercase; letter-spacing: 2px;
+    }
+    .login-subtitle { color: #80cfa0; font-size: 12px; margin-bottom: 20px; font-weight: bold; }
+    .pin-input-group { display: flex; gap: 8px; margin-bottom: 15px; }
+    #loginPinInput {
+      flex: 1; text-align: center; font-size: 24px !important; letter-spacing: 4px;
+      padding: 10px; background: #010a03; color: #00ffff; border: 2px solid #00ff41;
+      border-radius: 4px; font-weight: 900; box-shadow: inset 0 0 10px rgba(0,255,255,0.2);
+    }
+    #loginPinInput:focus { border-color: #00ffff; box-shadow: 0 0 15px rgba(0,255,255,0.6), inset 0 0 10px rgba(0,255,255,0.2); outline: none; }
+    #loginBtn {
+      width: 100%; padding: 12px; font-size: 16px !important; background: #00ff41; color: #000;
+      border: none; border-radius: 4px; font-weight: 900; cursor: pointer; text-transform: uppercase;
+      box-shadow: 0 0 15px rgba(0, 255, 65, 0.5); transition: all 0.2s;
+    }
+    #loginBtn:hover { background: #33ff66; box-shadow: 0 0 25px rgba(0, 255, 102, 0.8); }
+    #loginBtn:disabled { background: #082410; color: #005c18; box-shadow: none; cursor: not-allowed; }
+    #loginMsgArea { font-size: 13px; font-weight: bold; margin-top: 15px; min-height: 18px; text-shadow: 0 0 8px currentColor; }
     
     /* 導覽頁籤 Tab Bar */
     .tab-bar {
@@ -44,6 +82,7 @@
       flex: 1; min-width: max-content; padding: 8px 6px; font-size: 13px; font-weight: bold;
       background: #020a04; color: #80cfa0; border: 1px solid #144020; border-bottom: none;
       border-radius: 4px 4px 0 0; cursor: pointer; text-align: center; transition: all 0.2s ease;
+      display: none; /* 預設全部隱藏，靠權限動態開啟 */
     }
     .tab-btn.active {
       background: #00ff41; color: #000000; border-color: #00ff41; font-weight: 900;
@@ -189,7 +228,20 @@
 </head>
 <body>
 
-<div class="container">
+<!-- PIN 碼登入全螢幕遮罩 -->
+<div id="pinLoginOverlay">
+  <div class="login-box">
+    <div class="login-title">SYSTEM LOCKED</div>
+    <div class="login-subtitle">AWAITING AUTHORIZATION_</div>
+    <div class="pin-input-group">
+      <input type="password" id="loginPinInput" placeholder="PIN" onkeydown="handleLoginKey(event)" autofocus>
+    </div>
+    <button id="loginBtn" onclick="submitPinCode()">ACCESS GRANTED</button>
+    <div id="loginMsgArea" style="color: #ff2a6d;"></div>
+  </div>
+</div>
+
+<div class="container" id="mainContainer">
   <!-- 模態對話框 (Modal) -->
   <div id="resetConfirmModal" class="modal-overlay" style="display: none;">
     <div class="modal-box">
@@ -231,22 +283,22 @@
     </div>
   </div>
 
-  <h2 style="color: #00ff66; text-shadow: 0 0 10px rgba(0, 255, 102, 0.6); margin-top: 0; font-size:20px;">Rahoentusy</h2>
+  <h2 id="sysHeaderTitle" style="color: #00ff66; text-shadow: 0 0 10px rgba(0, 255, 102, 0.6); margin-top: 0; font-size:20px;">Rahoentusy</h2>
   
-  <div class="tab-bar">
-    <div id="tabSearchBtn" class="tab-btn active" onclick="switchTab('search')">🔍 查詢</div>
-    <div id="tabListBtn" class="tab-btn" onclick="switchTab('list')">♻️ 補貨</div>
-    <div id="tabAuditBtn" class="tab-btn" onclick="switchTab('audit')">📋 盤點</div>
-    <div id="tabOrderStatusBtn" class="tab-btn" onclick="switchTab('orderStatus')">📦 訂單</div>
-    <div id="tabGaoBtn" class="tab-btn" onclick="switchTab('gao')">🚚 DI</div>
-    <div id="tabRecBtn" class="tab-btn" onclick="switchTab('rec')">🎯 REC</div>
-    <div id="tabDbBtn" class="tab-btn" onclick="switchTab('db')">👁️ DB</div>
+  <div class="tab-bar" id="mainTabBar">
+    <div id="tabsearchBtn" class="tab-btn active" onclick="switchTab('search')">🔍 查詢</div>
+    <div id="tablistBtn" class="tab-btn" onclick="switchTab('list')">♻️ 補貨</div>
+    <div id="tabauditBtn" class="tab-btn" onclick="switchTab('audit')">📋 盤點</div>
+    <div id="taborderStatusBtn" class="tab-btn" onclick="switchTab('orderStatus')">📦 訂單</div>
+    <div id="tabgaoBtn" class="tab-btn" onclick="switchTab('gao')">🚚 DI</div>
+    <div id="tabrecBtn" class="tab-btn" onclick="switchTab('rec')">🎯 REC</div>
+    <div id="tabdbBtn" class="tab-btn" onclick="switchTab('db')">👁️ DB</div>
   </div>
 
   <!-- Search View (查詢分頁) -->
   <div id="searchView">
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="掃描或輸入 LOCATION_ID 或 條碼" autofocus>
+      <input type="text" id="searchInput" placeholder="掃描或輸入 LOCATION_ID 或 條碼">
       <button id="searchBtn" onclick="fetchData()">搜尋</button>
     </div>
     <div id="msgArea" class="message"></div>
@@ -440,6 +492,7 @@
       .then(data => { if (this._onSuccess) this._onSuccess(data); })
       .catch(err => { if (this._onFailure) this._onFailure(err); });
     },
+    verifyPinCode: function(pin) { this._get('verifyPinCode', { pin: pin }); }, // 新增 PIN 驗證路由
     searchSupplierSku: function(sku) { this._get('searchSupplierSku', { sku: sku }); },
     searchLocation: function(loc) { this._get('searchLocation', { loc: loc }); },
     getAlQtyList: function() { this._get('getAlQtyList'); },
@@ -453,8 +506,126 @@
   window.google = { script: { run: gasApiRun } };
 
   // =======================================================================
+  // 權限與登入系統 (RBAC & PIN Login)
+  // =======================================================================
+  let currentUserPermissions = [];
+
+  // 檢查登入金鑰 (Enter 鍵觸發)
+  function handleLoginKey(e) {
+    if (e.key === 'Enter') submitPinCode();
+  }
+
+  // 送出 PIN 碼驗證
+  function submitPinCode() {
+    const pin = document.getElementById('loginPinInput').value.trim();
+    if (!pin) return;
+    
+    const btn = document.getElementById('loginBtn');
+    const msg = document.getElementById('loginMsgArea');
+    const pinInput = document.getElementById('loginPinInput');
+    
+    btn.disabled = true;
+    pinInput.disabled = true;
+    btn.textContent = "VERIFYING...";
+    msg.style.color = "#00ff41";
+    msg.textContent = "Connecting to database...";
+
+    window.google.script.run
+      .withSuccessHandler(function(res) {
+        if (res.success && res.permissions) {
+          msg.textContent = "ACCESS GRANTED.";
+          
+          // 儲存權限與名稱至 sessionStorage
+          sessionStorage.setItem('rahoentusy_auth', JSON.stringify({
+            name: res.name,
+            permissions: res.permissions
+          }));
+          
+          // 執行解鎖並套用權限
+          unlockSystem(res.name, res.permissions);
+        } else {
+          btn.disabled = false; pinInput.disabled = false;
+          btn.textContent = "ACCESS GRANTED";
+          msg.style.color = "#ff2a6d";
+          msg.textContent = "ACCESS DENIED: " + (res.error || "Invalid PIN");
+          pinInput.value = ""; pinInput.focus();
+        }
+      })
+      .withFailureHandler(function(err) {
+        btn.disabled = false; pinInput.disabled = false;
+        btn.textContent = "ACCESS GRANTED";
+        msg.style.color = "#ff2a6d";
+        msg.textContent = "SYSTEM ERROR: " + err.message;
+        pinInput.focus();
+      })
+      .verifyPinCode(pin);
+  }
+
+  // 解鎖系統並套用動態權限
+  function unlockSystem(name, permissions) {
+    currentUserPermissions = permissions;
+    
+    // 更新標題
+    document.getElementById('sysHeaderTitle').textContent = `Rahoentusy - ${name}`;
+    
+    // 套用 Tab Bar 顯示權限
+    applyPermissions(permissions);
+    
+    // 隱藏黑客遮罩，顯示主內容
+    document.getElementById('pinLoginOverlay').style.display = 'none';
+    document.getElementById('mainContainer').style.display = 'block';
+  }
+
+  function applyPermissions(permissions) {
+    const allTabBtns = document.querySelectorAll('.tab-btn');
+    let firstAllowedTabId = null;
+
+    allTabBtns.forEach(btn => {
+      // 從 btn 的 id 中擷取分頁名稱 (例如從 'tabsearchBtn' 擷取 'search')
+      const tabNameMatch = btn.id.match(/^tab(.*?)Btn$/);
+      if (tabNameMatch && tabNameMatch[1]) {
+        const tabName = tabNameMatch[1]; // e.g., 'search', 'list', 'audit'
+        
+        // 如果權限陣列中包含此分頁名稱，則顯示，否則隱藏
+        if (permissions.includes(tabName)) {
+          btn.style.display = 'block';
+          if (!firstAllowedTabId) firstAllowedTabId = tabName; // 記錄第一個可用的分頁
+        } else {
+          btn.style.display = 'none';
+        }
+      }
+    });
+
+    // 自動切換到第一個被允許的分頁
+    if (firstAllowedTabId) {
+      switchTab(firstAllowedTabId);
+    } else {
+      // 異常狀況防呆：萬一權限清單全空
+      alert("您的帳號尚未被配置任何分頁權限。");
+    }
+  }
+
+  // 網頁載入時檢查快取
+  window.onload = function() {
+    const authDataStr = sessionStorage.getItem('rahoentusy_auth');
+    if (authDataStr) {
+      try {
+        const authData = JSON.parse(authDataStr);
+        if (authData && authData.permissions && authData.permissions.length > 0) {
+          // 若快取中已有權限，直接解鎖系統
+          unlockSystem(authData.name, authData.permissions);
+          return;
+        }
+      } catch (e) {
+        sessionStorage.removeItem('rahoentusy_auth');
+      }
+    }
+    // 若無快取或無效，焦點鎖定在 PIN 輸入框
+    document.getElementById('loginPinInput').focus();
+  };
+
+  // =======================================================================
   // HTML5 QR Code Scanner 相機掃描儲位與獨立條碼掃描整合
-  // ( Pro 級修正：確保參數完全符合函式庫安全規範 + 啟用硬體解碼與全寬度掃描 )
   // =======================================================================
   let html5QrCode = null;
   let barcodeHtml5QrCode = null;
@@ -466,12 +637,10 @@
     const stopBtn = document.getElementById('stopScanLocBtn');
     readerDiv.style.display = 'block'; stopBtn.style.display = 'block';
 
-    // 啟用原生硬體加速解碼晶片 (如果手機支援)
     if (!html5QrCode) { 
-        html5QrCode = new Html5Qrcode("reader", { experimentalFeatures: { useBarCodeDetectorIfSupported: true } }); 
+        html5QrCode = new Html5Qrcode("reader"); 
     }
     
-    // 安全修復：確保第一參數只有 1 個屬性。移除 qrbox 讓相機吃滿 100% 畫面寬度！
     html5QrCode.start(
       { facingMode: "environment" }, 
       { fps: 10 },
@@ -482,7 +651,7 @@
       },
       (errorMessage) => { /* Ignore errors */ }
     ).catch((err) => {
-      alert("無法存取相機，請確認瀏覽器已允許使用相機權限。錯誤: " + err);
+      alert("無法存取相機，請確認權限。錯誤: " + err);
       stopLocationScanner();
     });
   }
@@ -502,27 +671,16 @@
     const stopBtn = document.getElementById('stopBarcodeScanBtn');
     readerDiv.style.display = 'block'; stopBtn.style.display = 'block';
 
-    // 啟用原生硬體加速解碼晶片 (如果手機支援)
     if (!barcodeHtml5QrCode) { 
-        barcodeHtml5QrCode = new Html5Qrcode("barcodeReader", { experimentalFeatures: { useBarCodeDetectorIfSupported: true } }); 
+        barcodeHtml5QrCode = new Html5Qrcode("barcodeReader"); 
     }
     
     lastDetected = null;
     pendingBarcode = null;
 
-    // 安全修復：確保第一參數只有 1 個屬性 ({ facingMode })。
-    // 強制注入全格式支援 (包含 Code 128 / Code 39) 並移除 qrbox 邊界限制！
     barcodeHtml5QrCode.start(
       { facingMode: "environment" }, 
-      { 
-          fps: 10, 
-          formatsToSupport: [ 
-              Html5QrcodeSupportedFormats.CODE_128, 
-              Html5QrcodeSupportedFormats.CODE_39, 
-              Html5QrcodeSupportedFormats.EAN_13, 
-              Html5QrcodeSupportedFormats.QR_CODE 
-          ] 
-      },
+      { fps: 10 },
       (decodedText, decodedResult) => {
         const cleanCode = decodedText.trim().toUpperCase();
         
@@ -712,7 +870,7 @@
     return (val !== undefined && val !== null && val !== "" && val !== "-") ? val : "NA";
   }
 
-  let currentTab = 'search';
+  let currentTab = ''; // 清空預設，由 applyPermissions 決定
   let isAlListLoaded = false, isOrderStatusLoaded = false, isGaoLoaded = false, isRecLoaded = false, isDbLoaded = false;
 
   const searchInput = document.getElementById('searchInput');
@@ -721,9 +879,14 @@
   });
 
   function switchTab(tab) {
+    // 權限二次檢查：防止透過 console 呼叫
+    if (!currentUserPermissions.includes(tab)) return;
+    
     currentTab = tab;
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Btn').classList.add('active');
+    
+    const targetBtn = document.getElementById('tab' + tab + 'Btn');
+    if(targetBtn) targetBtn.classList.add('active');
 
     ['searchView', 'listView', 'auditView', 'orderStatusView', 'gaoView', 'recView', 'dbView'].forEach(view => {
       document.getElementById(view).style.display = 'none';
