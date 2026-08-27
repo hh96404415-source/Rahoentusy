@@ -650,7 +650,7 @@
     return "";
   }
   
-  // 🌟 新增：儲位分段變色 (前2黃, 中3綠, 後續青)
+  // 🌟 修改：儲位分段變色 (前2碼依分組變色, 中3綠, 後續青)
   function formatLocationStr(locStr) {
     if (!locStr) return "";
     let str = String(locStr).trim();
@@ -658,8 +658,21 @@
     let part1 = str.substring(0, 2);
     let part2 = str.substring(2, 5);
     let part3 = str.substring(5);
+    
+    // 判斷前兩碼所屬的群組並決定顏色
+    let part1Color = "#ffea00"; // 預設黃色 (01, 02 也是這組)
+    if (part1 === "03" || part1 === "04") {
+        part1Color = "#ff007f"; // 霓虹粉
+    } else if (part1 === "05" || part1 === "06") {
+        part1Color = "#b026ff"; // 亮紫
+    } else if (part1 === "07" || part1 === "08") {
+        part1Color = "#ff8c00"; // 亮橘
+    } else if (part1 === "09") {
+        part1Color = "#ff003c"; // 亮紅
+    }
+
     // 強制使用色碼確保絕對生效
-    return `<span style="color:#ffea00; font-weight:700;">${part1}</span><span style="color:#00ff41; font-weight:700;">${part2}</span><span style="color:#00d4ff; font-weight:700;">${part3}</span>`;
+    return `<span style="color:${part1Color}; font-weight:700;">${part1}</span><span style="color:#00ff41; font-weight:700;">${part2}</span><span style="color:#00d4ff; font-weight:700;">${part3}</span>`;
   }
 
   // 🌟 新增：Pallet 尾數5碼高亮變色
@@ -715,18 +728,33 @@
   function getCustomLabel(colName) { if (!colName || colName.startsWith("COL_")) return ""; return LABEL_MAP[colName] || colName; }
   function getValue(item, key) { const val = item[key]; return (val !== undefined && val !== null && val !== "" && val !== "-") ? val : "NA"; }
 
-  // 儲位分段變色 (前2黃, 中3綠, 後續青)
+  // 🌟 修改：儲位分段變色 (前2碼依新分組變色, 中3綠, 後續青)
   function formatLocationStr(locStr) {
     if (!locStr) return "";
     let str = String(locStr).trim();
-    if (str.length < 5) return str;
+    if (str.length < 5) return str; // 長度不夠就不處理
     let part1 = str.substring(0, 2);
     let part2 = str.substring(2, 5);
     let part3 = str.substring(5);
-    return `<span style="color:var(--status-yellow); font-weight:700;">${part1}</span><span style="color:var(--status-green); font-weight:700;">${part2}</span><span style="color:var(--accent-cyan); font-weight:700;">${part3}</span>`;
+    
+    // 判斷前兩碼所屬的群組並決定顏色
+    let part1Color = "#ffea00"; // 預設黃色 (01)
+    
+    if (part1 === "02" || part1 === "03") {
+        part1Color = "#ff007f"; // 霓虹粉
+    } else if (part1 === "04" || part1 === "05") {
+        part1Color = "#b026ff"; // 亮紫
+    } else if (part1 === "06" || part1 === "07") {
+        part1Color = "#ff8c00"; // 亮橘
+    } else if (part1 === "08" || part1 === "09") {
+        part1Color = "#ff003c"; // 亮紅
+    }
+
+    // 強制使用色碼確保絕對生效
+    return `<span style="color:${part1Color}; font-weight:700;">${part1}</span><span style="color:#00ff41; font-weight:700;">${part2}</span><span style="color:#00d4ff; font-weight:700;">${part3}</span>`;
   }
 
-  // Pallet 尾數5碼高亮變色
+  // 🌟 新增：Pallet 尾數5碼高亮變色
   function formatPalletStr(palletStr) {
     if (!palletStr) return "";
     let str = String(palletStr).trim();
@@ -918,6 +946,28 @@
 
         if(!isT && i["S/O"]&&i["S/O"]!=="-") { tCbm+=parseFloat(i["CBM"])||0; tCtns+=parseFloat(i["Ctns"])||0; tPcs+=parseFloat(i["PCS"])||0; }
         
+        // --- 擷取目前列的 P/C 與 GENDER 供後續判斷 ---
+        const pcKey = res.headers.find(h => h.toUpperCase().trim() === "P/C");
+        const genderKey = res.headers.find(h => h.toUpperCase().trim() === "GENDER");
+        
+        // --- 定義需要連動變色的欄位群組 ---
+        const targetColorColumns = ["P/C", "GENDER", "CBM", "CTNS", "PCS"];
+        
+        let pcValue = pcKey ? String(i[pcKey] || "").trim().toUpperCase() : "";
+        let genderValue = genderKey ? String(i[genderKey] || "").trim().toUpperCase() : "";
+        
+        // 判斷是否符合特定條件，決定自訂樣式字串 (依據最新規則)
+        let specialStyle = "";
+        if (pcValue.includes("GOH")) {
+            specialStyle = "color:#d946ef; font-weight:700;"; // 粉紫色
+        } else if (genderValue.includes("FOOTWEAR")) {
+            specialStyle = "color:#ff8c00; font-weight:700;"; // 亮橘色
+        } else if (genderValue.includes("ACCESSORY")) {
+            specialStyle = "color:#ff003c; font-weight:700;"; // 亮紅色
+        } else if (genderValue.includes("BDW")) {
+            specialStyle = "color:#86efac; font-weight:700;"; // 淡綠色
+        }
+
         h+=`<tr class="${isT?'gao-total-row':''}">`;
         res.headers.forEach((c, colIndex) => {
           let v = i[c] !== undefined ? i[c] : ""; 
@@ -942,11 +992,23 @@
           if (c === soKey && isPlanN && !isT) {
               cls += " highlight-alert";
           }
+          
+          // 準備輸出的 HTML 字串
+          let tdContent = v;
+          let tdStyle = "";
 
-          // 隱藏 0
-          if (v === 0 || String(v).trim() === "0") v = "";
+          // 4. 處理 "0" 或 "0.0"：給予極不明顯的顏色
+          if (vOriginal === "0" || vOriginal === "0.0") {
+              // 覆蓋掉可能存在的 cls (例如 text-green)，強制套用微弱樣式
+              cls = ""; 
+              tdStyle = "color: rgba(255, 255, 255, 0.1) !important;";
+          } 
+          // 5. 擴大連動變色範圍：判斷目前欄位名稱是否在 targetColorColumns 陣列中
+          else if (!isT && specialStyle !== "" && targetColorColumns.includes(cln)) {
+              tdStyle = specialStyle;
+          }
 
-          h+=`<td class="${cls.trim()}">${v}</td>`;
+          h+=`<td class="${cls.trim()}" style="${tdStyle}">${tdContent}</td>`;
         }); h+=`</tr>`;
       }); h+=`</tbody></table>`;
       document.getElementById('totGaoCbm').textContent = Number.isInteger(tCbm)?tCbm:tCbm.toFixed(1); document.getElementById('totGaoCtns').textContent=tCtns; document.getElementById('totGaoPcs').textContent=tPcs;
