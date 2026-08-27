@@ -200,9 +200,9 @@
       display: flex; justify-content: center; align-items: center; z-index: 99999; flex-direction: column;
     }
     .glass-box { 
-      position: relative; /* 為了讓絕對定位的上帝模式按鈕可以參考這裡 */
       background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
       padding: 24px; border-radius: 12px; width: 90%; max-width: 340px; text-align: center;
+      position: relative;
     }
     
     /* PIN 碼特效 */
@@ -223,9 +223,9 @@
 <!-- PIN 碼解鎖遮罩 (Hacker / Cyber 風格) -->
 <div id="pinLoginOverlay" class="glass-overlay">
   <div class="glass-box" style="border-color: rgba(56,189,248,0.3); box-shadow: 0 0 30px rgba(56,189,248,0.1);">
-    <!-- 上帝模式隱形按鈕 (Dev Backdoor) -->
-    <div ondblclick="triggerGodMode()" style="position: absolute; bottom: 0; left: 0; width: 40px; height: 40px; cursor: default; z-index: 10;"></div>
-    
+    <!-- 開發者上帝模式隱形按鈕 (支援手機雙擊) -->
+    <div id="devGodModeBtn" style="position: absolute; bottom: 10px; left: 10px; width: 50px; height: 50px; cursor: default; z-index: 10;" onclick="handleGodModeTap(event)" ontouchend="handleGodModeTap(event)"></div>
+
     <div class="pin-title"><i class="ph ph-lock-key"></i> SYSTEM LOCKED</div>
     <div class="pin-subtitle">Awaiting Authorization_</div>
     <input type="password" id="pinInput" class="pin-input" placeholder="••••" onkeydown="if(event.key === 'Enter') attemptLogin()">
@@ -312,6 +312,7 @@
 
   <!-- AUDIT Stock Counting View (盤點分頁) -->
   <div id="auditView" class="view-section" style="display: none;">
+    <!-- 移除了步驟1的文字，節省空間 -->
     <div class="search-box" style="margin-bottom: 4px;">
       <input type="text" id="auditLocInput" placeholder="輸入LOCATION">
       <button id="auditScanLocBtn" class="icon-btn btn-camera" onclick="startLocationScanner()"><i class="ph ph-camera"></i></button>
@@ -321,6 +322,7 @@
     <div id="reader" class="camera-wrapper" style="display:none;"></div>
     <button id="stopScanLocBtn" style="display:none; width: 100%; margin-bottom: 8px; background: var(--bg-hover);" onclick="stopLocationScanner()">關閉相機</button>
 
+    <!-- 終極一行流控制列 -->
     <div id="auditScanSection" style="display: none; background: var(--bg-card); padding: 6px; border-radius: 6px; border: 1px solid var(--border-light); margin-bottom: 4px;">
       <div class="search-box" style="margin-bottom: 0;">
         <input type="text" id="auditScanInput" placeholder="連續掃描實物條碼..." onkeydown="handleAuditScan(event)">
@@ -342,6 +344,7 @@
 
     <div id="auditMsgArea" class="message"></div>
 
+    <!-- 極限緊湊：盤點總計摘要區 8px/12px -->
     <div class="summary-box-compact" id="auditSummaryBox" style="display: none;">
       <div class="summary-item-compact">PLC:<span id="auditSysPlc">0</span></div>
       <div class="summary-item-compact">TAGC:<span id="auditSysTag">0</span></div>
@@ -352,6 +355,7 @@
       <div class="summary-item-compact text-yellow">🟡盈:<span id="auditExtraQty" class="text-yellow">0</span></div>
     </div>
 
+    <!-- 極限緊湊：動態篩選按鈕列 8px/12px -->
     <div id="auditFilterGroup" class="filter-group-compact" style="display: none;">
       <button class="filter-btn-compact active" id="filterAll" onclick="filterAuditResult('all')">全部<span id="fAll">0</span></button>
       <button class="filter-btn-compact text-red" id="filterMissing" onclick="filterAuditResult('missing')">🔴 盤虧<span id="fMis">0</span></button>
@@ -476,6 +480,35 @@
   window.google = { script: { run: gasApiRun } };
 
   // =======================================================================
+  // 上帝模式 (開發者專用後門) - 手機相容觸控版
+  // =======================================================================
+  let lastGodModeTap = 0;
+  
+  function handleGodModeTap(e) {
+    if (e && e.type === 'touchend') {
+      e.preventDefault(); // 防止手機觸控後又觸發 click，造成誤判或畫面放大
+    }
+    const now = Date.now();
+    // 如果距離上一次點擊小於 400 毫秒 (0.4秒)，且大於 50 毫秒(防止同一次點擊觸發兩次事件)
+    if (now - lastGodModeTap < 400 && (now - lastGodModeTap > 50)) {
+      activateGodMode();
+      lastGodModeTap = 0;
+    } else {
+      lastGodModeTap = now;
+    }
+  }
+
+  function activateGodMode() {
+    const godModePayload = {
+      success: true,
+      name: "Dev Admin",
+      permissions: ["search", "list", "audit", "orderStatus", "gao", "rec", "db"]
+    };
+    sessionStorage.setItem('wms_auth', JSON.stringify(godModePayload));
+    applyPermissions(godModePayload);
+  }
+
+  // =======================================================================
   // 登入與動態權限過濾 (PIN Code RBAC)
   // =======================================================================
   window.onload = function() {
@@ -511,17 +544,6 @@
         btn.disabled = false; btn.innerHTML = 'ACCESS GRANTED'; msg.textContent = "網路或伺服器錯誤";
       })
       .verifyPinCode(pin);
-  }
-
-  // 上帝模式：直接注入系統管理員權限
-  function triggerGodMode() {
-    const adminAuth = {
-      success: true,
-      name: "Dev Admin",
-      permissions: ["search", "list", "audit", "orderStatus", "gao", "rec", "db"]
-    };
-    sessionStorage.setItem('wms_auth', JSON.stringify(adminAuth));
-    applyPermissions(adminAuth);
   }
 
   function applyPermissions(authData) {
@@ -661,42 +683,6 @@
     return "";
   }
   
-  // 🌟 修改：儲位分段變色 (前2碼依新分組變色, 中3綠, 後續青)
-  function formatLocationStr(locStr) {
-    if (!locStr) return "";
-    let str = String(locStr).trim();
-    if (str.length < 5) return str; // 長度不夠就不處理
-    let part1 = str.substring(0, 2);
-    let part2 = str.substring(2, 5);
-    let part3 = str.substring(5);
-    
-    // 判斷前兩碼所屬的群組並決定顏色
-    let part1Color = "#ffea00"; // 預設黃色 (01)
-    
-    if (part1 === "02" || part1 === "03") {
-        part1Color = "#ff007f"; // 霓虹粉
-    } else if (part1 === "04" || part1 === "05") {
-        part1Color = "#b026ff"; // 亮紫
-    } else if (part1 === "06" || part1 === "07") {
-        part1Color = "#ff8c00"; // 亮橘
-    } else if (part1 === "08" || part1 === "09") {
-        part1Color = "#ff003c"; // 亮紅
-    }
-
-    // 強制使用色碼確保絕對生效
-    return `<span style="color:${part1Color}; font-weight:700;">${part1}</span><span style="color:#00ff41; font-weight:700;">${part2}</span><span style="color:#00d4ff; font-weight:700;">${part3}</span>`;
-  }
-
-  // 🌟 新增：Pallet 尾數5碼高亮變色
-  function formatPalletStr(palletStr) {
-    if (!palletStr) return "";
-    let str = String(palletStr).trim();
-    if (str.length <= 5) return `<span style="color:var(--status-yellow); font-weight:700; text-shadow:0 0 5px rgba(251,191,36,0.5);">${str}</span>`;
-    let prefix = str.substring(0, str.length - 5);
-    let suffix = str.substring(str.length - 5);
-    return `<span style="color:var(--text-muted);">${prefix}</span><span style="color:var(--status-yellow); font-weight:700; text-shadow:0 0 5px rgba(251,191,36,0.5);">${suffix}</span>`;
-  }
-
   function fetchAndUpdateSyncTime(targetTitle, elementId) {
     const el = document.getElementById(elementId); if (el) el.textContent = "--:--";
     window.google.script.run
@@ -739,6 +725,42 @@
   const LABEL_MAP = { "TAG_ID": "Tag", "SKU_ID": "SKU", "SUPPLIER_SKU": "Barcode", "Size": "Size", "QTY": "QTY", "AL QTY": "ALQTY", "Pallet ID": "Pallet", "Receipt Dstamp": "Receipt", "User Def Type 1": "COO", "Style": "Style", "User Def Type 7 (SKU)": "Fabric", "COLOUR": "COLOUR", "Order Seasonality": "Season" };
   function getCustomLabel(colName) { if (!colName || colName.startsWith("COL_")) return ""; return LABEL_MAP[colName] || colName; }
   function getValue(item, key) { const val = item[key]; return (val !== undefined && val !== null && val !== "" && val !== "-") ? val : "NA"; }
+
+  // 🌟 修改：儲位分段變色 (前2碼依新分組變色, 中3綠, 後續青)
+  function formatLocationStr(locStr) {
+    if (!locStr) return "";
+    let str = String(locStr).trim();
+    if (str.length < 5) return str; // 長度不夠就不處理
+    let part1 = str.substring(0, 2);
+    let part2 = str.substring(2, 5);
+    let part3 = str.substring(5);
+    
+    // 判斷前兩碼所屬的群組並決定顏色
+    let part1Color = "#ffea00"; // 預設黃色 (01)
+    
+    if (part1 === "02" || part1 === "03") {
+        part1Color = "#ff007f"; // 霓虹粉
+    } else if (part1 === "04" || part1 === "05") {
+        part1Color = "#b026ff"; // 亮紫
+    } else if (part1 === "06" || part1 === "07") {
+        part1Color = "#ff8c00"; // 亮橘
+    } else if (part1 === "08" || part1 === "09") {
+        part1Color = "#ff003c"; // 亮紅
+    }
+
+    // 強制使用色碼確保絕對生效
+    return `<span style="color:${part1Color}; font-weight:700;">${part1}</span><span style="color:#00ff41; font-weight:700;">${part2}</span><span style="color:#00d4ff; font-weight:700;">${part3}</span>`;
+  }
+
+  // 🌟 新增：Pallet 尾數5碼高亮變色
+  function formatPalletStr(palletStr) {
+    if (!palletStr) return "";
+    let str = String(palletStr).trim();
+    if (str.length <= 5) return `<span style="color:var(--status-yellow); font-weight:700; text-shadow:0 0 5px rgba(251,191,36,0.5);">${str}</span>`;
+    let prefix = str.substring(0, str.length - 5);
+    let suffix = str.substring(str.length - 5);
+    return `<span style="color:var(--text-muted);">${prefix}</span><span style="color:var(--status-yellow); font-weight:700; text-shadow:0 0 5px rgba(251,191,36,0.5);">${suffix}</span>`;
+  }
 
   // ==========================================
   // 分頁切換與載入邏輯
@@ -939,16 +961,14 @@
       let pcValue = pcKey ? String(i[pcKey] || "").trim().toUpperCase() : "";
       let genderValue = genderKey ? String(i[genderKey] || "").trim().toUpperCase() : "";
       let specialStyle = "";
-      
-      // 確保 GOH 優先級最高
       if (pcValue.includes("GOH")) {
-          specialStyle = "color:#d946ef; font-weight:700;"; // 粉紫色
+          specialStyle = "color:#d946ef; font-weight:700;"; 
       } else if (genderValue.includes("FOOTWEAR")) {
-          specialStyle = "color:#ff8c00; font-weight:700;"; // 亮橘色
+          specialStyle = "color:#ff8c00; font-weight:700;"; 
       } else if (genderValue.includes("ACCESSORY")) {
-          specialStyle = "color:#ff003c; font-weight:700;"; // 亮紅色
+          specialStyle = "color:#ff003c; font-weight:700;"; 
       } else if (genderValue.includes("BDW")) {
-          specialStyle = "color:#86efac; font-weight:700;"; // 淡綠色
+          specialStyle = "color:#86efac; font-weight:700;"; 
       }
 
       h+=`<tr class="${isT?'gao-total-row':''}">`;
@@ -961,22 +981,13 @@
         if (colIndex === 0 && vOriginal.includes("週一") && !isT) { cls = "highlight-monday"; }
         else if (cln === "SCND") { cls = "text-green"; } 
         else if (cln === "-SCN") { cls = "text-red"; if(v && v !== "0" && v !== "-" && !String(v).startsWith("-")) v = "-" + v; }
-        
-        // 確保 S/O 在 PLAN=N 時變為紅色，且在非 TOTAL 列生效
-        if (c === soKey && isPlanN && !isT) { cls += " text-red font-bold"; } // 使用預設紅色類別
+        if (c === soKey && isPlanN && !isT) { cls += " highlight-alert"; }
         
         let tdStyle = "";
-        // 0 弱化隱藏
         if (vOriginal === "0" || vOriginal === "0.0") {
             cls = ""; tdStyle = "color: rgba(255, 255, 255, 0.1) !important;";
         } else if (!isT && specialStyle !== "" && targetColorColumns.includes(cln)) {
-            // 特殊分類顏色覆蓋
             tdStyle = specialStyle;
-        }
-
-        // 如果是 S/O，確保紅色樣式能生效 (不被其他的 tdStyle 蓋掉)
-        if (c === soKey && isPlanN && !isT) {
-            tdStyle = "color: var(--status-red) !important; font-weight: 700 !important;";
         }
 
         h+=`<td class="${cls.trim()}" style="${tdStyle}">${v}</td>`;
