@@ -182,6 +182,8 @@
     /* 高亮與特效 */
     .gao-total-row td { background: rgba(251, 191, 36, 0.1) !important; color: var(--status-yellow) !important; font-weight: 700; border-top: 1px solid var(--status-yellow) !important; }
     .highlight-mon { color: #f472b6 !important; font-weight: 700 !important; }
+    .highlight-monday { color: #ef4444 !important; font-weight: 700 !important; } /* 深紅色：週一高亮 */
+    .highlight-alert { color: var(--status-red) !important; font-weight: 700 !important; }
     .last-scanned-highlight td { background-color: rgba(56, 189, 248, 0.15) !important; border-top: 1px solid var(--accent-cyan) !important; border-bottom: 1px solid var(--accent-cyan) !important; }
 
     /* 掃描回饋橫幅 */
@@ -364,7 +366,8 @@
   <div id="orderStatusView" class="view-section" style="display: none;">
     <div id="orderStatusMsgArea" class="message"></div>
     <div class="summary-box-compact" id="orderStatusSummaryBox" style="display: none;">
-      <div id="orderStatusMetricsContainer" style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; flex: 1;"></div>
+      <!-- 將 justify-content: center 改為 flex-start 讓它靠左 -->
+      <div id="orderStatusMetricsContainer" style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-start; flex: 1;"></div>
       <div style="display:flex; align-items:center; gap:4px; padding-left: 6px; border-left: 1px solid var(--border-light);">
         <span id="lastOrderStatusRefreshedTime" style="font-size: 10px; color: var(--text-muted); font-family:'Roboto Mono';">--:--</span>
         <button class="icon-btn" style="min-width: 24px; height:24px;" onclick="loadOrderStatusList(true)"><i class="ph ph-arrows-clockwise" style="font-size:12px;"></i></button>
@@ -647,6 +650,28 @@
     return "";
   }
   
+  // 🌟 新增：儲位分段變色 (前2黃, 中3綠, 後續青)
+  function formatLocationStr(locStr) {
+    if (!locStr) return "";
+    let str = String(locStr).trim();
+    if (str.length < 5) return str; // 長度不夠就不處理
+    let part1 = str.substring(0, 2);
+    let part2 = str.substring(2, 5);
+    let part3 = str.substring(5);
+    // 強制使用色碼確保絕對生效
+    return `<span style="color:#ffea00; font-weight:700;">${part1}</span><span style="color:#00ff41; font-weight:700;">${part2}</span><span style="color:#00d4ff; font-weight:700;">${part3}</span>`;
+  }
+
+  // 🌟 新增：Pallet 尾數5碼高亮變色
+  function formatPalletStr(palletStr) {
+    if (!palletStr) return "";
+    let str = String(palletStr).trim();
+    if (str.length <= 5) return `<span style="color:#ffea00; font-weight:700; text-shadow:0 0 5px rgba(255,234,0,0.5);">${str}</span>`;
+    let prefix = str.substring(0, str.length - 5);
+    let suffix = str.substring(str.length - 5);
+    return `<span style="color:#64748b;">${prefix}</span><span style="color:#ffea00; font-weight:700; text-shadow:0 0 5px rgba(255,234,0,0.5);">${suffix}</span>`;
+  }
+
   function fetchAndUpdateSyncTime(targetTitle, elementId) {
     const el = document.getElementById(elementId); if (el) el.textContent = "--:--";
     window.google.script.run
@@ -690,18 +715,18 @@
   function getCustomLabel(colName) { if (!colName || colName.startsWith("COL_")) return ""; return LABEL_MAP[colName] || colName; }
   function getValue(item, key) { const val = item[key]; return (val !== undefined && val !== null && val !== "" && val !== "-") ? val : "NA"; }
 
-  // 根據您的圖片：儲位分段變色 (前2黃, 中3綠, 後續青)
+  // 儲位分段變色 (前2黃, 中3綠, 後續青)
   function formatLocationStr(locStr) {
     if (!locStr) return "";
     let str = String(locStr).trim();
-    if (str.length < 5) return str; // 長度不夠就不處理
+    if (str.length < 5) return str;
     let part1 = str.substring(0, 2);
     let part2 = str.substring(2, 5);
     let part3 = str.substring(5);
     return `<span style="color:var(--status-yellow); font-weight:700;">${part1}</span><span style="color:var(--status-green); font-weight:700;">${part2}</span><span style="color:var(--accent-cyan); font-weight:700;">${part3}</span>`;
   }
 
-  // 根據您的圖片：Pallet 尾數5碼高亮變色
+  // Pallet 尾數5碼高亮變色
   function formatPalletStr(palletStr) {
     if (!palletStr) return "";
     let str = String(palletStr).trim();
@@ -796,15 +821,27 @@
         res.columns.forEach(c => { 
           let val = i[c] !== undefined ? i[c] : ""; 
           let displayHtml = val;
-          let upperC = c.toUpperCase();
+          let upperC = c ? c.toString().toUpperCase() : "";
           
-          // 如果是 Location 欄位，套用分段變色
           if (upperC.includes("LOC")) {
              displayHtml = formatLocationStr(val);
-          } 
-          // 如果是 Pallet 欄位，套用尾數高亮
-          else if (upperC.includes("PALLET") || upperC.includes("PL")) {
+          } else if (upperC.includes("PALLET") || upperC.includes("PL")) {
              displayHtml = formatPalletStr(val);
+          } else if (upperC.includes("QTY") || upperC.includes("SUM")) {
+             // 數量顏色分級 (白 -> 黃 -> 紅)
+             let num = parseFloat(val);
+             if (!isNaN(num)) {
+                 let numStr = String(num);
+                 if (numStr.length >= 3) {
+                     displayHtml = `<span style="color:var(--status-red); font-weight:700; font-size:14px;">${val}</span>`;
+                 } else if (numStr.length === 2) {
+                     displayHtml = `<span style="color:var(--status-yellow); font-weight:700;">${val}</span>`;
+                 } else {
+                     displayHtml = `<span style="color:var(--text-main); font-weight:700;">${val}</span>`;
+                 }
+             } else {
+                 displayHtml = `<span style="color:var(--accent-cyan); font-weight:700;">${val}</span>`;
+             }
           }
           
           h+=`<td>${displayHtml}</td>`; 
@@ -833,8 +870,11 @@
       if(res.totals && res.totals.length>0){
         h+=`<tr class="gao-total-row">`; res.headers.forEach((c,i)=>{
           let v=res.totals[i]||""; const cln=c?c.toString().trim().toUpperCase():"";
-          // 恢復：SCND 綠色，-SCN 紅色補負號
           let cls = cln==="SCND"?"text-green":(cln==="-SCN"?"text-red":""); if(cln==="-SCN" && v && !String(v).startsWith("-")) v="-"+v;
+          
+          // 隱藏 TOTAL 列中的 0
+          if (v === 0 || String(v).trim() === "0") v = "";
+
           h+=`<td class="${cls}">${v}</td>`;
         }); h+=`</tr>`;
       }
@@ -842,14 +882,15 @@
       (res.data||[]).forEach(i => {
         h+=`<tr>`; res.headers.forEach(c => {
           let v=i[c]!==undefined?i[c]:""; const cln=c?c.toString().trim().toUpperCase():"";
-          // 恢復：國旗功能
           let fg = (cln==="COUNTRYC"||cln==="COUNTRY_C") ? getFlagHtml(v) : "";
           let cls = ""; const vs = String(v).trim().toUpperCase();
-          // 恢復：MON 高亮粉紅色
           if(vs==="MON"||vs.endsWith("MON")||vs.endsWith("/MON")) cls="highlight-mon";
-          // 恢復：SCND 綠色，-SCN 紅色補負號
           if(cln==="SCND") cls+=" text-green"; else if(cln==="-SCN"){ cls+=" text-red"; if(v&&v!=="0"&&v!=="-"&&!String(v).startsWith("-")) v="-"+v; }
-          h+=`<td class="${cls.trim()}">${fg}${v}</td>`;
+          
+          // 隱藏一般資料列中的 0
+          if (v === 0 || String(v).trim() === "0") v = "";
+
+          h+=`<td class="${cls}">${fg}${v}</td>`;
         }); h+=`</tr>`;
       }); h+=`</tbody></table>`; document.getElementById('orderStatusTableContainer').innerHTML = h;
     }).withFailureHandler(e => msg.textContent="失敗:"+e.message).getOrderStatusData();
@@ -862,18 +903,49 @@
       msg.textContent = ""; isGaoLoaded = true; fetchAndUpdateSyncTime('DIsyncGoogleSheet', 'lastGaoRefreshedTime');
       let tCbm=0, tCtns=0, tPcs=0; document.getElementById('totGaoRows').textContent = res.rowCount||0;
       let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
+      
+      // 找出 PLAN 欄位的索引，以便後續判斷 S/O 是否要變紅
+      let planKey = res.headers.find(h => h.toUpperCase().trim() === "PLAN");
+      let soKey = res.headers.find(h => h.toUpperCase().trim() === "S/O");
+
       (res.data||[]).forEach(i => {
-        // 恢復：TOTAL 列高亮判斷
+        // 判斷是否為 TOTAL 列
         let isT = res.headers.some(c=>String(i[c]||"").trim().toUpperCase().includes("TOTAL"));
+        
+        // 判斷 S/O 是否需要標紅 (當 PLAN 的值是 'N' 或 'n' 時)
+        let planValue = planKey ? String(i[planKey] || "").trim().toUpperCase() : "";
+        let isPlanN = (planValue === "N");
+
         if(!isT && i["S/O"]&&i["S/O"]!=="-") { tCbm+=parseFloat(i["CBM"])||0; tCtns+=parseFloat(i["Ctns"])||0; tPcs+=parseFloat(i["PCS"])||0; }
+        
         h+=`<tr class="${isT?'gao-total-row':''}">`;
-        res.headers.forEach(c => {
-          let v=i[c]!==undefined?i[c]:""; const cln=c?c.toString().trim().toUpperCase():"";
-          let cls=""; const vs = String(v).trim().toUpperCase();
-          // 恢復：MON 高亮粉紅色
-          if(vs==="MON"||vs.endsWith("MON")||vs.endsWith("/MON")) cls="highlight-mon";
-          // 恢復：SCND 綠色，-SCN 紅色補負號
-          if(cln==="SCND") cls+=" text-green"; else if(cln==="-SCN"){ cls+=" text-red"; if(v&&v!=="0"&&v!=="-"&&!String(v).startsWith("-")) v="-"+v; }
+        res.headers.forEach((c, colIndex) => {
+          let v = i[c] !== undefined ? i[c] : ""; 
+          const cln = c ? c.toString().trim().toUpperCase() : "";
+          let cls = ""; 
+          const vs = String(v).trim().toUpperCase();
+          const vOriginal = String(v).trim();
+          
+          // 1. DI 分頁專屬：第一欄 (colIndex === 0) 如果包含 "週一"，變成深紅色粗體
+          if (colIndex === 0 && vOriginal.includes("週一") && !isT) {
+              cls = "highlight-monday";
+          }
+          // 2. 常規狀態色 (SCND 綠色 / -SCN 紅色)
+          else if (cln === "SCND") {
+              cls = "text-green"; 
+          } else if (cln === "-SCN") { 
+              cls = "text-red"; 
+              if(v && v !== "0" && v !== "-" && !String(v).startsWith("-")) v = "-" + v; 
+          }
+          
+          // 3. 如果是 S/O 欄位，且 PLAN 是 'N'，字體變紅
+          if (c === soKey && isPlanN && !isT) {
+              cls += " highlight-alert";
+          }
+
+          // 隱藏 0
+          if (v === 0 || String(v).trim() === "0") v = "";
+
           h+=`<td class="${cls.trim()}">${v}</td>`;
         }); h+=`</tr>`;
       }); h+=`</tbody></table>`;
@@ -895,6 +967,10 @@
           // 恢復：SCND 綠色，-SCN 紅色補負號
           if(cln==="SCND"){ cls="text-green"; tScnd+=(parseFloat(v)||0); }
           else if(cln==="-SCN"){ cls="text-red"; tScn+=(parseFloat(String(v).replace(/^-/,''))||0); if(v&&v!=="0"&&v!=="-"&&!String(v).startsWith("-")) v="-"+v; }
+          
+          // 隱藏 0
+          if (v === 0 || String(v).trim() === "0") v = "";
+
           h+=`<td class="${cls}">${v}</td>`;
         }); h+=`</tr>`;
       }); h+=`</tbody></table>`;
@@ -916,6 +992,10 @@
           let v=i[c]!==undefined?i[c]:""; const cln=c?c.toString().trim().toUpperCase():""; let cls="";
           // 恢復：SCND 綠色，-SCN 紅色補負號
           if(cln==="SCND") cls="text-green"; else if(cln==="-SCN"){ cls="text-red"; if(v&&v!=="0"&&v!=="-"&&!String(v).startsWith("-")) v="-"+v; }
+          
+          // 隱藏 0
+          if (v === 0 || String(v).trim() === "0") v = "";
+
           h+=`<td class="${cls}">${v}</td>`;
         }); h+=`</tr>`;
       }); h+=`</tbody></table>`;
