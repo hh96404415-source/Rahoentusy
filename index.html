@@ -835,6 +835,7 @@
   function handleError(e) { const b = document.getElementById('searchBtn'); b.disabled = false; b.innerHTML = "搜尋"; document.getElementById('msgArea').textContent = "Error: " + e.message; }
 
   // === 各表單載入 ===
+  
   function loadAlList(force) {
     if (isAlListLoaded && !force) return;
     const msg = document.getElementById('listMsgArea'); msg.textContent = "讀取中...";
@@ -856,7 +857,6 @@
           } else if (upperC.includes("PALLET") || upperC.includes("PL")) {
              displayHtml = formatPalletStr(val);
           } else if (upperC.includes("QTY") || upperC.includes("SUM")) {
-             // 數量顏色分級 (白 -> 黃 -> 紅)
              let num = parseFloat(val);
              if (!isNaN(num)) {
                  let numStr = String(num);
@@ -871,7 +871,6 @@
                  displayHtml = `<span style="color:var(--accent-cyan); font-weight:700;">${val}</span>`;
              }
           }
-          
           h+=`<td>${displayHtml}</td>`; 
         });
         h+=`</tr>`;
@@ -879,141 +878,150 @@
     }).withFailureHandler(e => msg.textContent="失敗:"+e.message).getAlQtyList();
   }
 
+  // SWR 快取渲染引擎 - OrderStatus
+  function renderOrderStatusData(res) {
+    const mc = document.getElementById('orderStatusMetricsContainer'); mc.innerHTML = "";
+    const tKeys = ["-AMR", "-M", "-PACK", "-MA", "01-09", "01~09"];
+    res.headers.forEach((h, idx) => {
+      if(!h)return; const n = h.toString().trim().toUpperCase().replace(/\s+/g,'');
+      if(tKeys.some(tk=>tk.replace(/\s+/g,'')===n)){
+        let v = res.totals[idx] || (res.data||[]).reduce((a,r)=>a+(parseFloat(r[h])||0),0);
+        mc.innerHTML += `<div class="summary-item-compact">${h.trim()}:<span>${v}</span></div>`;
+      }
+    });
+    document.getElementById('orderStatusSummaryBox').style.display = "flex";
+    let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${getCustomLabel(c)}</th>`); h+=`</tr>`;
+    if(res.totals && res.totals.length>0){
+      h+=`<tr class="gao-total-row">`; res.headers.forEach((c,i)=>{
+        let v=res.totals[i]||""; const cln=c?c.toString().trim().toUpperCase():"";
+        let cls = cln==="SCND"?"text-green":(cln==="-SCN"?"text-red":""); if(cln==="-SCN" && v && !String(v).startsWith("-")) v="-"+v;
+        if (v === 0 || String(v).trim() === "0") v = "";
+        h+=`<td class="${cls}">${v}</td>`;
+      }); h+=`</tr>`;
+    }
+    h+=`</thead><tbody>`;
+    (res.data||[]).forEach(i => {
+      h+=`<tr>`; res.headers.forEach(c => {
+        let v=i[c]!==undefined?i[c]:""; const cln=c?c.toString().trim().toUpperCase():"";
+        let fg = (cln==="COUNTRYC"||cln==="COUNTRY_C") ? getFlagHtml(v) : "";
+        let cls = ""; const vs = String(v).trim().toUpperCase();
+        if(vs==="MON"||vs.endsWith("MON")||vs.endsWith("/MON")) cls="highlight-mon";
+        if(cln==="SCND") cls+=" text-green"; else if(cln==="-SCN"){ cls+=" text-red"; if(v&&v!=="0"&&v!=="-"&&!String(v).startsWith("-")) v="-"+v; }
+        if (v === 0 || String(v).trim() === "0") v = "";
+        h+=`<td class="${cls}">${fg}${v}</td>`;
+      }); h+=`</tr>`;
+    }); h+=`</tbody></table>`; document.getElementById('orderStatusTableContainer').innerHTML = h;
+  }
+
   function loadOrderStatusList(force) {
     if (isOrderStatusLoaded && !force) return;
-    const msg = document.getElementById('orderStatusMsgArea'); msg.textContent = "讀取中...";
+    const msg = document.getElementById('orderStatusMsgArea'); 
+    
+    // SWR 步驟 1: 嘗試讀取快取
+    const cachedData = sessionStorage.getItem('wms_cache_orderStatus');
+    if (cachedData && !force) {
+      try {
+        renderOrderStatusData(JSON.parse(cachedData));
+        isOrderStatusLoaded = true;
+      } catch (e) { /* 快取解析失敗，靜默忽略 */ }
+    }
+
+    if (!cachedData || force) msg.textContent = "讀取中..."; // 如果沒快取才顯示讀取中，避免閃爍
+    
+    // SWR 步驟 2: 發送背景請求
     window.google.script.run.withSuccessHandler((res) => {
       msg.textContent = ""; isOrderStatusLoaded = true; fetchAndUpdateSyncTime('ODStatusProcess', 'lastOrderStatusRefreshedTime');
-      const mc = document.getElementById('orderStatusMetricsContainer'); mc.innerHTML = "";
-      const tKeys = ["-AMR", "-M", "-PACK", "-MA", "01-09", "01~09"];
-      res.headers.forEach((h, idx) => {
-        if(!h)return; const n = h.toString().trim().toUpperCase().replace(/\s+/g,'');
-        if(tKeys.some(tk=>tk.replace(/\s+/g,'')===n)){
-          let v = res.totals[idx] || (res.data||[]).reduce((a,r)=>a+(parseFloat(r[h])||0),0);
-          mc.innerHTML += `<div class="summary-item-compact">${h.trim()}:<span>${v}</span></div>`;
-        }
-      });
-      document.getElementById('orderStatusSummaryBox').style.display = "flex";
-      let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${getCustomLabel(c)}</th>`); h+=`</tr>`;
-      if(res.totals && res.totals.length>0){
-        h+=`<tr class="gao-total-row">`; res.headers.forEach((c,i)=>{
-          let v=res.totals[i]||""; const cln=c?c.toString().trim().toUpperCase():"";
-          let cls = cln==="SCND"?"text-green":(cln==="-SCN"?"text-red":""); if(cln==="-SCN" && v && !String(v).startsWith("-")) v="-"+v;
-          
-          // 隱藏 TOTAL 列中的 0
-          if (v === 0 || String(v).trim() === "0") v = "";
-
-          h+=`<td class="${cls}">${v}</td>`;
-        }); h+=`</tr>`;
+      
+      // SWR 步驟 3: 存入快取並重新渲染 (如果資料有變)
+      const newDataStr = JSON.stringify(res);
+      if (newDataStr !== cachedData) {
+        sessionStorage.setItem('wms_cache_orderStatus', newDataStr);
+        renderOrderStatusData(res);
       }
-      h+=`</thead><tbody>`;
-      (res.data||[]).forEach(i => {
-        h+=`<tr>`; res.headers.forEach(c => {
-          let v=i[c]!==undefined?i[c]:""; const cln=c?c.toString().trim().toUpperCase():"";
-          let fg = (cln==="COUNTRYC"||cln==="COUNTRY_C") ? getFlagHtml(v) : "";
-          let cls = ""; const vs = String(v).trim().toUpperCase();
-          if(vs==="MON"||vs.endsWith("MON")||vs.endsWith("/MON")) cls="highlight-mon";
-          if(cln==="SCND") cls+=" text-green"; else if(cln==="-SCN"){ cls+=" text-red"; if(v&&v!=="0"&&v!=="-"&&!String(v).startsWith("-")) v="-"+v; }
-          
-          // 隱藏一般資料列中的 0
-          if (v === 0 || String(v).trim() === "0") v = "";
+    }).withFailureHandler(e => {
+       if(!cachedData) msg.textContent="失敗:"+e.message; // 只有在沒快取時才報錯阻擋畫面
+    }).getOrderStatusData();
+  }
 
-          h+=`<td class="${cls}">${fg}${v}</td>`;
-        }); h+=`</tr>`;
-      }); h+=`</tbody></table>`; document.getElementById('orderStatusTableContainer').innerHTML = h;
-    }).withFailureHandler(e => msg.textContent="失敗:"+e.message).getOrderStatusData();
+  // SWR 快取渲染引擎 - GAO (DI)
+  function renderGaoData(res) {
+    let tCbm=0, tCtns=0, tPcs=0; document.getElementById('totGaoRows').textContent = res.rowCount||0;
+    let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
+    
+    let planKey = res.headers.find(h => h.toUpperCase().trim() === "PLAN");
+    let soKey = res.headers.find(h => h.toUpperCase().trim() === "S/O");
+    const pcKey = res.headers.find(h => h.toUpperCase().trim() === "P/C");
+    const genderKey = res.headers.find(h => h.toUpperCase().trim() === "GENDER");
+    const targetColorColumns = ["P/C", "GENDER", "CBM", "CTNS", "PCS"];
+
+    (res.data||[]).forEach(i => {
+      let isT = res.headers.some(c=>String(i[c]||"").trim().toUpperCase().includes("TOTAL"));
+      let planValue = planKey ? String(i[planKey] || "").trim().toUpperCase() : "";
+      let isPlanN = (planValue === "N");
+      if(!isT && i["S/O"]&&i["S/O"]!=="-") { tCbm+=parseFloat(i["CBM"])||0; tCtns+=parseFloat(i["Ctns"])||0; tPcs+=parseFloat(i["PCS"])||0; }
+      
+      let pcValue = pcKey ? String(i[pcKey] || "").trim().toUpperCase() : "";
+      let genderValue = genderKey ? String(i[genderKey] || "").trim().toUpperCase() : "";
+      let specialStyle = "";
+      if (pcValue.includes("GOH")) {
+          specialStyle = "color:#d946ef; font-weight:700;"; 
+      } else if (genderValue.includes("FOOTWEAR")) {
+          specialStyle = "color:#ff8c00; font-weight:700;"; 
+      } else if (genderValue.includes("ACCESSORY")) {
+          specialStyle = "color:#ff003c; font-weight:700;"; 
+      } else if (genderValue.includes("BDW")) {
+          specialStyle = "color:#86efac; font-weight:700;"; 
+      }
+
+      h+=`<tr class="${isT?'gao-total-row':''}">`;
+      res.headers.forEach((c, colIndex) => {
+        let v = i[c] !== undefined ? i[c] : ""; 
+        const cln = c ? c.toString().trim().toUpperCase() : "";
+        let cls = ""; 
+        const vOriginal = String(v).trim();
+        
+        if (colIndex === 0 && vOriginal.includes("週一") && !isT) { cls = "highlight-monday"; }
+        else if (cln === "SCND") { cls = "text-green"; } 
+        else if (cln === "-SCN") { cls = "text-red"; if(v && v !== "0" && v !== "-" && !String(v).startsWith("-")) v = "-" + v; }
+        if (c === soKey && isPlanN && !isT) { cls += " highlight-alert"; }
+        
+        let tdStyle = "";
+        if (vOriginal === "0" || vOriginal === "0.0") {
+            cls = ""; tdStyle = "color: rgba(255, 255, 255, 0.1) !important;";
+        } else if (!isT && specialStyle !== "" && targetColorColumns.includes(cln)) {
+            tdStyle = specialStyle;
+        }
+
+        h+=`<td class="${cls.trim()}" style="${tdStyle}">${v}</td>`;
+      }); h+=`</tr>`;
+    }); h+=`</tbody></table>`;
+    document.getElementById('totGaoCbm').textContent = Number.isInteger(tCbm)?tCbm:tCbm.toFixed(1); document.getElementById('totGaoCtns').textContent=tCtns; document.getElementById('totGaoPcs').textContent=tPcs;
+    document.getElementById('gaoSummaryBox').style.display = "flex"; document.getElementById('gaoTableContainer').innerHTML = h;
   }
 
   function loadGaoDataList(force) {
     if (isGaoLoaded && !force) return;
-    const msg = document.getElementById('gaoMsgArea'); msg.textContent = "讀取中...";
+    const msg = document.getElementById('gaoMsgArea'); 
+    
+    // SWR 步驟 1
+    const cachedData = sessionStorage.getItem('wms_cache_gao');
+    if (cachedData && !force) {
+      try { renderGaoData(JSON.parse(cachedData)); isGaoLoaded = true; } catch (e) {}
+    }
+    if (!cachedData || force) msg.textContent = "讀取中...";
+
+    // SWR 步驟 2
     window.google.script.run.withSuccessHandler((res) => {
       msg.textContent = ""; isGaoLoaded = true; fetchAndUpdateSyncTime('DIsyncGoogleSheet', 'lastGaoRefreshedTime');
-      let tCbm=0, tCtns=0, tPcs=0; document.getElementById('totGaoRows').textContent = res.rowCount||0;
-      let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
-      
-      // 找出 PLAN 欄位的索引，以便後續判斷 S/O 是否要變紅
-      let planKey = res.headers.find(h => h.toUpperCase().trim() === "PLAN");
-      let soKey = res.headers.find(h => h.toUpperCase().trim() === "S/O");
-
-      (res.data||[]).forEach(i => {
-        // 判斷是否為 TOTAL 列
-        let isT = res.headers.some(c=>String(i[c]||"").trim().toUpperCase().includes("TOTAL"));
-        
-        // 判斷 S/O 是否需要標紅 (當 PLAN 的值是 'N' 或 'n' 時)
-        let planValue = planKey ? String(i[planKey] || "").trim().toUpperCase() : "";
-        let isPlanN = (planValue === "N");
-
-        if(!isT && i["S/O"]&&i["S/O"]!=="-") { tCbm+=parseFloat(i["CBM"])||0; tCtns+=parseFloat(i["Ctns"])||0; tPcs+=parseFloat(i["PCS"])||0; }
-        
-        // --- 擷取目前列的 P/C 與 GENDER 供後續判斷 ---
-        const pcKey = res.headers.find(h => h.toUpperCase().trim() === "P/C");
-        const genderKey = res.headers.find(h => h.toUpperCase().trim() === "GENDER");
-        
-        // --- 定義需要連動變色的欄位群組 ---
-        const targetColorColumns = ["P/C", "GENDER", "CBM", "CTNS", "PCS"];
-        
-        let pcValue = pcKey ? String(i[pcKey] || "").trim().toUpperCase() : "";
-        let genderValue = genderKey ? String(i[genderKey] || "").trim().toUpperCase() : "";
-        
-        // 判斷是否符合特定條件，決定自訂樣式字串 (依據最新規則)
-        let specialStyle = "";
-        if (pcValue.includes("GOH")) {
-            specialStyle = "color:#d946ef; font-weight:700;"; // 粉紫色
-        } else if (genderValue.includes("FOOTWEAR")) {
-            specialStyle = "color:#ff8c00; font-weight:700;"; // 亮橘色
-        } else if (genderValue.includes("ACCESSORY")) {
-            specialStyle = "color:#ff003c; font-weight:700;"; // 亮紅色
-        } else if (genderValue.includes("BDW")) {
-            specialStyle = "color:#86efac; font-weight:700;"; // 淡綠色
-        }
-
-        h+=`<tr class="${isT?'gao-total-row':''}">`;
-        res.headers.forEach((c, colIndex) => {
-          let v = i[c] !== undefined ? i[c] : ""; 
-          const cln = c ? c.toString().trim().toUpperCase() : "";
-          let cls = ""; 
-          const vs = String(v).trim().toUpperCase();
-          const vOriginal = String(v).trim();
-          
-          // 1. DI 分頁專屬：第一欄 (colIndex === 0) 如果包含 "週一"，變成深紅色粗體
-          if (colIndex === 0 && vOriginal.includes("週一") && !isT) {
-              cls = "highlight-monday";
-          }
-          // 2. 常規狀態色 (SCND 綠色 / -SCN 紅色)
-          else if (cln === "SCND") {
-              cls = "text-green"; 
-          } else if (cln === "-SCN") { 
-              cls = "text-red"; 
-              if(v && v !== "0" && v !== "-" && !String(v).startsWith("-")) v = "-" + v; 
-          }
-          
-          // 3. 如果是 S/O 欄位，且 PLAN 是 'N'，字體變紅
-          if (c === soKey && isPlanN && !isT) {
-              cls += " highlight-alert";
-          }
-          
-          // 準備輸出的 HTML 字串
-          let tdContent = v;
-          let tdStyle = "";
-
-          // 4. 處理 "0" 或 "0.0"：給予極不明顯的顏色
-          if (vOriginal === "0" || vOriginal === "0.0") {
-              // 覆蓋掉可能存在的 cls (例如 text-green)，強制套用微弱樣式
-              cls = ""; 
-              tdStyle = "color: rgba(255, 255, 255, 0.1) !important;";
-          } 
-          // 5. 擴大連動變色範圍：判斷目前欄位名稱是否在 targetColorColumns 陣列中
-          else if (!isT && specialStyle !== "" && targetColorColumns.includes(cln)) {
-              tdStyle = specialStyle;
-          }
-
-          h+=`<td class="${cls.trim()}" style="${tdStyle}">${tdContent}</td>`;
-        }); h+=`</tr>`;
-      }); h+=`</tbody></table>`;
-      document.getElementById('totGaoCbm').textContent = Number.isInteger(tCbm)?tCbm:tCbm.toFixed(1); document.getElementById('totGaoCtns').textContent=tCtns; document.getElementById('totGaoPcs').textContent=tPcs;
-      document.getElementById('gaoSummaryBox').style.display = "flex"; document.getElementById('gaoTableContainer').innerHTML = h;
-    }).withFailureHandler(e => msg.textContent="失敗:"+e.message).getGaoData();
+      // SWR 步驟 3
+      const newDataStr = JSON.stringify(res);
+      if (newDataStr !== cachedData) {
+        sessionStorage.setItem('wms_cache_gao', newDataStr);
+        renderGaoData(res);
+      }
+    }).withFailureHandler(e => {
+       if(!cachedData) msg.textContent="失敗:"+e.message;
+    }).getGaoData();
   }
 
   function loadRecDataList(force) {
