@@ -2,7 +2,6 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <!-- 保留兩指縮放功能 (無 maximum-scale 限制) -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rahoentusy WMS</title>
   
@@ -20,9 +19,6 @@
 
   <!-- 引入強大的條碼掃描庫 html5-qrcode -->
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-
-  <!-- 🌟 引入純前端動態 QR Code 生成庫 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
     /* 賽博藍 (Cyber Blue) 現代化美學變數設定 */
@@ -64,9 +60,7 @@
     .sys-title {
       font-size: 18px; font-weight: 700; color: var(--text-main); margin: 0;
       text-shadow: 0 0 12px rgba(255, 255, 255, 0.2); display: flex; align-items: center; gap: 6px;
-      cursor: pointer; transition: color 0.2s ease;
     }
-    .sys-title:hover { color: var(--accent-cyan); }
     .sys-user { font-size: 11px; color: var(--accent-cyan); font-family: 'Roboto Mono', monospace; }
     
     /* 無框化 導覽頁籤 Tab Bar */
@@ -88,8 +82,6 @@
 
     /* 輸入框與搜尋按鈕 */
     .search-box { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: nowrap; }
-    
-    /* 🌟 將 font-size 設定為 16px 避免 iOS 自動放大 */
     input[type="text"] {
       flex: 1; min-width: 50px; padding: 8px 12px; font-size: 16px !important;
       background-color: var(--bg-deep); color: var(--text-main); 
@@ -138,16 +130,15 @@
       font-size: 12px; font-family: 'Roboto Mono', monospace; color: var(--accent-cyan);
     }
 
-    /* 🌟 改為單行水平排版，極致瘦身 */
     .filter-group-compact {
-      display: flex; gap: 4px; padding: 2px 0;
+      display: flex; gap: 4px; margin-bottom: 4px; padding: 2px 0;
     }
     .filter-btn-compact {
-      flex: 1; padding: 2px 0; font-size: 10px !important; background: var(--bg-deep); 
+      flex: 1; padding: 4px 2px; font-size: 10px !important; background: var(--bg-deep); 
       border: 1px solid var(--border-light); color: var(--text-muted); border-radius: 4px; 
-      display: flex; flex-direction: row; align-items: baseline; justify-content: center; gap: 3px;
+      display: flex; flex-direction: row; align-items: baseline; justify-content: center; gap: 3px; line-height: 1.2;
     }
-    .filter-btn-compact span { font-size: 12px; font-family: 'Roboto Mono', monospace; }
+    .filter-btn-compact span { font-size: 12px; font-family: 'Roboto Mono', monospace; margin-top: 1px; }
     .filter-btn-compact.active {
       background: var(--bg-card); border-color: var(--accent-cyan); color: var(--accent-cyan);
     }
@@ -164,7 +155,7 @@
     }
     .camera-wrapper video { width: 100% !important; height: 140px !important; object-fit: cover !important; }
     
-    /* 表格與卡片共用設定 */
+    /* 表格與卡片共用設定 (等寬字體與無框線化) */
     .card-list { display: flex; flex-direction: column; gap: 8px; }
     .inventory-card { 
       background: var(--bg-card); border-radius: 6px; padding: 8px; 
@@ -191,7 +182,7 @@
     /* 高亮與特效 */
     .gao-total-row td { background: rgba(251, 191, 36, 0.1) !important; color: var(--status-yellow) !important; font-weight: 700; border-top: 1px solid var(--status-yellow) !important; }
     .highlight-mon { color: #f472b6 !important; font-weight: 700 !important; }
-    .highlight-monday { color: #ef4444 !important; font-weight: 700 !important; }
+    .highlight-monday { color: #ef4444 !important; font-weight: 700 !important; } /* 深紅色：週一高亮 */
     .highlight-alert { color: var(--status-red) !important; font-weight: 700 !important; }
     .last-scanned-highlight td { background-color: rgba(56, 189, 248, 0.15) !important; border-top: 1px solid var(--accent-cyan) !important; border-bottom: 1px solid var(--accent-cyan) !important; }
 
@@ -229,10 +220,10 @@
 </head>
 <body>
 
-<!-- PIN 碼解鎖遮罩 -->
+<!-- PIN 碼解鎖遮罩 (Hacker / Cyber 風格) -->
 <div id="pinLoginOverlay" class="glass-overlay">
   <div class="glass-box" style="border-color: rgba(56,189,248,0.3); box-shadow: 0 0 30px rgba(56,189,248,0.1);">
-    <!-- 開發者上帝模式隱形按鈕 -->
+    <!-- 開發者上帝模式隱形按鈕 (支援手機雙擊) -->
     <div id="devGodModeBtn" style="position: absolute; bottom: 10px; left: 10px; width: 50px; height: 50px; cursor: default; z-index: 10;" onclick="handleGodModeTap(event)" ontouchend="handleGodModeTap(event)"></div>
 
     <div class="pin-title"><i class="ph ph-lock-key"></i> SYSTEM LOCKED</div>
@@ -240,17 +231,6 @@
     <input type="password" id="pinInput" class="pin-input" placeholder="••••" onkeydown="if(event.key === 'Enter') attemptLogin()">
     <button class="primary-btn" style="width: 100%; padding: 12px;" onclick="attemptLogin()" id="loginBtn">ACCESS GRANTED</button>
     <div id="pinErrorMsg" class="pin-error"></div>
-  </div>
-</div>
-
-<!-- 🌟 系統專屬 QR Code 彈窗 -->
-<div id="qrModalOverlay" class="glass-overlay" style="display: none; z-index: 99999;" onclick="closeSystemQrCode(event)">
-  <div class="glass-box" style="border-color: var(--accent-cyan);" onclick="event.stopPropagation();">
-    <div class="pin-title"><i class="ph-fill ph-hexagon"></i> Rahoentusy</div>
-    <div style="color: var(--text-muted); font-size: 11px; margin-bottom: 16px; font-family: 'Roboto Mono', monospace;">System Access Portal</div>
-    <!-- QR Code 生成容器 -->
-    <div id="sysQrCodeContainer" style="background: #fff; padding: 12px; border-radius: 8px; display: inline-block;"></div>
-    <button class="primary-btn" style="width: 100%; margin-top: 16px;" onclick="closeSystemQrCode()">關閉 (CLOSE)</button>
   </div>
 </div>
 
@@ -285,8 +265,7 @@
 <div class="container" id="mainContainer" style="display: none;">
   
   <div class="sys-header">
-    <!-- 🌟 加入 onclick 事件觸發 QR Code 生成 -->
-    <div class="sys-title" onclick="showSystemQrCode()"><i class="ph-fill ph-hexagon"></i> Rahoentusy</div>
+    <div class="sys-title"><i class="ph-fill ph-hexagon"></i> Rahoentusy</div>
     <div class="sys-user" id="currentUserDisplay">Logged as: -</div>
   </div>
   
@@ -301,7 +280,7 @@
     <button class="tab-btn" data-target="db" onclick="switchTab('db')"><i class="ph ph-database"></i> DB</button>
   </div>
 
-  <!-- Search View -->
+  <!-- Search View (查詢分頁) -->
   <div id="searchView" class="view-section" style="display: none;">
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="輸入 LOCATION 或 條碼" autofocus>
@@ -316,7 +295,7 @@
     <div id="cardContainer" class="card-list"></div>
   </div>
 
-  <!-- RESTOCK List View -->
+  <!-- RESTOCK List View (補貨分頁) -->
   <div id="listView" class="view-section" style="display: none;">
     <div id="listMsgArea" class="message"></div>
     <div class="summary-box-compact" id="listSummaryBox" style="display: none;">
@@ -331,8 +310,9 @@
     <div class="compact-table-wrapper"><div id="listTableContainer"></div></div>
   </div>
 
-  <!-- AUDIT View -->
+  <!-- AUDIT Stock Counting View (盤點分頁) -->
   <div id="auditView" class="view-section" style="display: none;">
+    <!-- 移除了步驟1的文字，節省空間 -->
     <div class="search-box" style="margin-bottom: 4px;">
       <input type="text" id="auditLocInput" placeholder="輸入LOCATION">
       <button id="auditScanLocBtn" class="icon-btn btn-camera" onclick="startLocationScanner()"><i class="ph ph-camera"></i></button>
@@ -342,6 +322,7 @@
     <div id="reader" class="camera-wrapper" style="display:none;"></div>
     <button id="stopScanLocBtn" style="display:none; width: 100%; margin-bottom: 8px; background: var(--bg-hover);" onclick="stopLocationScanner()">關閉相機</button>
 
+    <!-- 終極一行流控制列 -->
     <div id="auditScanSection" style="display: none; background: var(--bg-card); padding: 6px; border-radius: 6px; border: 1px solid var(--border-light); margin-bottom: 4px;">
       <div class="search-box" style="margin-bottom: 0;">
         <input type="text" id="auditScanInput" placeholder="連續掃描實物條碼..." onkeydown="handleAuditScan(event)">
@@ -363,6 +344,7 @@
 
     <div id="auditMsgArea" class="message"></div>
 
+    <!-- 極限緊湊：盤點總計摘要區 8px/12px -->
     <div class="summary-box-compact" id="auditSummaryBox" style="display: none;">
       <div class="summary-item-compact">PLC:<span id="auditSysPlc">0</span></div>
       <div class="summary-item-compact">TAGC:<span id="auditSysTag">0</span></div>
@@ -373,11 +355,12 @@
       <div class="summary-item-compact text-yellow">🟡盈:<span id="auditExtraQty" class="text-yellow">0</span></div>
     </div>
 
+    <!-- 極限緊湊：動態篩選按鈕列 8px/12px -->
     <div id="auditFilterGroup" class="filter-group-compact" style="display: none;">
-      <button class="filter-btn-compact active" id="filterAll" onclick="filterAuditResult('all')">全部<span id="fAll">(0)</span></button>
-      <button class="filter-btn-compact text-red" id="filterMissing" onclick="filterAuditResult('missing')">🔴 盤虧<span id="fMis">(0)</span></button>
-      <button class="filter-btn-compact text-yellow" id="filterExtra" onclick="filterAuditResult('extra')">🟡 盤盈<span id="fExt">(0)</span></button>
-      <button class="filter-btn-compact text-green" id="filterMatch" onclick="filterAuditResult('match')">🟢 正常<span id="fMat">(0)</span></button>
+      <button class="filter-btn-compact active" id="filterAll" onclick="filterAuditResult('all')">全部<span id="fAll">0</span></button>
+      <button class="filter-btn-compact text-red" id="filterMissing" onclick="filterAuditResult('missing')">🔴 盤虧<span id="fMis">0</span></button>
+      <button class="filter-btn-compact text-yellow" id="filterExtra" onclick="filterAuditResult('extra')">🟡 盤盈<span id="fExt">0</span></button>
+      <button class="filter-btn-compact text-green" id="filterMatch" onclick="filterAuditResult('match')">🟢 正常<span id="fMat">0</span></button>
     </div>
 
     <div id="auditResultContainer"></div>
@@ -387,6 +370,7 @@
   <div id="orderStatusView" class="view-section" style="display: none;">
     <div id="orderStatusMsgArea" class="message"></div>
     <div class="summary-box-compact" id="orderStatusSummaryBox" style="display: none;">
+      <!-- 將 justify-content: center 改為 flex-start 讓它靠左 -->
       <div id="orderStatusMetricsContainer" style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-start; flex: 1;"></div>
       <div style="display:flex; align-items:center; gap:4px; padding-left: 6px; border-left: 1px solid var(--border-light);">
         <span id="lastOrderStatusRefreshedTime" style="font-size: 10px; color: var(--text-muted); font-family:'Roboto Mono';">--:--</span>
@@ -443,7 +427,87 @@
 
 <script>
   // =======================================================================
-  // 純前端序列化佇列 API 通訊層
+  // 上帝模式 (開發者專用後門)
+  // =======================================================================
+  let lastGodModeTap = 0;
+  function handleGodModeTap(e) {
+    if (e && e.type === 'touchend') e.preventDefault();
+    const now = Date.now();
+    if (now - lastGodModeTap < 400 && (now - lastGodModeTap > 50)) {
+      activateGodMode(); lastGodModeTap = 0;
+    } else { lastGodModeTap = now; }
+  }
+
+  function activateGodMode() {
+    const godModePayload = { 
+      success: true, 
+      name: "Dev Admin", 
+      // 🌟 將上帝模式的預設順序也改成跟您的 Sheet 一樣
+      permissions: ["rec", "gao", "list", "orderStatus", "search", "audit", "db"] 
+    };
+    sessionStorage.setItem('wms_auth', JSON.stringify(godModePayload)); applyPermissions(godModePayload);
+  }
+
+  // =======================================================================
+  // 登入與動態權限過濾 (🌟 完全依賴後端陣列順序版)
+  // =======================================================================
+  window.onload = function() {
+    const cachedAuth = sessionStorage.getItem('wms_auth');
+    if (cachedAuth) {
+      try { const authData = JSON.parse(cachedAuth); applyPermissions(authData); } 
+      catch (e) { document.getElementById('pinLoginOverlay').style.display = 'flex'; }
+    } else {
+      document.getElementById('pinLoginOverlay').style.display = 'flex'; document.getElementById('pinInput').focus();
+    }
+  };
+
+  function attemptLogin() {
+    const pin = document.getElementById('pinInput').value.trim(); if (!pin) return;
+    const btn = document.getElementById('loginBtn'); const msg = document.getElementById('pinErrorMsg');
+    btn.disabled = true; btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> VERIFYING...'; msg.textContent = "";
+
+    window.google.script.run
+      .withSuccessHandler(function(res) {
+        if (res.success) { sessionStorage.setItem('wms_auth', JSON.stringify(res)); applyPermissions(res); } 
+        else { btn.disabled = false; btn.innerHTML = 'ACCESS GRANTED'; msg.textContent = res.error || "登入失敗"; }
+      })
+      .withFailureHandler(function(err) { btn.disabled = false; btn.innerHTML = 'ACCESS GRANTED'; msg.textContent = "網路錯誤"; })
+      .verifyPinCode(pin);
+  }
+
+  function applyPermissions(authData) {
+    document.getElementById('pinLoginOverlay').style.display = 'none';
+    document.getElementById('mainContainer').style.display = 'block';
+    
+    document.getElementById('currentUserDisplay').textContent = "Logged as: " + (authData.name || "Unknown");
+
+    const perms = authData.permissions || [];
+    const tabs = document.querySelectorAll('.tab-btn');
+    
+    tabs.forEach(tab => {
+      const target = tab.getAttribute('data-target');
+      if (perms.includes(target)) {
+        tab.style.display = 'flex';
+        
+        // 🌟 核心魔法：直接拿後端陣列的 Index 當作 Flexbox 的 Order
+        // 這樣您的後端傳來什麼順序，前端就一定長什麼順序！
+        const orderIndex = perms.indexOf(target);
+        tab.style.order = orderIndex; 
+      } else {
+        tab.style.display = 'none';
+      }
+    });
+
+    // 預設跳轉到權限陣列中的第一個分頁 (也就是排在最左邊的那個)
+    if (perms.length > 0) {
+      switchTab(perms[0]);
+    } else {
+      document.getElementById('msgArea').textContent = "您沒有任何分頁權限。";
+    }
+  }
+
+  // =======================================================================
+  // 相機掃描
   // =======================================================================
   const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxn95iB72ljeNugSzIT7vpviDp-bwXiA8HnPQ3UXxLFOnxafBc8imVU5oyvhjOSdcaX/exec";
 
@@ -496,37 +560,7 @@
   window.google = { script: { run: gasApiRun } };
 
   // =======================================================================
-  // 🌟 新增：系統專屬 QR Code 生成邏輯
-  // =======================================================================
-  function showSystemQrCode() {
-    const overlay = document.getElementById('qrModalOverlay');
-    const container = document.getElementById('sysQrCodeContainer');
-    
-    // 顯示彈窗
-    overlay.style.display = 'flex';
-    
-    // 清空舊的內容以防重複生成
-    container.innerHTML = '';
-    
-    // 使用 qrcode.js 生成即時 QR Code
-    new QRCode(container, {
-      text: "https://hh96404415-source.github.io/Rahoentusy/",
-      width: 180,
-      height: 180,
-      colorDark : "#000000",
-      colorLight : "#ffffff",
-      correctLevel : QRCode.CorrectLevel.M
-    });
-  }
-
-  function closeSystemQrCode(e) {
-    // 如果傳入了 event，確保只有點擊外圍黑色遮罩才關閉（點擊白色框塊內部不關閉）
-    if (e && e.target !== e.currentTarget) return; 
-    document.getElementById('qrModalOverlay').style.display = 'none';
-  }
-
-  // =======================================================================
-  // 動態讀取進度引擎 (Smart Loading Progress)
+  // 🌟 新增：動態讀取進度引擎 (Smart Loading Progress)
   // =======================================================================
   const loadingTimers = {};
   
@@ -557,46 +591,70 @@
 
 
   // =======================================================================
-  // 上帝模式 (開發者專用後門)
+  // 上帝模式 (開發者專用後門) - 手機相容觸控版
   // =======================================================================
   let lastGodModeTap = 0;
+  
   function handleGodModeTap(e) {
-    if (e && e.type === 'touchend') e.preventDefault();
+    if (e && e.type === 'touchend') {
+      e.preventDefault(); // 防止手機觸控後又觸發 click，造成誤判或畫面放大
+    }
     const now = Date.now();
+    // 如果距離上一次點擊小於 400 毫秒 (0.4秒)，且大於 50 毫秒(防止同一次點擊觸發兩次事件)
     if (now - lastGodModeTap < 400 && (now - lastGodModeTap > 50)) {
-      activateGodMode(); lastGodModeTap = 0;
-    } else { lastGodModeTap = now; }
+      activateGodMode();
+      lastGodModeTap = 0;
+    } else {
+      lastGodModeTap = now;
+    }
   }
 
   function activateGodMode() {
-    const godModePayload = { success: true, name: "Dev Admin", permissions: ["search", "list", "audit", "orderStatus", "gao", "rec", "db"] };
-    sessionStorage.setItem('wms_auth', JSON.stringify(godModePayload)); applyPermissions(godModePayload);
+    const godModePayload = {
+      success: true,
+      name: "Dev Admin",
+      // 🌟 將上帝模式的預設順序改為與您的 Google Sheet 表頭一致：REC, DI, 補貨, 訂單, 查詢, 盤點, DB
+      permissions: ["rec", "gao", "list", "orderStatus", "search", "audit", "db"]
+    };
+    sessionStorage.setItem('wms_auth', JSON.stringify(godModePayload));
+    applyPermissions(godModePayload);
   }
 
   // =======================================================================
-  // 登入與動態權限過濾 (前端強制自訂排序版)
+  // 登入與動態權限過濾 (PIN Code RBAC) + 動態排序
   // =======================================================================
   window.onload = function() {
     const cachedAuth = sessionStorage.getItem('wms_auth');
     if (cachedAuth) {
-      try { const authData = JSON.parse(cachedAuth); applyPermissions(authData); } 
-      catch (e) { document.getElementById('pinLoginOverlay').style.display = 'flex'; }
+      try {
+        const authData = JSON.parse(cachedAuth);
+        applyPermissions(authData);
+      } catch (e) { document.getElementById('pinLoginOverlay').style.display = 'flex'; }
     } else {
-      document.getElementById('pinLoginOverlay').style.display = 'flex'; document.getElementById('pinInput').focus();
+      document.getElementById('pinLoginOverlay').style.display = 'flex';
+      document.getElementById('pinInput').focus();
     }
   };
 
   function attemptLogin() {
-    const pin = document.getElementById('pinInput').value.trim(); if (!pin) return;
-    const btn = document.getElementById('loginBtn'); const msg = document.getElementById('pinErrorMsg');
+    const pin = document.getElementById('pinInput').value.trim();
+    if (!pin) return;
+    const btn = document.getElementById('loginBtn');
+    const msg = document.getElementById('pinErrorMsg');
     btn.disabled = true; btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> VERIFYING...'; msg.textContent = "";
 
     window.google.script.run
       .withSuccessHandler(function(res) {
-        if (res.success) { sessionStorage.setItem('wms_auth', JSON.stringify(res)); applyPermissions(res); } 
-        else { btn.disabled = false; btn.innerHTML = 'ACCESS GRANTED'; msg.textContent = res.error || "登入失敗"; }
+        if (res.success) {
+          sessionStorage.setItem('wms_auth', JSON.stringify(res));
+          applyPermissions(res);
+        } else {
+          btn.disabled = false; btn.innerHTML = 'ACCESS GRANTED'; msg.textContent = res.error || "登入失敗";
+        }
       })
-      .withFailureHandler(function(err) { btn.disabled = false; btn.innerHTML = 'ACCESS GRANTED'; msg.textContent = "網路錯誤"; })
+      .withFailureHandler(function(err) {
+        btn.disabled = false; btn.innerHTML = 'ACCESS GRANTED'; msg.textContent = "網路或伺服器錯誤";
+      })
       .verifyPinCode(pin);
   }
 
@@ -604,45 +662,47 @@
     document.getElementById('pinLoginOverlay').style.display = 'none';
     document.getElementById('mainContainer').style.display = 'block';
     
+    // 更新標題使用者名稱
     document.getElementById('currentUserDisplay').textContent = "Logged as: " + (authData.name || "Unknown");
 
     const perms = authData.permissions || [];
     const tabs = document.querySelectorAll('.tab-btn');
     
-    // 【前端強制自訂排序表】 隨時可在此調整分頁顯示順序
-    const CUSTOM_ORDER = ["gao", "audit", "search", "list", "orderStatus", "rec", "db"];
-
     tabs.forEach(tab => {
       const target = tab.getAttribute('data-target');
       if (perms.includes(target)) {
         tab.style.display = 'flex';
-        const orderIndex = CUSTOM_ORDER.indexOf(target);
-        tab.style.order = orderIndex !== -1 ? orderIndex : 99;
+        
+        // 🌟 核心魔法：根據後端傳來的陣列 index 來設定 Flexbox 的 order
+        // 這會讓前端的分頁順序完全聽從 Google Sheet 裡的順序排列！
+        const orderIndex = perms.indexOf(target);
+        tab.style.order = orderIndex; 
       } else {
         tab.style.display = 'none';
       }
     });
 
-    const firstVisibleTab = CUSTOM_ORDER.find(target => perms.includes(target));
-
-    if (firstVisibleTab) {
-      switchTab(firstVisibleTab);
+    // 預設跳轉到權限陣列中的第一個分頁
+    if (perms.length > 0) {
+      switchTab(perms[0]);
     } else {
       document.getElementById('msgArea').textContent = "您沒有任何分頁權限。";
     }
   }
 
   // =======================================================================
-  // 相機掃描
+  // HTML5 QR Code Scanner 相機掃描
   // =======================================================================
-  let html5QrCode = null; let barcodeHtml5QrCode = null; let pendingBarcode = null; let lastDetected = null;
+  let html5QrCode = null; let barcodeHtml5QrCode = null;
+  let pendingBarcode = null; let lastDetected = null;
 
   function startLocationScanner() {
     const r = document.getElementById('reader'); const btn = document.getElementById('stopScanLocBtn');
     r.style.display = 'block'; btn.style.display = 'block';
     if (!html5QrCode) html5QrCode = new Html5Qrcode("reader"); 
     html5QrCode.start( { facingMode: "environment" }, { fps: 10 },
-      (text) => { document.getElementById('auditLocInput').value = text; stopLocationScanner(); startAuditSession(); }, () => {}
+      (text) => { document.getElementById('auditLocInput').value = text; stopLocationScanner(); startAuditSession(); },
+      () => {}
     ).catch(e => { alert("相機錯誤: " + e); stopLocationScanner(); });
   }
   function stopLocationScanner() {
@@ -661,7 +721,8 @@
         const cleanCode = text.trim().toUpperCase();
         if (pendingBarcode === cleanCode || lastDetected === cleanCode) return;
         lastDetected = cleanCode; pendingBarcode = cleanCode;
-        playScanSound('pending'); triggerVibration(60); confirmBarcodeScan();
+        playScanSound('pending'); triggerVibration(60);
+        confirmBarcodeScan(); // 直接自動確認以加快流暢度
       }, () => {}
     ).catch(e => { alert("相機錯誤: " + e); stopBarcodeScanner(); });
   }
@@ -683,17 +744,69 @@
   // ==========================================
   // 工具與全功能國旗
   // ==========================================
-  const COUNTRY_FLAG_CODES = { "RUS": "ru", "USA": "us", "JPN": "jp", "CAN": "ca", "MEX": "mx", "AUS": "au", "KOR": "kr", "MAC": "mo", "TWN": "tw", "CHN": "cn", "HKG": "hk", "IDN": "id", "BRA": "br", "THA": "th", "KWT": "kw", "ARE": "ae", "SAU": "sa", "BHR": "bh", "SGP": "sg", "MYS": "my", "QAT": "qa", "KHM": "kh", "UZB": "uz", "PAK": "pk", "VNM": "vn", "PHL": "ph", "ISR": "il", "SUR": "sr", "GTM": "gt", "ARM": "am", "IND": "in", "KAZ": "kz", "MMR": "mm", "UKR": "ua", "ITA": "it", "ZAF": "za", "PRY": "py", "EGY": "eg", "LBN": "lb", "CHL": "cl", "VEN": "ve", "MUS": "mu", "URY": "uy", "COL": "co" };
+  const COUNTRY_FLAG_CODES = {
+    "RUS": "ru", "RU": "ru", "俄羅斯": "ru",
+    "USA": "us", "US": "us", "美國": "us",
+    "JPN": "jp", "JP": "jp", "日本": "jp",
+    "CAN": "ca", "CA": "ca", "加拿大": "ca",
+    "MEX": "mx", "MX": "mx", "墨西哥": "mx",
+    "AUS": "au", "AU": "au", "澳大利亞": "au", "澳洲": "au",
+    "KOR": "kr", "KR": "kr", "韓國": "kr",
+    "MAC": "mo", "MO": "mo", "澳門": "mo",
+    "TWN": "tw", "TW": "tw", "台灣": "tw",
+    "CHN": "cn", "CN": "cn", "中國": "cn", "中国": "cn",
+    "HKG": "hk", "HK": "hk", "香港": "hk",
+    "IDN": "id", "ID": "id", "印尼": "id",
+    "BRA": "br", "BR": "br", "巴西": "br",
+    "THA": "th", "TH": "th", "泰國": "th",
+    "KWT": "kw", "KW": "kw", "科威特": "kw",
+    "ARE": "ae", "AE": "ae", "阿聯酋": "ae",
+    "SAU": "sa", "SA": "sa", "沙特": "sa", "沙烏地": "sa",
+    "BHR": "bh", "BH": "bh", "巴林": "bh",
+    "SGP": "sg", "SG": "sg", "新加坡": "sg",
+    "MYS": "my", "MY": "my", "馬來西亞": "my",
+    "QAT": "qa", "QA": "qa", "卡塔爾": "qa", "卡達": "qa",
+    "KHM": "kh", "KH": "kh", "柬埔寨": "kh",
+    "UZB": "uz", "UZ": "uz", "烏茲別克": "uz",
+    "PAK": "pk", "PK": "pk", "巴基斯坦": "pk",
+    "VNM": "vn", "VN": "vn", "越南": "vn",
+    "PHL": "ph", "PH": "ph", "菲律賓": "ph",
+    "ISR": "il", "IL": "il", "以色列": "il",
+    "SUR": "sr", "SR": "sr", "蘇里南": "sr", "蘇利南": "sr",
+    "GTM": "gt", "GT": "gt", "危地馬拉": "gt", "瓜地馬拉": "gt",
+    "ARM": "am", "AM": "am", "亞美尼亞": "am",
+    "IND": "in", "IN": "in", "印度": "in",
+    "KAZ": "kz", "KZ": "kz", "哈薩克斯坦": "kz", "哈薩克": "kz",
+    "MMR": "mm", "MM": "mm", "緬甸": "mm",
+    "UKR": "ua", "UA": "ua", "烏克蘭": "ua",
+    "ITA": "it", "IT": "it", "意大利": "it", "義大利": "it",
+    "ZAF": "za", "ZA": "za", "南非": "za",
+    "PRY": "py", "PY": "py", "巴拉圭": "py",
+    "EGY": "eg", "EG": "eg", "埃及": "eg",
+    "LBN": "lb", "LB": "lb", "黎巴嫩": "lb",
+    "CHL": "cl", "CL": "cl", "智利": "cl",
+    "VEN": "ve", "VE": "ve", "委內瑞拉": "ve",
+    "MUS": "mu", "MU": "mu", "毛里求斯": "mu", "模里西斯": "mu",
+    "URY": "uy", "UY": "uy", "烏拉圭": "uy",
+    "COL": "co", "CO": "co", "哥倫比亞": "co"
+  };
+
   function getFlagHtml(text) {
-    if (!text || typeof text !== 'string') return ""; const str = text.trim(); if (!str) return "";
+    if (!text || typeof text !== 'string') return "";
+    const str = text.trim(); if (!str) return "";
     const code = COUNTRY_FLAG_CODES[str.toUpperCase()] || COUNTRY_FLAG_CODES[str];
     if (code) return `<img src="https://flagcdn.com/w20/${code}.png" style="height:11px; width:14px; vertical-align:middle; margin-right:2px; border-radius:1px; display:inline-block;">`;
     return "";
   }
+  
   function fetchAndUpdateSyncTime(targetTitle, elementId) {
     const el = document.getElementById(elementId); if (el) el.textContent = "--:--";
-    window.google.script.run.withSuccessHandler((res) => {
-        if (res && res.data) { const item = res.data.find(i => String(i["TITLE"]||"").trim() === targetTitle); if (item && el) el.textContent = String(item["DATA"]||"").trim(); }
+    window.google.script.run
+      .withSuccessHandler((res) => {
+        if (res && res.data) {
+          const item = res.data.find(i => String(i["TITLE"]||"").trim() === targetTitle);
+          if (item && el) el.textContent = String(item["DATA"]||"").trim();
+        }
       }).getDbData();
   }
 
@@ -702,7 +815,8 @@
   // ==========================================
   let auditSoundEnabled = true; let audioCtx = null;
   function toggleAuditSound() {
-    auditSoundEnabled = !auditSoundEnabled; const btn = document.getElementById('soundToggleBtn');
+    auditSoundEnabled = !auditSoundEnabled;
+    const btn = document.getElementById('soundToggleBtn');
     btn.innerHTML = auditSoundEnabled ? '<i class="ph ph-speaker-high"></i>' : '<i class="ph ph-speaker-slash"></i>';
     btn.style.color = auditSoundEnabled ? 'var(--accent-cyan)' : 'var(--text-muted)';
   }
@@ -711,7 +825,8 @@
     try {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') audioCtx.resume();
-      const now = audioCtx.currentTime; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
       osc.connect(gain); gain.connect(audioCtx.destination);
       if (type === 'pending') { osc.type = 'sine'; osc.frequency.setValueAtTime(600, now); gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.1); osc.start(now); osc.stop(now+0.1); }
       else if (type === 'match') { osc.type = 'sine'; osc.frequency.setValueAtTime(880, now); osc.frequency.setValueAtTime(1174.66, now+0.08); gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.2); osc.start(now); osc.stop(now+0.2); }
@@ -727,23 +842,36 @@
   function getCustomLabel(colName) { if (!colName || colName.startsWith("COL_")) return ""; return LABEL_MAP[colName] || colName; }
   function getValue(item, key) { const val = item[key]; return (val !== undefined && val !== null && val !== "" && val !== "-") ? val : "NA"; }
 
+  // 🌟 修改：儲位分段變色 (前2碼依新分組變色, 中3綠, 後續青)
   function formatLocationStr(locStr) {
-    if (!locStr) return ""; let str = String(locStr).trim(); if (str.length < 5) return str; 
-    let part1 = str.substring(0, 2); let part2 = str.substring(2, 5); let part3 = str.substring(5);
-    let part1Color = "#ffea00"; 
-    if (part1 === "02" || part1 === "03") part1Color = "#ff007f"; 
-    else if (part1 === "04" || part1 === "05") part1Color = "#b026ff"; 
-    else if (part1 === "06" || part1 === "07") part1Color = "#ff8c00"; 
-    else if (part1 === "08" || part1 === "09") part1Color = "#ff003c"; 
+    if (!locStr) return "";
+    let str = String(locStr).trim();
+    if (str.length < 5) return str; // 長度不夠就不處理
+    let part1 = str.substring(0, 2);
+    let part2 = str.substring(2, 5);
+    let part3 = str.substring(5);
+    
+    // 判斷前兩碼所屬的群組並決定顏色
+    let part1Color = "#ffea00"; // 預設黃色 (01)
+    
+    if (part1 === "02" || part1 === "03") {
+        part1Color = "#ff007f"; // 霓虹粉
+    } else if (part1 === "04" || part1 === "05") {
+        part1Color = "#b026ff"; // 亮紫
+    } else if (part1 === "06" || part1 === "07") {
+        part1Color = "#ff8c00"; // 亮橘
+    } else if (part1 === "08" || part1 === "09") {
+        part1Color = "#ff003c"; // 亮紅
+    }
+
+    // 強制使用色碼確保絕對生效
     return `<span style="color:${part1Color}; font-weight:700;">${part1}</span><span style="color:#00ff41; font-weight:700;">${part2}</span><span style="color:#00d4ff; font-weight:700;">${part3}</span>`;
   }
-  
-  // 原本獨立的 formatPalletStr 保留給其他分頁使用
-  function formatPalletStr(palletStr) {
-    if (!palletStr || palletStr === "-") return palletStr; let str = String(palletStr).trim();
-    if (str.length <= 5) return `<span style="color:var(--status-yellow); font-weight:700; text-shadow:0 0 5px rgba(251,191,36,0.5);">${str}</span>`;
-    let prefix = str.substring(0, str.length - 5); let suffix = str.substring(str.length - 5);
-    return `<span style="color:var(--text-muted);">${prefix}</span><span style="color:var(--status-yellow); font-weight:700; text-shadow:0 0 5px rgba(251,191,36,0.5);">${suffix}</span>`;
+
+  // 🌟 PL 預設只做灰化，不再直接給尾部上色 (因為要留給 render 階段的比對)
+  function formatPalletStrBase(palletStr) {
+      if (!palletStr || palletStr === "-") return palletStr;
+      return `<span style="color:var(--text-muted);">${palletStr}</span>`;
   }
 
   // ==========================================
@@ -773,35 +901,26 @@
     else if (tab === 'db') loadDbDataList(false);
   }
 
-  // === Fetch 邏輯 ===
+  // === Search 邏輯 ===
   function fetchData() {
     let raw = searchInput.value; if (!raw) return;
     let sVal = raw.replace(/[\r\n]+/g, "").trim().toUpperCase(); if (!sVal) return;
     if (sVal.length > 13) sVal = sVal.substring(0, 13);
-    
     const btn = document.getElementById('searchBtn'); btn.disabled = true; btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i>';
-    document.getElementById('summaryBox').style.display = "none"; document.getElementById('cardContainer').innerHTML = "";
-    
-    let loadTimer = startLoadingMsg('msgArea', '搜尋庫存');
+    document.getElementById('msgArea').textContent = ""; document.getElementById('summaryBox').style.display = "none";
+    document.getElementById('cardContainer').innerHTML = "";
 
-    if (sVal.length === 13) {
-      window.google.script.run
-        .withSuccessHandler(r => { stopLoadingMsg('msgArea', loadTimer); handleResponse(r, 'sku'); })
-        .withFailureHandler(e => { stopLoadingMsg('msgArea', loadTimer); handleError(e); })
-        .searchSupplierSku(sVal);
-    } else {
-      window.google.script.run
-        .withSuccessHandler(r => { stopLoadingMsg('msgArea', loadTimer); handleResponse(r, 'location'); })
-        .withFailureHandler(e => { stopLoadingMsg('msgArea', loadTimer); handleError(e); })
-        .searchLocation(sVal);
-    }
+    // 啟動進度提示
+    let timer = startLoadingMsg('msgArea', '搜尋庫存');
+
+    if (sVal.length === 13) window.google.script.run.withSuccessHandler(r=>{stopLoadingMsg('msgArea', timer); handleResponse(r, 'sku');}).withFailureHandler(e=>{stopLoadingMsg('msgArea', timer); handleError(e);}).searchSupplierSku(sVal);
+    else window.google.script.run.withSuccessHandler(r=>{stopLoadingMsg('msgArea', timer); handleResponse(r, 'location');}).withFailureHandler(e=>{stopLoadingMsg('msgArea', timer); handleError(e);}).searchLocation(sVal);
   }
-
   function handleResponse(res, type) {
     const btn = document.getElementById('searchBtn'); btn.disabled = false; btn.innerHTML = "搜尋";
     searchInput.focus(); searchInput.select();
     const msg = document.getElementById('msgArea');
-    if (!res || !res.data || res.data.length === 0) { msg.textContent = type==='sku'?"查無條碼":"該儲位無庫存"; msg.style.color="var(--status-yellow)"; return; }
+    if (!res || !res.data || res.data.length === 0) { msg.textContent = type==='sku'?"查無條碼":"該儲位無庫存"; return; }
 
     const tags = new Set(res.data.map(i => i["TAG_ID"]).filter(v => v && v!=="-"));
     const locs = new Set(res.data.map(i => i["LOCATION_ID"]).filter(v => v && v!=="-"));
@@ -821,22 +940,20 @@
         <span>SKU: ${getValue(item,"SKU_ID")}</span>
         <span>${getValue(item,"Style")}-${getValue(item,"User Def Type 7 (SKU)")}</span>
         <span>Sz: ${getValue(item,"Size")}</span>
-        <span>PL: ${formatPalletStr(getValue(item,"Pallet ID"))}</span>
+        <span>PL: ${getValue(item,"Pallet ID")}</span>
       </div>`;
       card.innerHTML = h; cont.appendChild(card);
     });
   }
-  function handleError(e) { 
-    const b = document.getElementById('searchBtn'); b.disabled = false; b.innerHTML = "搜尋"; 
-    const m = document.getElementById('msgArea'); m.textContent = "Error: " + e.message; m.style.color = "var(--status-red)";
-  }
+  function handleError(e) { const b = document.getElementById('searchBtn'); b.disabled = false; b.innerHTML = "搜尋"; document.getElementById('msgArea').textContent = "Error: " + e.message; }
 
+  // === 各表單載入 ===
+  
   function loadAlList(force) {
     if (isAlListLoaded && !force) return;
-    let loadTimer = startLoadingMsg('listMsgArea', '補貨清單');
-    
+    let timer = startLoadingMsg('listMsgArea', '補貨報表');
     window.google.script.run.withSuccessHandler((res) => {
-      stopLoadingMsg('listMsgArea', loadTimer); isAlListLoaded = true; fetchAndUpdateSyncTime('INVSYNc.INVSYNc', 'lastRefreshedTime');
+      stopLoadingMsg('listMsgArea', timer); isAlListLoaded = true; fetchAndUpdateSyncTime('INVSYNc.INVSYNc', 'lastRefreshedTime');
       document.getElementById('totListLocs').textContent = res.locsCount||0; document.getElementById('totListRows').textContent = res.plCount||0; document.getElementById('totListAlQty').textContent = res.totalAlQty||0;
       document.getElementById('listSummaryBox').style.display = "flex";
       let h = `<table class="compact-table"><thead><tr>`;
@@ -845,28 +962,36 @@
         h+=`<tr>`;
         res.columns.forEach(c => { 
           let val = i[c] !== undefined ? i[c] : ""; 
-          let displayHtml = val; let upperC = c ? c.toString().toUpperCase() : "";
-          if (upperC.includes("LOC")) displayHtml = formatLocationStr(val);
-          else if (upperC.includes("PALLET") || upperC.includes("PL")) displayHtml = formatPalletStr(val);
-          else if (upperC.includes("QTY") || upperC.includes("SUM")) {
+          let displayHtml = val;
+          let upperC = c ? c.toString().toUpperCase() : "";
+          
+          if (upperC.includes("LOC")) {
+             displayHtml = formatLocationStr(val);
+          } else if (upperC.includes("PALLET") || upperC.includes("PL")) {
+             displayHtml = formatPalletStrBase(val);
+          } else if (upperC.includes("QTY") || upperC.includes("SUM")) {
              let num = parseFloat(val);
              if (!isNaN(num)) {
                  let numStr = String(num);
-                 if (numStr.length >= 3) displayHtml = `<span style="color:var(--status-red); font-weight:700; font-size:14px;">${val}</span>`;
-                 else if (numStr.length === 2) displayHtml = `<span style="color:var(--status-yellow); font-weight:700;">${val}</span>`;
-                 else displayHtml = `<span style="color:var(--text-main); font-weight:700;">${val}</span>`;
-             } else displayHtml = `<span style="color:var(--accent-cyan); font-weight:700;">${val}</span>`;
+                 if (numStr.length >= 3) {
+                     displayHtml = `<span style="color:var(--status-red); font-weight:700; font-size:14px;">${val}</span>`;
+                 } else if (numStr.length === 2) {
+                     displayHtml = `<span style="color:var(--status-yellow); font-weight:700;">${val}</span>`;
+                 } else {
+                     displayHtml = `<span style="color:var(--text-main); font-weight:700;">${val}</span>`;
+                 }
+             } else {
+                 displayHtml = `<span style="color:var(--accent-cyan); font-weight:700;">${val}</span>`;
+             }
           }
           h+=`<td>${displayHtml}</td>`; 
         });
         h+=`</tr>`;
       }); h+=`</tbody></table>`; document.getElementById('listTableContainer').innerHTML = h;
-    }).withFailureHandler(e => {
-      stopLoadingMsg('listMsgArea', loadTimer);
-      document.getElementById('listMsgArea').textContent="失敗:"+e.message; 
-    }).getAlQtyList();
+    }).withFailureHandler(e => {stopLoadingMsg('listMsgArea', timer); document.getElementById('listMsgArea').textContent="失敗:"+e.message;}).getAlQtyList();
   }
 
+  // SWR 快取渲染引擎 - OrderStatus
   function renderOrderStatusData(res) {
     const mc = document.getElementById('orderStatusMetricsContainer'); mc.innerHTML = "";
     const tKeys = ["-AMR", "-M", "-PACK", "-MA", "01-09", "01~09"];
@@ -883,7 +1008,8 @@
       h+=`<tr class="gao-total-row">`; res.headers.forEach((c,i)=>{
         let v=res.totals[i]||""; const cln=c?c.toString().trim().toUpperCase():"";
         let cls = cln==="SCND"?"text-green":(cln==="-SCN"?"text-red":""); if(cln==="-SCN" && v && !String(v).startsWith("-")) v="-"+v;
-        if (v === 0 || String(v).trim() === "0") v = ""; h+=`<td class="${cls}">${v}</td>`;
+        if (v === 0 || String(v).trim() === "0") v = "";
+        h+=`<td class="${cls}">${v}</td>`;
       }); h+=`</tr>`;
     }
     h+=`</thead><tbody>`;
@@ -894,7 +1020,8 @@
         let cls = ""; const vs = String(v).trim().toUpperCase();
         if(vs==="MON"||vs.endsWith("MON")||vs.endsWith("/MON")) cls="highlight-mon";
         if(cln==="SCND") cls+=" text-green"; else if(cln==="-SCN"){ cls+=" text-red"; if(v&&v!=="0"&&v!=="-"&&!String(v).startsWith("-")) v="-"+v; }
-        if (v === 0 || String(v).trim() === "0") v = ""; h+=`<td class="${cls}">${fg}${v}</td>`;
+        if (v === 0 || String(v).trim() === "0") v = "";
+        h+=`<td class="${cls}">${fg}${v}</td>`;
       }); h+=`</tr>`;
     }); h+=`</tbody></table>`; document.getElementById('orderStatusTableContainer').innerHTML = h;
   }
@@ -903,6 +1030,7 @@
     if (isOrderStatusLoaded && !force) return;
     const msgId = 'orderStatusMsgArea'; let timer = null;
     
+    // SWR 步驟 1: 嘗試讀取快取
     const cachedDataStr = sessionStorage.getItem('wms_cache_orderStatus');
     if (cachedDataStr && !force) {
       try {
@@ -912,16 +1040,21 @@
       } catch (e) { timer = startLoadingMsg(msgId, '訂單報表'); }
     } else { if (!cachedDataStr || force) timer = startLoadingMsg(msgId, '訂單報表'); }
     
+    // SWR 步驟 2: 發送背景請求
     window.google.script.run.withSuccessHandler((res) => {
       stopLoadingMsg(msgId, timer); isOrderStatusLoaded = true; fetchAndUpdateSyncTime('ODStatusProcess', 'lastOrderStatusRefreshedTime');
+      
+      // SWR 步驟 3: 存入快取並重新渲染 (如果資料有變)
       const cacheObj = { timestamp: Date.now(), data: res };
       sessionStorage.setItem('wms_cache_orderStatus', JSON.stringify(cacheObj)); renderOrderStatusData(res);
+      
     }).withFailureHandler(e => {
        stopLoadingMsg(msgId, timer);
        if(!cachedDataStr) document.getElementById(msgId).textContent="失敗:"+e.message; 
     }).getOrderStatusData();
   }
 
+  // SWR 快取渲染引擎 - GAO (DI)
   function renderGaoData(res) {
     let tCbm=0, tCtns=0, tPcs=0; document.getElementById('totGaoRows').textContent = res.rowCount||0;
     let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
@@ -934,27 +1067,41 @@
 
     (res.data||[]).forEach(i => {
       let isT = res.headers.some(c=>String(i[c]||"").trim().toUpperCase().includes("TOTAL"));
-      let planValue = planKey ? String(i[planKey] || "").trim().toUpperCase() : ""; let isPlanN = (planValue === "N");
+      let planValue = planKey ? String(i[planKey] || "").trim().toUpperCase() : "";
+      let isPlanN = (planValue === "N");
       if(!isT && i["S/O"]&&i["S/O"]!=="-") { tCbm+=parseFloat(i["CBM"])||0; tCtns+=parseFloat(i["Ctns"])||0; tPcs+=parseFloat(i["PCS"])||0; }
       
-      let pcValue = pcKey ? String(i[pcKey] || "").trim().toUpperCase() : ""; let genderValue = genderKey ? String(i[genderKey] || "").trim().toUpperCase() : "";
+      let pcValue = pcKey ? String(i[pcKey] || "").trim().toUpperCase() : "";
+      let genderValue = genderKey ? String(i[genderKey] || "").trim().toUpperCase() : "";
       let specialStyle = "";
-      if (pcValue.includes("GOH")) specialStyle = "color:#d946ef; font-weight:700;"; 
-      else if (genderValue.includes("FOOTWEAR")) specialStyle = "color:#ff8c00; font-weight:700;"; 
-      else if (genderValue.includes("ACCESSORY")) specialStyle = "color:#ff003c; font-weight:700;"; 
-      else if (genderValue.includes("BDW")) specialStyle = "color:#86efac; font-weight:700;"; 
+      if (pcValue.includes("GOH")) {
+          specialStyle = "color:#d946ef; font-weight:700;"; 
+      } else if (genderValue.includes("FOOTWEAR")) {
+          specialStyle = "color:#ff8c00; font-weight:700;"; 
+      } else if (genderValue.includes("ACCESSORY")) {
+          specialStyle = "color:#ff003c; font-weight:700;"; 
+      } else if (genderValue.includes("BDW")) {
+          specialStyle = "color:#86efac; font-weight:700;"; 
+      }
 
       h+=`<tr class="${isT?'gao-total-row':''}">`;
       res.headers.forEach((c, colIndex) => {
-        let v = i[c] !== undefined ? i[c] : ""; const cln = c ? c.toString().trim().toUpperCase() : ""; let cls = ""; const vOriginal = String(v).trim();
-        if (colIndex === 0 && vOriginal.includes("週一") && !isT) cls = "highlight-monday";
-        else if (cln === "SCND") cls = "text-green"; 
+        let v = i[c] !== undefined ? i[c] : ""; 
+        const cln = c ? c.toString().trim().toUpperCase() : "";
+        let cls = ""; 
+        const vOriginal = String(v).trim();
+        
+        if (colIndex === 0 && vOriginal.includes("週一") && !isT) { cls = "highlight-monday"; }
+        else if (cln === "SCND") { cls = "text-green"; } 
         else if (cln === "-SCN") { cls = "text-red"; if(v && v !== "0" && v !== "-" && !String(v).startsWith("-")) v = "-" + v; }
-        if (c === soKey && isPlanN && !isT) cls += " highlight-alert";
+        if (c === soKey && isPlanN && !isT) { cls += " highlight-alert"; }
         
         let tdStyle = "";
-        if (vOriginal === "0" || vOriginal === "0.0") { cls = ""; tdStyle = "color: rgba(255, 255, 255, 0.1) !important;"; } 
-        else if (!isT && specialStyle !== "" && targetColorColumns.includes(cln)) tdStyle = specialStyle;
+        if (vOriginal === "0" || vOriginal === "0.0") {
+            cls = ""; tdStyle = "color: rgba(255, 255, 255, 0.1) !important;";
+        } else if (!isT && specialStyle !== "" && targetColorColumns.includes(cln)) {
+            tdStyle = specialStyle;
+        }
 
         h+=`<td class="${cls.trim()}" style="${tdStyle}">${v}</td>`;
       }); h+=`</tr>`;
@@ -967,6 +1114,7 @@
     if (isGaoLoaded && !force) return;
     const msgId = 'gaoMsgArea'; let timer = null;
     
+    // SWR 步驟 1
     const cachedDataStr = sessionStorage.getItem('wms_cache_gao');
     if (cachedDataStr && !force) {
       try {
@@ -976,8 +1124,10 @@
       } catch (e) { timer = startLoadingMsg(msgId, 'DI 報表'); }
     } else { if (!cachedDataStr || force) timer = startLoadingMsg(msgId, 'DI 報表'); }
 
+    // SWR 步驟 2
     window.google.script.run.withSuccessHandler((res) => {
       stopLoadingMsg(msgId, timer); isGaoLoaded = true; fetchAndUpdateSyncTime('DIsyncGoogleSheet', 'lastGaoRefreshedTime');
+      // SWR 步驟 3
       const cacheObj = { timestamp: Date.now(), data: res };
       sessionStorage.setItem('wms_cache_gao', JSON.stringify(cacheObj)); renderGaoData(res);
     }).withFailureHandler(e => {
@@ -996,14 +1146,19 @@
       (res.data||[]).forEach(i => {
         h+=`<tr>`; res.headers.forEach(c => {
           let v=i[c]!==undefined?i[c]:""; const cln=c?c.toString().trim().toUpperCase():""; let cls="";
+          // 恢復：SCND 綠色，-SCN 紅色補負號
           if(cln==="SCND"){ cls="text-green"; tScnd+=(parseFloat(v)||0); }
           else if(cln==="-SCN"){ cls="text-red"; tScn+=(parseFloat(String(v).replace(/^-/,''))||0); if(v&&v!=="0"&&v!=="-"&&!String(v).startsWith("-")) v="-"+v; }
-          if (v === 0 || String(v).trim() === "0") v = ""; h+=`<td class="${cls}">${v}</td>`;
+          
+          // 隱藏 0
+          if (v === 0 || String(v).trim() === "0") v = "";
+
+          h+=`<td class="${cls}">${v}</td>`;
         }); h+=`</tr>`;
       }); h+=`</tbody></table>`;
       document.getElementById('totRecScnd').textContent = Number.isInteger(tScnd)?tScnd:tScnd.toFixed(2); document.getElementById('totRecScn').textContent = Number.isInteger(tScn)?"-"+tScn:"-"+tScn.toFixed(2);
       document.getElementById('recSummaryBox').style.display = "flex"; document.getElementById('recTableContainer').innerHTML = h;
-    }).withFailureHandler(e => { stopLoadingMsg('recMsgArea', timer); document.getElementById('recMsgArea').textContent="失敗:"+e.message; }).getRecData();
+    }).withFailureHandler(e => {stopLoadingMsg('recMsgArea', timer); document.getElementById('recMsgArea').textContent="失敗:"+e.message;}).getRecData();
   }
 
   function loadDbDataList(force) {
@@ -1017,12 +1172,17 @@
       (res.data||[]).forEach(i => {
         h+=`<tr>`; res.headers.forEach(c => {
           let v=i[c]!==undefined?i[c]:""; const cln=c?c.toString().trim().toUpperCase():""; let cls="";
+          // 恢復：SCND 綠色，-SCN 紅色補負號
           if(cln==="SCND") cls="text-green"; else if(cln==="-SCN"){ cls="text-red"; if(v&&v!=="0"&&v!=="-"&&!String(v).startsWith("-")) v="-"+v; }
-          if (v === 0 || String(v).trim() === "0") v = ""; h+=`<td class="${cls}">${v}</td>`;
+          
+          // 隱藏 0
+          if (v === 0 || String(v).trim() === "0") v = "";
+
+          h+=`<td class="${cls}">${v}</td>`;
         }); h+=`</tr>`;
       }); h+=`</tbody></table>`;
       document.getElementById('dbSummaryBox').style.display = "flex"; document.getElementById('dbTableContainer').innerHTML = h;
-    }).withFailureHandler(e => { stopLoadingMsg('dbMsgArea', timer); document.getElementById('dbMsgArea').textContent="失敗:"+e.message; }).getDbData();
+    }).withFailureHandler(e => {stopLoadingMsg('dbMsgArea', timer); document.getElementById('dbMsgArea').textContent="失敗:"+e.message;}).getDbData();
   }
 
   // ==========================================
@@ -1035,13 +1195,13 @@
     const b = document.getElementById('auditLoadBtn'); const msg = document.getElementById('auditMsgArea');
     b.disabled = true; b.innerHTML = '<i class="ph ph-spinner ph-spin"></i>'; 
     document.getElementById('feedbackTitle').innerHTML = '<i class="ph ph-barcode"></i> 等待掃描...'; document.getElementById('feedbackDetails').innerHTML = '應盤: 0 | 實盤: 0';
-    
+
     let timer = startLoadingMsg('auditMsgArea', '盤點記錄庫');
 
     window.google.script.run.withSuccessHandler((res) => {
       stopLoadingMsg('auditMsgArea', timer);
       b.disabled = false; b.innerHTML = '<i class="ph ph-magnifying-glass"></i>';
-      if (!res || !res.data || res.data.length === 0) { msg.textContent = `⚠️ 系統無儲位 (${loc}) 記錄，進入盲盤模式`; msg.style.color="var(--status-yellow)"; }
+      if (!res || !res.data || res.data.length === 0) {msg.textContent = `⚠️ 系統無儲位 (${loc}) 記錄，進入盲盤模式`; msg.style.color="var(--status-yellow)";}
       auditState = { location: loc, systemItemsMap: {}, scannedCounts: {}, scanHistoryStack: [], lastRawCodeMap: {}, lastLookupCodeMap: {}, activeFilter: 'all', lastScannedKey: null };
       if (res && res.data) {
         res.data.forEach(item => {
@@ -1057,8 +1217,7 @@
       renderAuditComparison();
     }).withFailureHandler((e) => { 
       stopLoadingMsg('auditMsgArea', timer);
-      b.disabled = false; b.innerHTML = '<i class="ph ph-magnifying-glass"></i>'; 
-      msg.textContent = "載入失敗: " + e.message; 
+      b.disabled = false; b.innerHTML = '<i class="ph ph-magnifying-glass"></i>'; msg.textContent = "載入失敗: " + e.message; 
     }).searchLocation(loc);
   }
 
@@ -1105,7 +1264,7 @@
   function finishAuditSync() {
     const b = document.getElementById('finishSyncConfirmBtn'); b.disabled = true; 
     let timer = startLoadingMsg('auditMsgArea', '雲端同步上傳');
-
+    
     const diffs = []; let ts = 0, tc = 0;
     new Set([...Object.keys(auditState.systemItemsMap), ...Object.keys(auditState.scannedCounts)]).forEach(k => {
       const s = auditState.systemItemsMap[k] || { key: k, sysQty: 0, tag: "", sku: "-", barcode: "-", style: "-", size: "-", palletId: "-" };
@@ -1113,14 +1272,11 @@
       if (d !== 0) diffs.push({ key: k, tagId: s.tag!=="-"?s.tag:"", palletId: s.palletId||"-", rawScannedCode: auditState.lastRawCodeMap[k]||"", lookupCode: s.barcode!=="-"?s.barcode:k, sku: s.sku, style: s.style, size: s.size, sysQty: s.sysQty, scannedQty: c, diff: d });
     });
     window.google.script.run.withSuccessHandler((r) => {
-      stopLoadingMsg('auditMsgArea', timer);
-      b.disabled = false; 
+      stopLoadingMsg('auditMsgArea', timer); b.disabled = false; 
       const msg = document.getElementById('auditMsgArea'); msg.style.color = "var(--status-green)"; msg.textContent = r.message;
     }).withFailureHandler((e) => {
-      stopLoadingMsg('auditMsgArea', timer);
-      b.disabled = false; 
-      const msg = document.getElementById('auditMsgArea'); msg.style.color = "var(--status-red)"; msg.textContent = "失敗: " + e.message; 
-      playScanSound('error');
+      stopLoadingMsg('auditMsgArea', timer); b.disabled = false; 
+      const msg = document.getElementById('auditMsgArea'); msg.style.color = "var(--status-red)"; msg.textContent = "失敗: " + e.message; playScanSound('error');
     }).saveAuditRecord({ location: auditState.location, totalSysQty: ts, totalScannedQty: tc, hasDiff: diffs.length > 0, items: diffs });
   }
 
@@ -1129,7 +1285,7 @@
   function confirmResetAuditSession() { closeResetModal(); auditState.scannedCounts = {}; auditState.scanHistoryStack = []; document.getElementById('scanFeedbackBanner').style.borderColor='var(--border-light)'; document.getElementById('feedbackTitle').innerHTML = '<i class="ph ph-barcode"></i> 等待掃描...'; document.getElementById('feedbackDetails').innerHTML = '應盤: 0 | 實盤: 0'; renderAuditComparison(); }
   function filterAuditResult(t) { auditState.activeFilter = t; document.querySelectorAll('.filter-btn-compact').forEach(b => b.classList.remove('active')); document.getElementById('filter' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active'); renderAuditComparison(); }
 
-  // 🌟 盤點渲染核心：動態連動 PL 與 TAG 變色
+  // 渲染核心：8px/12px 極緻計算與版面
   function renderAuditComparison() {
     const cont = document.getElementById('auditResultContainer'); cont.innerHTML = "";
     let ts=0, tc=0, mc=0, ec=0, mic=0, eic=0, mac=0;
@@ -1148,6 +1304,7 @@
       items.push({ ...s, scannedQty: c, diff: d, status: st });
     });
 
+    // 更新 7 項緊湊摘要
     document.getElementById('auditSysPlc').textContent = plSet.size;
     document.getElementById('auditSysTag').textContent = tagSet.size;
     document.getElementById('auditSysLoc').textContent = locSet.size;
@@ -1156,6 +1313,7 @@
     document.getElementById('auditMissingQty').textContent = mc;
     document.getElementById('auditExtraQty').textContent = ec;
     
+    // 更新篩選器括號數字 (12px)
     document.getElementById('fAll').textContent = `(${items.length})`;
     document.getElementById('fMis').textContent = `(${mic})`;
     document.getElementById('fExt').textContent = `(${eic})`;
@@ -1172,28 +1330,26 @@
       let bLeft = i.status === 'missing' ? 'var(--status-red)' : (i.status === 'extra' ? 'var(--status-yellow)' : 'var(--status-green)');
       let sColor = i.scannedQty > i.sysQty ? 'var(--status-yellow)' : (i.scannedQty === 0 ? 'var(--text-muted)' : 'var(--status-green)');
       
-      // 🌟 動態判斷 PL 後 5 碼與 TAG 倒數 6-10 碼是否完全吻合
-      let plStr = i.palletId !== "-" ? String(i.palletId).trim() : "";
-      let plTail = plStr.length >= 5 ? plStr.slice(-5) : "";
+      // 🌟 條件連動發光邏輯：檢查 PL 後 5 碼 與 TAG 倒數 6-10 碼
+      let plStr = String(i.palletId !== "-" ? i.palletId : "").trim();
+      let tagStr = String(i.tag !== "-" ? i.tag : "").trim();
       
-      let tagStr = i.tag !== "-" ? String(i.tag).trim() : "";
-      let tagTarget = tagStr.length >= 10 ? tagStr.slice(-10, -5) : "";
-      
-      let plDisplay = plStr;
-      let tagDisplay = tagStr;
-      
-      if (plTail !== "" && tagTarget !== "" && plTail === tagTarget) {
-        // 相符時，黃色高亮連動
-        let plPrefix = plStr.slice(0, -5);
-        plDisplay = `<span style="color:var(--text-muted);">${plPrefix}</span><span style="color:var(--status-yellow); font-weight:700; text-shadow:0 0 5px rgba(251,191,36,0.5);">${plTail}</span>`;
-        
-        let tagPrefix = tagStr.slice(0, -10);
-        let tagSuffix = tagStr.slice(-5);
-        tagDisplay = `<span style="color:var(--text-muted);">${tagPrefix}</span><span style="color:var(--status-yellow); font-weight:700; text-shadow:0 0 5px rgba(251,191,36,0.5);">${tagTarget}</span><span style="color:var(--text-muted);">${tagSuffix}</span>`;
-      } else {
-        // 不符時，全部維持灰色
-        plDisplay = `<span style="color:var(--text-muted);">${plStr}</span>`;
-        tagDisplay = `<span style="color:var(--text-muted);">${tagStr}</span>`;
+      let plDisplay = `<span style="color:var(--text-muted);">${plStr}</span>`;
+      let tagDisplay = `<span style="color:var(--text-muted);">${tagStr}</span>`;
+
+      if (plStr.length >= 5 && tagStr.length >= 10) {
+        let plLast5 = plStr.slice(-5);
+        let tagTarget5 = tagStr.slice(-10, -5); 
+
+        if (plLast5 === tagTarget5) {
+          // 匹配成功：PL尾數5碼 和 TAG目標5碼 同時黃色高亮
+          let plPrefix = plStr.slice(0, -5);
+          plDisplay = `<span style="color:var(--text-muted);">${plPrefix}</span><span style="color:var(--status-yellow); font-weight:700; text-shadow:0 0 5px rgba(251,191,36,0.5);">${plLast5}</span>`;
+          
+          let tagPrefix = tagStr.slice(0, -10);
+          let tagLast5 = tagStr.slice(-5);
+          tagDisplay = `<span style="color:var(--text-muted);">${tagPrefix}</span><span style="color:var(--status-yellow); font-weight:700; text-shadow:0 0 5px rgba(251,191,36,0.5);">${tagTarget5}</span><span style="color:var(--text-muted);">${tagLast5}</span>`;
+        }
       }
 
       h += `
