@@ -139,9 +139,9 @@
     .filter-btn-compact {
       flex: 1; padding: 4px 2px; font-size: 10px !important; background: var(--bg-deep); 
       border: 1px solid var(--border-light); color: var(--text-muted); border-radius: 4px; 
-      display: flex; flex-direction: column; align-items: center; line-height: 1.2;
+      display: flex; flex-direction: row; justify-content: center; align-items: baseline; gap: 3px; line-height: 1.2;
     }
-    .filter-btn-compact span { font-size: 12px; font-family: 'Roboto Mono', monospace; margin-top: 1px; }
+    .filter-btn-compact span { font-size: 12px; font-family: 'Roboto Mono', monospace; margin-top: 0; }
     .filter-btn-compact.active {
       background: var(--bg-card); border-color: var(--accent-cyan); color: var(--accent-cyan);
     }
@@ -1215,7 +1215,7 @@
           <td style="color:${sColor}; font-size:14px; font-weight:700;">${i.scannedQty}</td>
           <td>${i.palletId!=="-"?i.palletId:""}</td>
           <td style="color:var(--accent-cyan); font-size:11px;">${i.barcode!=="-"?i.barcode:""}</td>
-          <td style="text-align:left;">${i.tag!=="-"?i.tag:""}</td>
+          <td style="text-align:left; font-size:11px;">${formatTagStr(i.tag)}</td>
           <td style="color:var(--text-muted);">${auditState.location}</td>
           <td>${i.style}</td><td>${i.size}</td><td>${i.sku}</td>
         </tr>`;
