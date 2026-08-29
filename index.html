@@ -49,7 +49,20 @@
       width: 100%; min-height: 100vh; margin: 0; padding: 0;
       -webkit-text-size-adjust: 100%;
       font-family: 'Roboto Condensed', system-ui, sans-serif;
-      background-color: var(--bg-deep); color: var(--text-main);
+      /* 🌟 替換為賽博龐克動態網格 */
+      background-color: var(--bg-deep);
+      background-image: 
+        linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
+      background-size: 30px 30px;
+      animation: moveGrid 20s linear infinite;
+      color: var(--text-main);
+    }
+
+    /* 🌟 加入向下掃描的無縫動畫 */
+    @keyframes moveGrid {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 30px; }
     }
 
     .container {
@@ -228,6 +241,9 @@
   </style>
 </head>
 <body>
+
+<!-- 🌟 星塵浮動微粒專用背景容器 -->
+<div class="bg-glow"></div>
 
 <!-- PIN 碼解鎖遮罩 -->
 <div id="pinLoginOverlay" class="glass-overlay">
@@ -995,13 +1011,32 @@
     window.google.script.run.withSuccessHandler((res) => {
       stopLoadingMsg('recMsgArea', timer); isRecLoaded = true; fetchAndUpdateSyncTime('ReceivedSyncProcess', 'lastRecRefreshedTime');
       let tScnd=0, tScn=0; document.getElementById('totRecRows').textContent = res.rowCount||0;
+      
+      // 🌟 新增：找出 Cat 和 S/O 的精確欄位名稱 (Header)
+      let catKey = res.headers.find(h => h && h.toUpperCase().trim() === "CAT");
+      let soKey = res.headers.find(h => h && h.toUpperCase().trim() === "S/O");
+
       let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
       (res.data||[]).forEach(i => {
+        // 🌟 新增：取得這列的 Cat 值，並決定變色 Style
+        let catValue = catKey ? String(i[catKey] || "").trim().toUpperCase() : "";
+        let soStyle = "";
+        
+        if (catValue.includes("GOH")) soStyle = "color:#d946ef; font-weight:700;"; 
+        else if (catValue.includes("FTW")) soStyle = "color:#ff8c00; font-weight:700;"; 
+        else if (catValue.includes("ACC")) soStyle = "color:#ff003c; font-weight:700;"; 
+        else if (catValue.includes("BDW")) soStyle = "color:#86efac; font-weight:700;"; 
+
         h+=`<tr>`; res.headers.forEach(c => {
           let v=i[c]!==undefined?i[c]:""; const cln=c?c.toString().trim().toUpperCase():""; let cls="";
           if(cln==="SCND"){ cls="text-green"; tScnd+=(parseFloat(v)||0); }
           else if(cln==="-SCN"){ cls="text-red"; tScn+=(parseFloat(String(v).replace(/^-/,''))||0); if(v&&v!=="0"&&v!=="-"&&!String(v).startsWith("-")) v="-"+v; }
-          if (v === 0 || String(v).trim() === "0") v = ""; h+=`<td class="${cls}">${v}</td>`;
+          if (v === 0 || String(v).trim() === "0") v = ""; 
+          
+          // 🌟 修改：如果目前是 S/O 欄位，套用算好的 soStyle
+          let tdStyle = (c === soKey && soStyle !== "") ? soStyle : "";
+
+          h+=`<td class="${cls}" style="${tdStyle}">${v}</td>`;
         }); h+=`</tr>`;
       }); h+=`</tbody></table>`;
       document.getElementById('totRecScnd').textContent = Number.isInteger(tScnd)?tScnd:tScnd.toFixed(2); document.getElementById('totRecScn').textContent = Number.isInteger(tScn)?"-"+tScn:"-"+tScn.toFixed(2);
