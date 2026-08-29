@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <!-- 🌟 修改點：移除了 maximum-scale=1.0 和 user-scalable=no，恢復兩指縮放功能 -->
+  <!-- 保留兩指縮放功能 (無 maximum-scale 限制) -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rahoentusy WMS</title>
   
@@ -83,8 +83,10 @@
 
     /* 輸入框與搜尋按鈕 */
     .search-box { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: nowrap; }
+    
+    /* 🌟 修改點：將 font-size 設定為 16px 避免 iOS 自動放大 */
     input[type="text"] {
-      flex: 1; min-width: 50px; padding: 8px 12px; font-size: 15px !important;
+      flex: 1; min-width: 50px; padding: 8px 12px; font-size: 16px !important;
       background-color: var(--bg-deep); color: var(--text-main); 
       border: 1px solid var(--bg-hover); border-radius: 6px; 
       font-family: 'Roboto Mono', monospace;
