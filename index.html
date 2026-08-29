@@ -533,7 +533,8 @@
     const godModePayload = {
       success: true,
       name: "Dev Admin",
-      permissions: ["search", "list", "audit", "orderStatus", "gao", "rec", "db"]
+      // 🌟 將上帝模式的預設順序改為與您的 Google Sheet 表頭一致：REC, DI, 補貨, 訂單, 查詢, 盤點, DB
+      permissions: ["rec", "gao", "list", "orderStatus", "search", "audit", "db"]
     };
     sessionStorage.setItem('wms_auth', JSON.stringify(godModePayload));
     applyPermissions(godModePayload);
