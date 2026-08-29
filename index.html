@@ -2,7 +2,6 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <!-- Viewport settings for mobile scaling -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rahoentusy WMS</title>
   
@@ -10,22 +9,15 @@
   <meta property="og:description" content="RahoentusyLaboratory" />
   <meta property="og:type" content="website" />
 
-  <!-- Google Fonts: Roboto Condensed & Roboto Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   
-  <!-- Phosphor Icons -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-
-  <!-- html5-qrcode scanner library -->
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-
-  <!-- qrcode.js dynamic generation library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
-    /* Cyber Blue modern aesthetic variables */
     :root {
       --bg-deep: #0f172a;        
       --bg-card: #1e293b;        
@@ -37,7 +29,6 @@
       --accent-blue: #0ea5e9;    
       --border-light: rgba(255, 255, 255, 0.1);
       
-      /* Pastel Status Colors */
       --status-green: #34d399;   
       --status-red: #fb7185;     
       --status-yellow: #fbbf24;  
@@ -45,7 +36,6 @@
 
     * { box-sizing: border-box; touch-action: manipulation; }
 
-    /* Cyberpunk Gradient Breathing Background */
     html, body {
       width: 100%; min-height: 100vh; margin: 0; padding: 0;
       -webkit-text-size-adjust: 100%;
@@ -67,7 +57,6 @@
       padding: 6px; 
     }
 
-    /* System Header */
     .sys-header {
       display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 4px 6px;
     }
@@ -79,7 +68,6 @@
     .sys-title:hover { color: var(--accent-cyan); }
     .sys-user { font-size: 11px; color: var(--accent-cyan); font-family: 'Roboto Mono', monospace; }
     
-    /* Borderless Tab Bar */
     .tab-bar {
       display: flex; gap: 4px; margin-bottom: 8px; border-bottom: 1px solid var(--border-light); overflow-x: auto;
     }
@@ -96,10 +84,8 @@
       text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
     }
 
-    /* Search Box */
     .search-box { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: nowrap; }
     
-    /* Fix iOS auto-zoom with 16px font-size */
     input[type="text"] {
       flex: 1; min-width: 50px; padding: 8px 12px; font-size: 16px !important;
       background-color: var(--bg-deep); color: var(--text-main); 
@@ -129,13 +115,11 @@
     .icon-btn i { font-size: 18px; }
     .icon-btn:hover { background: var(--bg-hover); }
 
-    /* Audit Controller Buttons */
     .btn-camera { color: #fff; background: var(--accent-blue); border-color: var(--accent-blue); }
     .btn-undo { color: var(--status-yellow); border-color: rgba(251, 191, 36, 0.3); }
     .btn-reset { color: var(--status-red); border-color: rgba(251, 113, 133, 0.3); }
     .btn-sync { color: var(--status-green); border-color: rgba(52, 211, 153, 0.3); }
 
-    /* Compact Summary Box */
     .summary-box-compact {
       display: flex; flex-wrap: wrap; justify-content: flex-start; align-items: center;
       gap: 4px; margin-bottom: 4px; padding: 4px 6px; 
@@ -148,7 +132,6 @@
       font-size: 12px; font-family: 'Roboto Mono', monospace; color: var(--accent-cyan);
     }
 
-    /* Single Row Compact Filters */
     .filter-group-compact {
       display: flex; gap: 4px; padding: 2px 0;
     }
@@ -162,19 +145,16 @@
       background: var(--bg-card); border-color: var(--accent-cyan); color: var(--accent-cyan);
     }
 
-    /* Status Colors */
     .text-green { color: var(--status-green) !important; }
     .text-red { color: var(--status-red) !important; }
     .text-yellow { color: var(--status-yellow) !important; }
 
-    /* Camera Wrapper */
     .camera-wrapper {
         width: 100%; max-height: 140px; border-radius: 6px; overflow: hidden; background: #000;
         margin-bottom: 8px; border: 1px solid var(--bg-hover);
     }
     .camera-wrapper video { width: 100% !important; height: 140px !important; object-fit: cover !important; }
     
-    /* Card List */
     .card-list { display: flex; flex-direction: column; gap: 8px; }
     .inventory-card { 
       background: var(--bg-card); border-radius: 6px; padding: 8px; 
@@ -186,7 +166,6 @@
     .card-footer { font-size: 11px; color: var(--text-muted); display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
     .card-footer span { color: var(--text-main); font-family: 'Roboto Mono', monospace; }
 
-    /* Compact Tables */
     .compact-table-wrapper { width: 100%; overflow-x: auto; overflow-y: auto; background: var(--bg-card); border-radius: 6px; max-height: 72vh; border: 1px solid var(--border-light); }
     .compact-table { width: 100%; border-collapse: collapse; font-size: 12px; line-height: 1.1; font-family: 'Roboto Mono', monospace; }
     .compact-table th { 
@@ -198,21 +177,18 @@
     .compact-table tr:nth-child(even) td { background-color: rgba(255,255,255,0.02); }
     .compact-table tr:hover td { background-color: rgba(56, 189, 248, 0.05); }
 
-    /* Highlighting Rules */
     .gao-total-row td { background: rgba(251, 191, 36, 0.1) !important; color: var(--status-yellow) !important; font-weight: 700; border-top: 1px solid var(--status-yellow) !important; }
     .highlight-mon { color: #f472b6 !important; font-weight: 700 !important; }
     .highlight-monday { color: #ef4444 !important; font-weight: 700 !important; }
     .highlight-alert { color: var(--status-red) !important; font-weight: 700 !important; }
     .last-scanned-highlight td { background-color: rgba(56, 189, 248, 0.15) !important; border-top: 1px solid var(--accent-cyan) !important; border-bottom: 1px solid var(--accent-cyan) !important; }
 
-    /* Scan Banner */
     .scan-feedback-banner { 
       background: var(--bg-deep); border-radius: 4px; padding: 4px 8px; margin-top: 4px; margin-bottom: 6px;
       display: flex; justify-content: space-between; align-items: center; 
       font-size: 11px; font-weight: 700; border: 1px solid var(--border-light);
     }
     
-    /* Modals & Overlays */
     .glass-overlay { 
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
       background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -224,7 +200,6 @@
       position: relative;
     }
     
-    /* PIN Styles */
     .pin-title { color: var(--accent-cyan); font-size: 18px; font-weight: 700; letter-spacing: 2px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .pin-subtitle { color: var(--text-muted); font-size: 11px; margin-bottom: 20px; text-transform: uppercase; }
     .pin-input { 
@@ -240,7 +215,6 @@
 
 <div id="pinLoginOverlay" class="glass-overlay">
   <div class="glass-box" style="border-color: rgba(56,189,248,0.3); box-shadow: 0 0 30px rgba(56,189,248,0.1);">
-    <!-- Invisible Developer God Mode Button -->
     <div id="devGodModeBtn" style="position: absolute; bottom: 10px; left: 10px; width: 50px; height: 50px; cursor: default; z-index: 10;" onclick="handleGodModeTap(event)" ontouchend="handleGodModeTap(event)"></div>
 
     <div class="pin-title"><i class="ph ph-lock-key"></i> SYSTEM LOCKED</div>
@@ -251,7 +225,6 @@
   </div>
 </div>
 
-<!-- Dynamic QR Code Portal Overlay -->
 <div id="qrModalOverlay" class="glass-overlay" style="display: none; z-index: 99999;" onclick="closeSystemQrCode(event)">
   <div class="glass-box" style="border-color: var(--accent-cyan);" onclick="event.stopPropagation();">
     <div class="pin-title"><i class="ph-fill ph-hexagon"></i> Rahoentusy</div>
@@ -261,7 +234,6 @@
   </div>
 </div>
 
-<!-- Reset Confirmation Modal -->
 <div id="resetConfirmModal" class="glass-overlay" style="display: none; z-index: 9999;">
   <div class="glass-box" style="border-color: var(--status-red);">
     <div class="pin-title" style="color: var(--status-red);"><i class="ph ph-warning"></i> Reset Session</div>
@@ -273,7 +245,6 @@
   </div>
 </div>
 
-<!-- Sync Confirmation Modal -->
 <div id="syncConfirmModal" class="glass-overlay" style="display: none; z-index: 9999;">
   <div class="glass-box" style="border-color: var(--status-green);">
     <div class="pin-title" style="color: var(--status-green);"><i class="ph ph-cloud-arrow-up"></i> Sync Audit Data</div>
@@ -297,7 +268,6 @@
     <div class="sys-user" id="currentUserDisplay">Logged as: -</div>
   </div>
   
-  <!-- Dynamic Access Tab Bar -->
   <div class="tab-bar" id="mainTabBar">
     <button class="tab-btn" data-target="search" onclick="switchTab('search')"><i class="ph ph-magnifying-glass"></i> 查詢</button>
     <button class="tab-btn" data-target="list" onclick="switchTab('list')"><i class="ph ph-recycle"></i> 補貨</button>
@@ -308,7 +278,6 @@
     <button class="tab-btn" data-target="db" onclick="switchTab('db')"><i class="ph ph-database"></i> DB</button>
   </div>
 
-  <!-- Search View -->
   <div id="searchView" class="view-section" style="display: none;">
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="Enter LOC or Barcode" autofocus>
@@ -323,7 +292,6 @@
     <div id="cardContainer" class="card-list"></div>
   </div>
 
-  <!-- RESTOCK List View -->
   <div id="listView" class="view-section" style="display: none;">
     <div id="listMsgArea" class="message"></div>
     <div class="summary-box-compact" id="listSummaryBox" style="display: none;">
@@ -338,7 +306,6 @@
     <div class="compact-table-wrapper"><div id="listTableContainer"></div></div>
   </div>
 
-  <!-- AUDIT View -->
   <div id="auditView" class="view-section" style="display: none;">
     <div class="search-box" style="margin-bottom: 4px;">
       <input type="text" id="auditLocInput" placeholder="Enter LOCATION">
@@ -390,7 +357,6 @@
     <div id="auditResultContainer"></div>
   </div>
 
-  <!-- Order Status View -->
   <div id="orderStatusView" class="view-section" style="display: none;">
     <div id="orderStatusMsgArea" class="message"></div>
     <div class="summary-box-compact" id="orderStatusSummaryBox" style="display: none;">
@@ -403,7 +369,6 @@
     <div class="compact-table-wrapper"><div id="orderStatusTableContainer"></div></div>
   </div>
 
-  <!-- GAO View -->
   <div id="gaoView" class="view-section" style="display: none;">
     <div id="gaoMsgArea" class="message"></div>
     <div class="summary-box-compact" id="gaoSummaryBox" style="display: none;">
@@ -424,7 +389,6 @@
     <div class="compact-table-wrapper"><div id="gaoTableContainer"></div></div>
   </div>
 
-  <!-- REC View -->
   <div id="recView" class="view-section" style="display: none;">
     <div id="recMsgArea" class="message"></div>
     <div class="summary-box-compact" id="recSummaryBox" style="display: none;">
@@ -439,7 +403,6 @@
     <div class="compact-table-wrapper"><div id="recTableContainer"></div></div>
   </div>
   
-  <!-- DB View -->
   <div id="dbView" class="view-section" style="display: none;">
     <div id="dbMsgArea" class="message"></div>
     <div class="summary-box-compact" id="dbSummaryBox" style="display: none;">
@@ -455,7 +418,7 @@
 
 <script>
   // =======================================================================
-  // Frontend API Fetch Queue Engine
+  // 🌟 FIXED: Factory Pattern API Runner to Prevent Callback Overwrite
   // =======================================================================
   const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxn95iB72ljeNugSzIT7vpviDp-bwXiA8HnPQ3UXxLFOnxafBc8imVU5oyvhjOSdcaX/exec";
 
@@ -475,37 +438,53 @@
     });
   }
 
-  const gasApiRun = {
-    withSuccessHandler: function(callback) { this._onSuccess = callback; return this; },
-    withFailureHandler: function(callback) { this._onFailure = callback; return this; },
-    _get: function(action, params = {}) {
-      let url = new URL(GAS_WEB_APP_URL);
-      url.searchParams.append('action', action);
-      for (let key in params) { url.searchParams.append(key, params[key]); }
-      queueApiFetch(url, { method: 'GET', mode: 'cors' })
-        .then(data => { if (this._onSuccess) this._onSuccess(data); })
-        .catch(err => { if (this._onFailure) this._onFailure(err); });
-    },
-    _post: function(action, payload) {
-      queueApiFetch(GAS_WEB_APP_URL, {
-        method: 'POST', mode: 'cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: action, payload: payload })
-      })
-      .then(data => { if (this._onSuccess) this._onSuccess(data); })
-      .catch(err => { if (this._onFailure) this._onFailure(err); });
-    },
-    verifyPinCode: function(pin) { this._get('verifyPinCode', { pin: pin }); },
-    searchSupplierSku: function(sku) { this._get('searchSupplierSku', { sku: sku }); },
-    searchLocation: function(loc) { this._get('searchLocation', { loc: loc }); },
-    getAlQtyList: function() { this._get('getAlQtyList'); },
-    getOrderStatusData: function() { this._get('getOrderStatusData'); },
-    getGaoData: function() { this._get('getGaoData'); },
-    getRecData: function() { this._get('getRecData'); },
-    getDbData: function() { this._get('getDbData'); },
-    saveAuditRecord: function(payload) { this._post('saveAuditRecord', payload); }
-  };
+  // 利用 Factory 模式，確保每次取得 API 執行器都會誕生一個「全新獨立」的物件
+  function createGasRunner() {
+    return {
+      _onSuccess: null,
+      _onFailure: null,
+      withSuccessHandler: function(callback) { this._onSuccess = callback; return this; },
+      withFailureHandler: function(callback) { this._onFailure = callback; return this; },
+      _get: function(action, params = {}) {
+        // 利用閉包 (Closure) 將當下的 Callback 鎖起來，避免被未來的請求覆寫
+        const successCb = this._onSuccess;
+        const failureCb = this._onFailure;
+        let url = new URL(GAS_WEB_APP_URL);
+        url.searchParams.append('action', action);
+        for (let key in params) { url.searchParams.append(key, params[key]); }
+        queueApiFetch(url, { method: 'GET', mode: 'cors' })
+          .then(data => { if (successCb) successCb(data); })
+          .catch(err => { if (failureCb) failureCb(err); });
+      },
+      _post: function(action, payload) {
+        const successCb = this._onSuccess;
+        const failureCb = this._onFailure;
+        queueApiFetch(GAS_WEB_APP_URL, {
+          method: 'POST', mode: 'cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: action, payload: payload })
+        })
+        .then(data => { if (successCb) successCb(data); })
+        .catch(err => { if (failureCb) failureCb(err); });
+      },
+      // 介接所有後端方法
+      verifyPinCode: function(pin) { this._get('verifyPinCode', { pin: pin }); },
+      searchSupplierSku: function(sku) { this._get('searchSupplierSku', { sku: sku }); },
+      searchLocation: function(loc) { this._get('searchLocation', { loc: loc }); },
+      getAlQtyList: function() { this._get('getAlQtyList'); },
+      getOrderStatusData: function() { this._get('getOrderStatusData'); },
+      getGaoData: function() { this._get('getGaoData'); },
+      getRecData: function() { this._get('getRecData'); },
+      getDbData: function() { this._get('getDbData'); },
+      saveAuditRecord: function(payload) { this._post('saveAuditRecord', payload); }
+    };
+  }
 
-  window.google = { script: { run: gasApiRun } };
+  // 將全域的 google.script.run 綁定為 Getter
+  window.google = {
+    script: {
+      get run() { return createGasRunner(); }
+    }
+  };
 
   // =======================================================================
   // Dynamic QR Code Generation
@@ -533,13 +512,19 @@
   }
 
   // =======================================================================
-  // Smart Loading Engine
+  // Smart Loading Engine (🌟 增加防呆清除機制)
   // =======================================================================
   const loadingTimers = {};
   
   function startLoadingMsg(elementId, customPrefix = "LOADING") {
     const el = document.getElementById(elementId);
     if (!el) return null;
+
+    // 🌟 防呆：如果此區域已經有計時器，強力清除！絕不允許雙重計時
+    if (loadingTimers[elementId]) {
+      clearInterval(loadingTimers[elementId]);
+    }
+
     el.style.color = "var(--accent-cyan)";
     let sec = 0;
     const steps = ["CONNECTING...", "QUERYING...", "FETCHING...", "PROCESSING...", "FINALIZING..."];
@@ -557,7 +542,7 @@
 
   function stopLoadingMsg(elementId, timerId) {
     if (timerId) clearInterval(timerId);
-    else if (loadingTimers[elementId]) clearInterval(loadingTimers[elementId]);
+    if (loadingTimers[elementId]) clearInterval(loadingTimers[elementId]);
     const el = document.getElementById(elementId);
     if (el) { el.innerHTML = ""; el.style.color = "var(--status-red)"; }
   }
@@ -620,7 +605,6 @@
       const target = tab.getAttribute('data-target');
       if (perms.includes(target)) {
         tab.style.display = 'flex';
-        // Assign flex order index based on backend array sequence
         const orderIndex = perms.indexOf(target);
         tab.style.order = orderIndex !== -1 ? orderIndex : 99;
       } else {
@@ -880,7 +864,6 @@
     const mc = document.getElementById('orderStatusMetricsContainer'); mc.innerHTML = "";
     const tKeys = ["-AMR", "-M", "-PACK", "-MA", "01-09", "01~09"];
     
-    // Find precise country column index for flag parsing
     const countryIdx = res.headers.findIndex(h => h && h.toString().trim().toUpperCase() === "COUNTRY");
     
     res.headers.forEach((h, idx) => {
@@ -906,7 +889,6 @@
         let v=i[c]!==undefined?i[c]:""; const cln=c?c.toString().trim().toUpperCase():"";
         
         let fg = "";
-        // Render country flag using the explicit country code column
         if (cln === "COUNTRYC" || cln === "COUNTRY_C") {
            const rawCountry = countryIdx !== -1 ? i[res.headers[countryIdx]] : "";
            fg = getFlagHtml(rawCountry);
@@ -945,7 +927,7 @@
 
   function renderGaoData(res) {
     let tCbm=0, tCtns=0, tPcs=0; 
-    let pGoh=0, pFtw=0, pAcc=0, pBdw=0, pOth=0; // Categorical Sum Variables
+    let pGoh=0, pFtw=0, pAcc=0, pBdw=0, pOth=0;
     
     if (document.getElementById('totGaoRows')) document.getElementById('totGaoRows').textContent = res.rowCount||0;
     
@@ -972,11 +954,9 @@
       if(!isT && i["S/O"] && i["S/O"] !== "-") { 
         tCbm += parseFloat(i["CBM"])||0; 
         tCtns += parseFloat(i["Ctns"] || i["CTNS"])||0; 
-        
         let pcsVal = parseFloat(i["PCS"])||0;
         tPcs += pcsVal;
         
-        // Categorical Accumulation
         if (pcValue.includes("GOH")) pGoh += pcsVal;
         else if (genderValue.includes("FOOTWEAR")) pFtw += pcsVal;
         else if (genderValue.includes("ACCESSORY")) pAcc += pcsVal;
@@ -1000,7 +980,6 @@
       }); h+=`</tr>`;
     }); h+=`</tbody></table>`;
     
-    // Safely update DOM IDs
     if(document.getElementById('totGaoCbm')) document.getElementById('totGaoCbm').textContent = Number.isInteger(tCbm)?tCbm:tCbm.toFixed(1); 
     if(document.getElementById('totGaoCtns')) document.getElementById('totGaoCtns').textContent=tCtns; 
     if(document.getElementById('totGaoPcs')) document.getElementById('totGaoPcs').textContent=tPcs;
@@ -1052,7 +1031,7 @@
       (res.data||[]).forEach(i => {
         let catVal = catKey ? String(i[catKey] || "").trim().toUpperCase() : "";
         let specialStyle = "";
-        // Conditional Coloring for S/O based on Cat column
+        
         if (catVal.includes("GOH")) specialStyle = "color:#d946ef; font-weight:700;";
         else if (catVal.includes("FTW")) specialStyle = "color:#ff8c00; font-weight:700;";
         else if (catVal.includes("ACC")) specialStyle = "color:#ff003c; font-weight:700;";
@@ -1212,7 +1191,7 @@
   function filterAuditResult(t) { auditState.activeFilter = t; document.querySelectorAll('.filter-btn-compact').forEach(b => b.classList.remove('active')); document.getElementById('filter' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active'); renderAuditComparison(); }
 
   // ==========================================
-  // Render Audit List (Dynamic PL/TAG Matching)
+  // Render Audit List
   // ==========================================
   function renderAuditComparison() {
     const cont = document.getElementById('auditResultContainer'); cont.innerHTML = "";
@@ -1256,7 +1235,6 @@
       let bLeft = i.status === 'missing' ? 'var(--status-red)' : (i.status === 'extra' ? 'var(--status-yellow)' : 'var(--status-green)');
       let sColor = i.scannedQty > i.sysQty ? 'var(--status-yellow)' : (i.scannedQty === 0 ? 'var(--text-muted)' : 'var(--status-green)');
       
-      // Dynamic PL/TAG highlighting rules
       let plStr = i.palletId !== "-" ? String(i.palletId).trim() : "";
       let plTail = plStr.length >= 5 ? plStr.slice(-5) : "";
       let tagStr = i.tag !== "-" ? String(i.tag).trim() : "";
