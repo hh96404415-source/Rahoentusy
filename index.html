@@ -177,6 +177,23 @@
     .compact-table tr:nth-child(even) td { background-color: rgba(255,255,255,0.02); }
     .compact-table tr:hover td { background-color: rgba(56, 189, 248, 0.05); }
 
+    /* 🌟 MAP 熱力圖專屬格線樣式 (支援雙向凍結窗格) */
+    .map-table th, .map-table td {
+      min-width: 32px; height: 28px; padding: 2px; font-size: 11px; text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.05); font-family: 'Roboto Mono', monospace;
+    }
+    .map-table th { position: sticky; top: 0; z-index: 4; background: var(--bg-deep); color: var(--accent-cyan); }
+    .map-table td:first-child, .map-table th:first-child {
+      position: sticky; left: 0; z-index: 5; background: var(--bg-card); color: var(--status-yellow); font-weight: 700;
+    }
+    .map-table td:nth-child(2), .map-table th:nth-child(2) {
+      position: sticky; left: 32px; z-index: 5; background: var(--bg-card); color: var(--status-green); font-weight: 700;
+    }
+    .map-zero { color: rgba(255, 255, 255, 0.15); background: rgba(0, 0, 0, 0.1); }
+    .map-low { color: #86efac; background: rgba(52, 211, 153, 0.1); }
+    .map-mid { color: #fde047; background: rgba(251, 191, 36, 0.15); }
+    .map-high { color: #f87171; background: rgba(251, 113, 133, 0.25); font-weight: 700; }
+
     .gao-total-row td { background: rgba(251, 191, 36, 0.1) !important; color: var(--status-yellow) !important; font-weight: 700; border-top: 1px solid var(--status-yellow) !important; }
     .highlight-mon { color: #f472b6 !important; font-weight: 700 !important; }
     .highlight-monday { color: #ef4444 !important; font-weight: 700 !important; }
@@ -276,6 +293,8 @@
     <button class="tab-btn" data-target="gao" onclick="switchTab('gao')"><i class="ph ph-truck"></i> DI</button>
     <button class="tab-btn" data-target="rec" onclick="switchTab('rec')"><i class="ph ph-target"></i> REC</button>
     <button class="tab-btn" data-target="db" onclick="switchTab('db')"><i class="ph ph-database"></i> DB</button>
+    <!-- 🌟 MAP Tab Button -->
+    <button class="tab-btn" data-target="map" onclick="switchTab('map')"><i class="ph ph-map-trifold"></i> MAP</button>
   </div>
 
   <div id="searchView" class="view-section" style="display: none;">
@@ -414,12 +433,22 @@
     </div>
     <div class="compact-table-wrapper"><div id="dbTableContainer"></div></div>
   </div>
+
+  <!-- 🌟 MAP View Section -->
+  <div id="mapView" class="view-section" style="display: none;">
+    <div id="mapMsgArea" class="message"></div>
+    <div class="summary-box-compact" id="mapSummaryBox" style="display: none;">
+      <div class="summary-item-compact">MAP LAYOUT: <span id="totMapCells">MAP1-9 (A1:AO28)</span></div>
+      <div style="margin-left: auto; display:flex; align-items:center; gap:4px;">
+        <button class="icon-btn" style="min-width: 24px; height:24px;" onclick="loadMapData(true)"><i class="ph ph-arrows-clockwise" style="font-size:12px;"></i></button>
+      </div>
+    </div>
+    <div class="compact-table-wrapper"><div id="mapTableContainer"></div></div>
+  </div>
+
 </div>
 
 <script>
-  // =======================================================================
-  // 🌟 FIXED: Factory Pattern API Runner to Prevent Callback Overwrite
-  // =======================================================================
   const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxn95iB72ljeNugSzIT7vpviDp-bwXiA8HnPQ3UXxLFOnxafBc8imVU5oyvhjOSdcaX/exec";
 
   let apiQueue = Promise.resolve();
@@ -438,7 +467,6 @@
     });
   }
 
-  // 利用 Factory 模式，確保每次取得 API 執行器都會誕生一個「全新獨立」的物件
   function createGasRunner() {
     return {
       _onSuccess: null,
@@ -446,7 +474,6 @@
       withSuccessHandler: function(callback) { this._onSuccess = callback; return this; },
       withFailureHandler: function(callback) { this._onFailure = callback; return this; },
       _get: function(action, params = {}) {
-        // 利用閉包 (Closure) 將當下的 Callback 鎖起來，避免被未來的請求覆寫
         const successCb = this._onSuccess;
         const failureCb = this._onFailure;
         let url = new URL(GAS_WEB_APP_URL);
@@ -466,7 +493,6 @@
         .then(data => { if (successCb) successCb(data); })
         .catch(err => { if (failureCb) failureCb(err); });
       },
-      // 介接所有後端方法
       verifyPinCode: function(pin) { this._get('verifyPinCode', { pin: pin }); },
       searchSupplierSku: function(sku) { this._get('searchSupplierSku', { sku: sku }); },
       searchLocation: function(loc) { this._get('searchLocation', { loc: loc }); },
@@ -475,20 +501,17 @@
       getGaoData: function() { this._get('getGaoData'); },
       getRecData: function() { this._get('getRecData'); },
       getDbData: function() { this._get('getDbData'); },
+      getMapData: function() { this._get('getMapData'); },
       saveAuditRecord: function(payload) { this._post('saveAuditRecord', payload); }
     };
   }
 
-  // 將全域的 google.script.run 綁定為 Getter
   window.google = {
     script: {
       get run() { return createGasRunner(); }
     }
   };
 
-  // =======================================================================
-  // Dynamic QR Code Generation
-  // =======================================================================
   function showSystemQrCode() {
     const overlay = document.getElementById('qrModalOverlay');
     const container = document.getElementById('sysQrCodeContainer');
@@ -511,16 +534,12 @@
     document.getElementById('qrModalOverlay').style.display = 'none';
   }
 
-  // =======================================================================
-  // Smart Loading Engine (🌟 增加防呆清除機制)
-  // =======================================================================
   const loadingTimers = {};
   
   function startLoadingMsg(elementId, customPrefix = "LOADING") {
     const el = document.getElementById(elementId);
     if (!el) return null;
 
-    // 🌟 防呆：如果此區域已經有計時器，強力清除！絕不允許雙重計時
     if (loadingTimers[elementId]) {
       clearInterval(loadingTimers[elementId]);
     }
@@ -547,10 +566,6 @@
     if (el) { el.innerHTML = ""; el.style.color = "var(--status-red)"; }
   }
 
-
-  // =======================================================================
-  // Developer God Mode
-  // =======================================================================
   let lastGodModeTap = 0;
   function handleGodModeTap(e) {
     if (e && e.type === 'touchend') e.preventDefault();
@@ -561,13 +576,10 @@
   }
 
   function activateGodMode() {
-    const godModePayload = { success: true, name: "Dev Admin", permissions: ["rec", "gao", "list", "orderStatus", "search", "audit", "db"] };
+    const godModePayload = { success: true, name: "Dev Admin", permissions: ["map", "rec", "gao", "list", "orderStatus", "search", "audit", "db"] };
     sessionStorage.setItem('wms_auth', JSON.stringify(godModePayload)); applyPermissions(godModePayload);
   }
 
-  // =======================================================================
-  // Authentication & Dynamic Tab Ordering
-  // =======================================================================
   window.onload = function() {
     const cachedAuth = sessionStorage.getItem('wms_auth');
     if (cachedAuth) {
@@ -619,9 +631,6 @@
     }
   }
 
-  // =======================================================================
-  // Camera Scanner Handlers
-  // =======================================================================
   let html5QrCode = null; let barcodeHtml5QrCode = null; let pendingBarcode = null; let lastDetected = null;
 
   function startLocationScanner() {
@@ -667,9 +676,6 @@
     inputEl.value = code; processScannedCode(code); inputEl.value = ""; inputEl.focus();
   }
 
-  // ==========================================
-  // Utilities & Flag Map
-  // ==========================================
   const COUNTRY_FLAG_CODES = { "RUS": "ru", "USA": "us", "JPN": "jp", "CAN": "ca", "MEX": "mx", "AUS": "au", "KOR": "kr", "MAC": "mo", "TWN": "tw", "CHN": "cn", "HKG": "hk", "IDN": "id", "BRA": "br", "THA": "th", "KWT": "kw", "ARE": "ae", "SAU": "sa", "BHR": "bh", "SGP": "sg", "MYS": "my", "QAT": "qa", "KHM": "kh", "UZB": "uz", "PAK": "pk", "VNM": "vn", "PHL": "ph", "ISR": "il", "SUR": "sr", "GTM": "gt", "ARM": "am", "IND": "in", "KAZ": "kz", "MMR": "mm", "UKR": "ua", "ITA": "it", "ZAF": "za", "PRY": "py", "EGY": "eg", "LBN": "lb", "CHL": "cl", "VEN": "ve", "MUS": "mu", "URY": "uy", "COL": "co" };
   
   function getFlagHtml(text) {
@@ -686,9 +692,6 @@
       }).getDbData();
   }
 
-  // ==========================================
-  // Audio & Haptic Feedback Engine
-  // ==========================================
   let auditSoundEnabled = true; let audioCtx = null;
   function toggleAuditSound() {
     auditSoundEnabled = !auditSoundEnabled; const btn = document.getElementById('soundToggleBtn');
@@ -736,11 +739,8 @@
     return `<span style="color:var(--text-muted);">${prefix}</span><span style="color:var(--status-yellow); font-weight:700; text-shadow:0 0 5px rgba(251,191,36,0.5);">${suffix}</span>`;
   }
 
-  // ==========================================
-  // Tab Routing
-  // ==========================================
   let currentTab = '';
-  let isAlListLoaded = false, isOrderStatusLoaded = false, isGaoLoaded = false, isRecLoaded = false, isDbLoaded = false;
+  let isAlListLoaded = false, isOrderStatusLoaded = false, isGaoLoaded = false, isRecLoaded = false, isDbLoaded = false, isMapLoaded = false;
 
   const searchInput = document.getElementById('searchInput');
   searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); fetchData(); } });
@@ -761,11 +761,9 @@
     else if (tab === 'gao') loadGaoDataList(false);
     else if (tab === 'rec') loadRecDataList(false);
     else if (tab === 'db') loadDbDataList(false);
+    else if (tab === 'map') loadMapData(false);
   }
 
-  // ==========================================
-  // View Rendering Logics
-  // ==========================================
   function fetchData() {
     let raw = searchInput.value; if (!raw) return;
     let sVal = raw.replace(/[\r\n]+/g, "").trim().toUpperCase(); if (!sVal) return;
@@ -1021,7 +1019,7 @@
     if (isRecLoaded && !force) return;
     let timer = startLoadingMsg('recMsgArea', 'REC STAT');
     window.google.script.run.withSuccessHandler((res) => {
-      stopLoadingMsg('recMsgArea', timer); isRecLoaded = true; fetchAndUpdateSyncTime('ReceivedSyncProcess', 'lastRecRefreshedTime');
+      stopLoadingMsg(msgId, timer); isRecLoaded = true; fetchAndUpdateSyncTime('ReceivedSyncProcess', 'lastRecRefreshedTime');
       let tScnd=0, tScn=0; document.getElementById('totRecRows').textContent = res.rowCount||0;
       
       let catKey = res.headers.find(h => h.toUpperCase().trim() === "CAT");
@@ -1064,7 +1062,7 @@
     if (isDbLoaded && !force) return;
     let timer = startLoadingMsg('dbMsgArea', 'DB STAT');
     window.google.script.run.withSuccessHandler((res) => {
-      stopLoadingMsg('dbMsgArea', timer); isDbLoaded = true;
+      stopLoadingMsg(msgId, timer); isDbLoaded = true;
       let ts = "--:--"; if(res.data) { const t=res.data.find(i=>String(i["TITLE"]||"").trim()==="TimerSYNC"); if(t) ts=String(t["DATA"]||"").trim(); }
       document.getElementById('lastDbRefreshedTime').textContent = ts; document.getElementById('totDbRows').textContent = res.rowCount||0;
       let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
@@ -1079,9 +1077,57 @@
     }).withFailureHandler(e => { stopLoadingMsg('dbMsgArea', timer); document.getElementById('dbMsgArea').textContent="ERROR:"+e.message; }).getDbData();
   }
 
-  // ==========================================
-  // Audit Session Logic
-  // ==========================================
+  // 🌟 MAP 渲染與熱力圖對應邏輯
+  function loadMapData(force) {
+    if (isMapLoaded && !force) return;
+    let timer = startLoadingMsg('mapMsgArea', 'MAP LAYOUT');
+
+    window.google.script.run.withSuccessHandler((res) => {
+      stopLoadingMsg('mapMsgArea', timer); isMapLoaded = true;
+      if (!res || !res.grid || res.grid.length === 0) {
+        document.getElementById('mapMsgArea').textContent = "NO MAP DATA FOUND";
+        return;
+      }
+
+      const grid = res.grid;
+      document.getElementById('mapSummaryBox').style.display = "flex";
+
+      let h = `<table class="compact-table map-table">`;
+      grid.forEach((row, rIdx) => {
+        h += `<tr>`;
+        row.forEach((cell, cIdx) => {
+          let valStr = String(cell).trim();
+          let cellClass = "";
+          let tag = (rIdx === 0 || cIdx === 0 || cIdx === 1) ? "th" : "td";
+
+          if (rIdx === 0 || cIdx === 0 || cIdx === 1) {
+            h += `<${tag}>${valStr}</${tag}>`;
+          } else {
+            let num = parseFloat(valStr);
+            if (isNaN(num) || num === 0 || valStr === "") {
+              cellClass = "map-zero";
+              valStr = valStr || "";
+            } else if (num < 10) {
+              cellClass = "map-low";
+            } else if (num < 30) {
+              cellClass = "map-mid";
+            } else {
+              cellClass = "map-high";
+            }
+            h += `<td class="${cellClass}">${valStr}</td>`;
+          }
+        });
+        h += `</tr>`;
+      });
+      h += `</table>`;
+
+      document.getElementById('mapTableContainer').innerHTML = h;
+    }).withFailureHandler(e => {
+      stopLoadingMsg('mapMsgArea', timer);
+      document.getElementById('mapMsgArea').textContent = "ERROR: " + e.message;
+    }).getMapData();
+  }
+
   let auditState = { location: '', systemItemsMap: {}, scannedCounts: {}, scanHistoryStack: [], lastRawCodeMap: {}, lastLookupCodeMap: {}, activeFilter: 'all', lastScannedKey: null };
 
   function startAuditSession() {
@@ -1190,9 +1236,6 @@
   function confirmResetAuditSession() { closeResetModal(); auditState.scannedCounts = {}; auditState.scanHistoryStack = []; document.getElementById('scanFeedbackBanner').style.borderColor='var(--border-light)'; document.getElementById('feedbackTitle').innerHTML = '<i class="ph ph-barcode"></i> AWAITING SCAN...'; document.getElementById('feedbackDetails').innerHTML = 'SYS: 0 | SCN: 0'; renderAuditComparison(); }
   function filterAuditResult(t) { auditState.activeFilter = t; document.querySelectorAll('.filter-btn-compact').forEach(b => b.classList.remove('active')); document.getElementById('filter' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active'); renderAuditComparison(); }
 
-  // ==========================================
-  // Render Audit List
-  // ==========================================
   function renderAuditComparison() {
     const cont = document.getElementById('auditResultContainer'); cont.innerHTML = "";
     let ts=0, tc=0, mc=0, ec=0, mic=0, eic=0, mac=0;
