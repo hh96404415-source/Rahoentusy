@@ -177,22 +177,36 @@
     .compact-table tr:nth-child(even) td { background-color: rgba(255,255,255,0.02); }
     .compact-table tr:hover td { background-color: rgba(56, 189, 248, 0.05); }
 
-    /* 🌟 MAP 熱力圖專屬格線樣式 (支援雙向凍結窗格) */
+    /* 🌟 MAP 熱力圖專屬極致緊湊與優化樣式 */
     .map-table th, .map-table td {
-      min-width: 32px; height: 28px; padding: 2px; font-size: 11px; text-align: center;
+      min-width: 24px; height: 24px; padding: 1px; font-size: 13px; text-align: center;
       border: 1px solid rgba(255, 255, 255, 0.05); font-family: 'Roboto Mono', monospace;
     }
-    .map-table th { position: sticky; top: 0; z-index: 4; background: var(--bg-deep); color: var(--accent-cyan); }
+    /* 藍色標題列與字體放大 */
+    .map-table th { position: sticky; top: 0; z-index: 4; background: var(--bg-deep); color: var(--accent-cyan); font-size: 14px !important; }
+    /* 左側第一欄 (行) 黃色與字體放大 */
     .map-table td:first-child, .map-table th:first-child {
-      position: sticky; left: 0; z-index: 5; background: var(--bg-card); color: var(--status-yellow); font-weight: 700;
+      position: sticky; left: 0; z-index: 5; background: var(--bg-card); color: var(--status-yellow) !important; font-weight: 700; font-size: 14px !important;
     }
+    /* 左側第二欄 (層) 字體放大 */
     .map-table td:nth-child(2), .map-table th:nth-child(2) {
-      position: sticky; left: 32px; z-index: 5; background: var(--bg-card); color: var(--status-green); font-weight: 700;
+      font-size: 14px !important; font-weight: 700;
     }
-    .map-zero { color: rgba(255, 255, 255, 0.15); background: rgba(0, 0, 0, 0.1); }
+    /* 層次專屬顏色 */
+    .lvl-3 { color: #d946ef !important; } /* 霓虹粉紫 */
+    .lvl-2 { color: #38bdf8 !important; } /* 亮青藍色 */
+    .lvl-1 { color: #86efac !important; } /* 粉亮綠色 */
+
+    /* 儲位熱力圖顏色 */
+    .map-zero { color: rgba(255, 255, 255, 0.15); background: rgba(0, 0, 0, 0.1); font-weight: normal; }
     .map-low { color: #86efac; background: rgba(52, 211, 153, 0.1); }
     .map-mid { color: #fde047; background: rgba(251, 191, 36, 0.15); }
     .map-high { color: #f87171; background: rgba(251, 113, 133, 0.25); font-weight: 700; }
+
+    /* 行與行之間的分隔線 */
+    .map-row-separator td, .map-row-separator th {
+      border-bottom: 2px solid rgba(56, 189, 248, 0.4) !important;
+    }
 
     .gao-total-row td { background: rgba(251, 191, 36, 0.1) !important; color: var(--status-yellow) !important; font-weight: 700; border-top: 1px solid var(--status-yellow) !important; }
     .highlight-mon { color: #f472b6 !important; font-weight: 700 !important; }
@@ -293,7 +307,6 @@
     <button class="tab-btn" data-target="gao" onclick="switchTab('gao')"><i class="ph ph-truck"></i> DI</button>
     <button class="tab-btn" data-target="rec" onclick="switchTab('rec')"><i class="ph ph-target"></i> REC</button>
     <button class="tab-btn" data-target="db" onclick="switchTab('db')"><i class="ph ph-database"></i> DB</button>
-    <!-- 🌟 MAP Tab Button -->
     <button class="tab-btn" data-target="map" onclick="switchTab('map')"><i class="ph ph-map-trifold"></i> MAP</button>
   </div>
 
@@ -434,15 +447,31 @@
     <div class="compact-table-wrapper"><div id="dbTableContainer"></div></div>
   </div>
 
-  <!-- 🌟 MAP View Section -->
+  <!-- MAP View -->
   <div id="mapView" class="view-section" style="display: none;">
     <div id="mapMsgArea" class="message"></div>
+    
     <div class="summary-box-compact" id="mapSummaryBox" style="display: none;">
-      <div class="summary-item-compact">MAP LAYOUT: <span id="totMapCells">MAP1-9 (A1:AO28)</span></div>
-      <div style="margin-left: auto; display:flex; align-items:center; gap:4px;">
+      <div class="summary-item-compact" style="flex: 1;">MAP LAYOUT: <span id="totMapCells">MAP1-9 (A1:AO28)</span></div>
+      <div style="display:flex; align-items:center; gap:4px;">
         <button class="icon-btn" style="min-width: 24px; height:24px;" onclick="loadMapData(true)"><i class="ph ph-arrows-clockwise" style="font-size:12px;"></i></button>
       </div>
     </div>
+
+    <!-- 🌟 新增：行號篩選器群組 -->
+    <div id="mapFilterGroup" class="filter-group-compact" style="display: none; flex-wrap: wrap; margin-bottom: 4px;">
+      <button class="filter-btn-compact active" data-filter="ALL" onclick="filterMap('ALL')">ALL</button>
+      <button class="filter-btn-compact" data-filter="01" onclick="filterMap('01')">01</button>
+      <button class="filter-btn-compact" data-filter="02" onclick="filterMap('02')">02</button>
+      <button class="filter-btn-compact" data-filter="03" onclick="filterMap('03')">03</button>
+      <button class="filter-btn-compact" data-filter="04" onclick="filterMap('04')">04</button>
+      <button class="filter-btn-compact" data-filter="05" onclick="filterMap('05')">05</button>
+      <button class="filter-btn-compact" data-filter="06" onclick="filterMap('06')">06</button>
+      <button class="filter-btn-compact" data-filter="07" onclick="filterMap('07')">07</button>
+      <button class="filter-btn-compact" data-filter="08" onclick="filterMap('08')">08</button>
+      <button class="filter-btn-compact" data-filter="09" onclick="filterMap('09')">09</button>
+    </div>
+
     <div class="compact-table-wrapper"><div id="mapTableContainer"></div></div>
   </div>
 
@@ -611,16 +640,32 @@
     document.getElementById('currentUserDisplay').textContent = "Logged as: " + (authData.name || "Unknown");
 
     const perms = authData.permissions || [];
-    const tabs = document.querySelectorAll('.tab-btn');
+    const tabBar = document.getElementById('mainTabBar');
+    const tabs = Array.from(document.querySelectorAll('.tab-btn'));
     
+    // 🌟 完全物理排序 (Absolute DOM Reordering)
+    // 嚴格依照後端權限陣列的順序重新排列按鈕
+    tabs.sort((a, b) => {
+      const aTarget = a.getAttribute('data-target');
+      const bTarget = b.getAttribute('data-target');
+      const aIndex = perms.indexOf(aTarget);
+      const bIndex = perms.indexOf(bTarget);
+      
+      // 若兩者都在權限陣列中，依據索引排序
+      if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+      // 若只有一個在權限陣列中，存在的排前面
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return 0;
+    });
+
+    // 清空現有容器，並按新順序重新插入
+    tabBar.innerHTML = '';
     tabs.forEach(tab => {
       const target = tab.getAttribute('data-target');
       if (perms.includes(target)) {
         tab.style.display = 'flex';
-        const orderIndex = perms.indexOf(target);
-        tab.style.order = orderIndex !== -1 ? orderIndex : 99;
-      } else {
-        tab.style.display = 'none';
+        tabBar.appendChild(tab); // 物理插入 DOM
       }
     });
 
@@ -1019,7 +1064,7 @@
     if (isRecLoaded && !force) return;
     let timer = startLoadingMsg('recMsgArea', 'REC STAT');
     window.google.script.run.withSuccessHandler((res) => {
-      stopLoadingMsg(msgId, timer); isRecLoaded = true; fetchAndUpdateSyncTime('ReceivedSyncProcess', 'lastRecRefreshedTime');
+      stopLoadingMsg('recMsgArea', timer); isRecLoaded = true; fetchAndUpdateSyncTime('ReceivedSyncProcess', 'lastRecRefreshedTime');
       let tScnd=0, tScn=0; document.getElementById('totRecRows').textContent = res.rowCount||0;
       
       let catKey = res.headers.find(h => h.toUpperCase().trim() === "CAT");
@@ -1062,7 +1107,7 @@
     if (isDbLoaded && !force) return;
     let timer = startLoadingMsg('dbMsgArea', 'DB STAT');
     window.google.script.run.withSuccessHandler((res) => {
-      stopLoadingMsg(msgId, timer); isDbLoaded = true;
+      stopLoadingMsg('dbMsgArea', timer); isDbLoaded = true;
       let ts = "--:--"; if(res.data) { const t=res.data.find(i=>String(i["TITLE"]||"").trim()==="TimerSYNC"); if(t) ts=String(t["DATA"]||"").trim(); }
       document.getElementById('lastDbRefreshedTime').textContent = ts; document.getElementById('totDbRows').textContent = res.rowCount||0;
       let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
@@ -1077,7 +1122,59 @@
     }).withFailureHandler(e => { stopLoadingMsg('dbMsgArea', timer); document.getElementById('dbMsgArea').textContent="ERROR:"+e.message; }).getDbData();
   }
 
-  // 🌟 MAP 渲染與熱力圖對應邏輯
+  // 🌟 MAP 行號多重篩選邏輯 (Multi-select Filter)
+  let activeMapFilters = new Set();
+
+  function filterMap(group) {
+    const allBtn = document.querySelector('#mapFilterGroup .filter-btn-compact[data-filter="ALL"]');
+    
+    if (group === 'ALL') {
+      activeMapFilters.clear();
+      document.querySelectorAll('#mapFilterGroup .filter-btn-compact').forEach(btn => btn.classList.remove('active'));
+      allBtn.classList.add('active');
+    } else {
+      const targetBtn = document.querySelector(`#mapFilterGroup .filter-btn-compact[data-filter="${group}"]`);
+      
+      // 切換選取狀態 (Toggle)
+      if (activeMapFilters.has(group)) {
+        activeMapFilters.delete(group);
+        targetBtn.classList.remove('active');
+      } else {
+        activeMapFilters.add(group);
+        targetBtn.classList.add('active');
+      }
+
+      // 判斷是否需要變回 ALL
+      if (activeMapFilters.size === 0) {
+        allBtn.classList.add('active');
+      } else {
+        allBtn.classList.remove('active');
+      }
+    }
+
+    // 執行篩選顯示隱藏
+    const rows = document.querySelectorAll('.map-data-row');
+    rows.forEach(r => {
+      // 找出這列屬於哪個 group
+      let rowGroup = null;
+      for (let i = 1; i <= 9; i++) {
+        let g = "0" + i;
+        if (r.classList.contains(`group-${g}`)) { rowGroup = g; break; }
+      }
+
+      if (activeMapFilters.size === 0) {
+        r.style.display = ''; // ALL
+      } else {
+        if (rowGroup && activeMapFilters.has(rowGroup)) {
+          r.style.display = '';
+        } else {
+          r.style.display = 'none';
+        }
+      }
+    });
+  }
+
+  // 🌟 新增：載入與渲染 MAP 熱力圖地圖資料
   function loadMapData(force) {
     if (isMapLoaded && !force) return;
     let timer = startLoadingMsg('mapMsgArea', 'MAP LAYOUT');
@@ -1091,22 +1188,48 @@
 
       const grid = res.grid;
       document.getElementById('mapSummaryBox').style.display = "flex";
+      document.getElementById('mapFilterGroup').style.display = "flex"; // 顯示篩選列
 
       let h = `<table class="compact-table map-table">`;
+      let currentRowGroup = "HEADER";
+
       grid.forEach((row, rIdx) => {
-        h += `<tr>`;
+        // 追蹤當前的行號 (Row Group: 01, 02... 09)
+        let colA = String(row[0]).trim();
+        if (rIdx > 0 && colA !== "") {
+          currentRowGroup = colA; 
+        }
+
+        // 當層次(colB)為 "1" 時，加入底部虛線分隔樣式
+        let colB = String(row[1]).trim();
+        let trClass = rIdx > 0 ? `map-data-row group-${currentRowGroup}` : "";
+        if (colB === "1") {
+          trClass += " map-row-separator";
+        }
+
+        h += `<tr class="${trClass}">`;
+
         row.forEach((cell, cIdx) => {
           let valStr = String(cell).trim();
           let cellClass = "";
-          let tag = (rIdx === 0 || cIdx === 0 || cIdx === 1) ? "th" : "td";
+          let tag = (rIdx === 0 || cIdx === 0) ? "th" : "td";
+
+          // 判斷第 2 欄 (層次) 賦予特殊顏色
+          if (rIdx > 0 && cIdx === 1) {
+            if (valStr === "3") cellClass = "lvl-3";
+            else if (valStr === "2") cellClass = "lvl-2";
+            else if (valStr === "1") cellClass = "lvl-1";
+          }
 
           if (rIdx === 0 || cIdx === 0 || cIdx === 1) {
-            h += `<${tag}>${valStr}</${tag}>`;
+            // 表頭與凍結的兩列不參與熱力圖渲染，直接套用
+            h += `<${tag} class="${cellClass}">${valStr}</${tag}>`;
           } else {
+            // 資料區域熱力圖與空值處理
             let num = parseFloat(valStr);
             if (isNaN(num) || num === 0 || valStr === "") {
               cellClass = "map-zero";
-              valStr = valStr || "";
+              valStr = "."; // 替換 0 為 .
             } else if (num < 10) {
               cellClass = "map-low";
             } else if (num < 30) {
@@ -1122,6 +1245,10 @@
       h += `</table>`;
 
       document.getElementById('mapTableContainer').innerHTML = h;
+      
+      // 載入完成後預設顯示 ALL
+      filterMap('ALL');
+      
     }).withFailureHandler(e => {
       stopLoadingMsg('mapMsgArea', timer);
       document.getElementById('mapMsgArea').textContent = "ERROR: " + e.message;
@@ -1234,7 +1361,7 @@
   function resetAuditSession() { document.getElementById('resetConfirmModal').style.display = 'flex'; }
   function closeResetModal() { document.getElementById('resetConfirmModal').style.display = 'none'; }
   function confirmResetAuditSession() { closeResetModal(); auditState.scannedCounts = {}; auditState.scanHistoryStack = []; document.getElementById('scanFeedbackBanner').style.borderColor='var(--border-light)'; document.getElementById('feedbackTitle').innerHTML = '<i class="ph ph-barcode"></i> AWAITING SCAN...'; document.getElementById('feedbackDetails').innerHTML = 'SYS: 0 | SCN: 0'; renderAuditComparison(); }
-  function filterAuditResult(t) { auditState.activeFilter = t; document.querySelectorAll('.filter-btn-compact').forEach(b => b.classList.remove('active')); document.getElementById('filter' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active'); renderAuditComparison(); }
+  function filterAuditResult(t) { auditState.activeFilter = t; document.querySelectorAll('#auditFilterGroup .filter-btn-compact').forEach(b => b.classList.remove('active')); document.getElementById('filter' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active'); renderAuditComparison(); }
 
   function renderAuditComparison() {
     const cont = document.getElementById('auditResultContainer'); cont.innerHTML = "";
