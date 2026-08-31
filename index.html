@@ -177,36 +177,32 @@
     .compact-table tr:nth-child(even) td { background-color: rgba(255,255,255,0.02); }
     .compact-table tr:hover td { background-color: rgba(56, 189, 248, 0.05); }
 
-    /* 🌟 MAP 熱力圖專屬極致緊湊與優化樣式 */
     .map-table th, .map-table td {
       min-width: 24px; height: 24px; padding: 1px; font-size: 13px; text-align: center;
       border: 1px solid rgba(255, 255, 255, 0.05); font-family: 'Roboto Mono', monospace;
     }
-    /* 藍色標題列與字體放大 */
+    /* Fixed Column Styles */
     .map-table th { position: sticky; top: 0; z-index: 4; background: var(--bg-deep); color: var(--accent-cyan); font-size: 14px !important; }
-    /* 左側第一欄 (行) 黃色與字體放大 */
     .map-table td:first-child, .map-table th:first-child {
       position: sticky; left: 0; z-index: 5; background: var(--bg-card); color: var(--status-yellow) !important; font-weight: 700; font-size: 14px !important;
     }
-    /* 左側第二欄 (層) 字體放大 */
     .map-table td:nth-child(2), .map-table th:nth-child(2) {
       font-size: 14px !important; font-weight: 700;
     }
-    /* 層次專屬顏色 */
-    .lvl-3 { color: #d946ef !important; } /* 霓虹粉紫 */
-    .lvl-2 { color: #38bdf8 !important; } /* 亮青藍色 */
-    .lvl-1 { color: #86efac !important; } /* 粉亮綠色 */
+    
+    /* Semantic Layout Colors */
+    .lvl-3 { color: #d946ef !important; } 
+    .lvl-2 { color: #38bdf8 !important; } 
+    .lvl-1 { color: #86efac !important; } 
+    .map-row-separator td, .map-row-separator th {
+      border-bottom: 2px solid rgba(56, 189, 248, 0.4) !important;
+    }
 
-    /* 儲位熱力圖顏色 */
+    /* Heatmap Data Levels */
     .map-zero { color: rgba(255, 255, 255, 0.15); background: rgba(0, 0, 0, 0.1); font-weight: normal; }
     .map-low { color: #86efac; background: rgba(52, 211, 153, 0.1); }
     .map-mid { color: #fde047; background: rgba(251, 191, 36, 0.15); }
     .map-high { color: #f87171; background: rgba(251, 113, 133, 0.25); font-weight: 700; }
-
-    /* 行與行之間的分隔線 */
-    .map-row-separator td, .map-row-separator th {
-      border-bottom: 2px solid rgba(56, 189, 248, 0.4) !important;
-    }
 
     .gao-total-row td { background: rgba(251, 191, 36, 0.1) !important; color: var(--status-yellow) !important; font-weight: 700; border-top: 1px solid var(--status-yellow) !important; }
     .highlight-mon { color: #f472b6 !important; font-weight: 700 !important; }
@@ -220,6 +216,7 @@
       font-size: 11px; font-weight: 700; border: 1px solid var(--border-light);
     }
     
+    /* Modals & Overlays */
     .glass-overlay { 
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
       background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -231,6 +228,7 @@
       position: relative;
     }
     
+    /* PIN Styles */
     .pin-title { color: var(--accent-cyan); font-size: 18px; font-weight: 700; letter-spacing: 2px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .pin-subtitle { color: var(--text-muted); font-size: 11px; margin-bottom: 20px; text-transform: uppercase; }
     .pin-input { 
@@ -246,6 +244,7 @@
 
 <div id="pinLoginOverlay" class="glass-overlay">
   <div class="glass-box" style="border-color: rgba(56,189,248,0.3); box-shadow: 0 0 30px rgba(56,189,248,0.1);">
+    <!-- Invisible Developer God Mode Button -->
     <div id="devGodModeBtn" style="position: absolute; bottom: 10px; left: 10px; width: 50px; height: 50px; cursor: default; z-index: 10;" onclick="handleGodModeTap(event)" ontouchend="handleGodModeTap(event)"></div>
 
     <div class="pin-title"><i class="ph ph-lock-key"></i> SYSTEM LOCKED</div>
@@ -299,6 +298,7 @@
     <div class="sys-user" id="currentUserDisplay">Logged as: -</div>
   </div>
   
+  <!-- Dynamic Access Tab Bar: HTML physical order does NOT matter, JS will enforce array order via appendChild -->
   <div class="tab-bar" id="mainTabBar">
     <button class="tab-btn" data-target="search" onclick="switchTab('search')"><i class="ph ph-magnifying-glass"></i> 查詢</button>
     <button class="tab-btn" data-target="list" onclick="switchTab('list')"><i class="ph ph-recycle"></i> 補貨</button>
@@ -447,7 +447,6 @@
     <div class="compact-table-wrapper"><div id="dbTableContainer"></div></div>
   </div>
 
-  <!-- MAP View -->
   <div id="mapView" class="view-section" style="display: none;">
     <div id="mapMsgArea" class="message"></div>
     
@@ -458,7 +457,7 @@
       </div>
     </div>
 
-    <!-- 🌟 新增：行號篩選器群組 -->
+    <!-- Map Multi-Select Filter Row -->
     <div id="mapFilterGroup" class="filter-group-compact" style="display: none; flex-wrap: wrap; margin-bottom: 4px;">
       <button class="filter-btn-compact active" data-filter="ALL" onclick="filterMap('ALL')">ALL</button>
       <button class="filter-btn-compact" data-filter="01" onclick="filterMap('01')">01</button>
@@ -479,7 +478,6 @@
 
 <script>
   const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxn95iB72ljeNugSzIT7vpviDp-bwXiA8HnPQ3UXxLFOnxafBc8imVU5oyvhjOSdcaX/exec";
-
   let apiQueue = Promise.resolve();
 
   function queueApiFetch(url, options) {
@@ -544,10 +542,8 @@
   function showSystemQrCode() {
     const overlay = document.getElementById('qrModalOverlay');
     const container = document.getElementById('sysQrCodeContainer');
-    
     overlay.style.display = 'flex';
     container.innerHTML = '';
-    
     new QRCode(container, {
       text: "https://hh96404415-source.github.io/Rahoentusy/",
       width: 180,
@@ -569,9 +565,7 @@
     const el = document.getElementById(elementId);
     if (!el) return null;
 
-    if (loadingTimers[elementId]) {
-      clearInterval(loadingTimers[elementId]);
-    }
+    if (loadingTimers[elementId]) { clearInterval(loadingTimers[elementId]); }
 
     el.style.color = "var(--accent-cyan)";
     let sec = 0;
@@ -605,8 +599,14 @@
   }
 
   function activateGodMode() {
-    const godModePayload = { success: true, name: "Dev Admin", permissions: ["map", "rec", "gao", "list", "orderStatus", "search", "audit", "db"] };
-    sessionStorage.setItem('wms_auth', JSON.stringify(godModePayload)); applyPermissions(godModePayload);
+    // 🌟 Absolute physical mapping for testing
+    const godModePayload = { 
+        success: true, 
+        name: "Dev Admin", 
+        permissions: ["rec", "gao", "list", "map", "orderStatus", "search", "audit", "db"] 
+    };
+    sessionStorage.setItem('wms_auth', JSON.stringify(godModePayload)); 
+    applyPermissions(godModePayload);
   }
 
   window.onload = function() {
@@ -636,41 +636,28 @@
   function applyPermissions(authData) {
     document.getElementById('pinLoginOverlay').style.display = 'none';
     document.getElementById('mainContainer').style.display = 'block';
-    
     document.getElementById('currentUserDisplay').textContent = "Logged as: " + (authData.name || "Unknown");
 
     const perms = authData.permissions || [];
     const tabBar = document.getElementById('mainTabBar');
-    const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+    const tabs = document.querySelectorAll('.tab-btn');
     
-    // 🌟 完全物理排序 (Absolute DOM Reordering)
-    tabs.sort((a, b) => {
-      const aTarget = a.getAttribute('data-target');
-      const bTarget = b.getAttribute('data-target');
-      const aIndex = perms.indexOf(aTarget);
-      const bIndex = perms.indexOf(bTarget);
-      
-      if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
-      if (aIndex !== -1) return -1;
-      if (bIndex !== -1) return 1;
-      return 0;
-    });
-
-    // 清空並依序塞回
-    tabBar.innerHTML = '';
     tabs.forEach(tab => {
-      const target = tab.getAttribute('data-target');
-      if (perms.includes(target)) {
-        tab.style.display = 'flex';
-        tabBar.appendChild(tab);
-      }
+        tab.style.display = 'none';
+        tab.style.order = ''; 
     });
 
-    if (perms.length > 0) {
-      switchTab(perms[0]);
-    } else {
-      document.getElementById('msgArea').textContent = "UNAUTHORIZED ACCESS.";
-    }
+    // Enforcement of physical sorting based entirely on the backend payload
+    perms.forEach(targetKey => {
+        const targetTab = document.querySelector(`.tab-btn[data-target="${targetKey}"]`);
+        if (targetTab) {
+            targetTab.style.display = 'flex';
+            tabBar.appendChild(targetTab); 
+        }
+    });
+
+    if (perms.length > 0) { switchTab(perms[0]); } 
+    else { document.getElementById('msgArea').textContent = "UNAUTHORIZED ACCESS."; }
   }
 
   let html5QrCode = null; let barcodeHtml5QrCode = null; let pendingBarcode = null; let lastDetected = null;
@@ -903,7 +890,6 @@
   function renderOrderStatusData(res) {
     const mc = document.getElementById('orderStatusMetricsContainer'); mc.innerHTML = "";
     const tKeys = ["-AMR", "-M", "-PACK", "-MA", "01-09", "01~09"];
-    
     const countryIdx = res.headers.findIndex(h => h && h.toString().trim().toUpperCase() === "COUNTRY");
     
     res.headers.forEach((h, idx) => {
@@ -927,13 +913,11 @@
     (res.data||[]).forEach(i => {
       h+=`<tr>`; res.headers.forEach(c => {
         let v=i[c]!==undefined?i[c]:""; const cln=c?c.toString().trim().toUpperCase():"";
-        
         let fg = "";
         if (cln === "COUNTRYC" || cln === "COUNTRY_C") {
            const rawCountry = countryIdx !== -1 ? i[res.headers[countryIdx]] : "";
            fg = getFlagHtml(rawCountry);
         }
-        
         let cls = ""; const vs = String(v).trim().toUpperCase();
         if(vs==="MON"||vs.endsWith("MON")||vs.endsWith("/MON")) cls="highlight-mon";
         if(cln==="SCND") cls+=" text-green"; else if(cln==="-SCN"){ cls+=" text-red"; if(v&&v!=="0"&&v!=="-"&&!String(v).startsWith("-")) v="-"+v; }
@@ -1023,7 +1007,6 @@
     if(document.getElementById('totGaoCbm')) document.getElementById('totGaoCbm').textContent = Number.isInteger(tCbm)?tCbm:tCbm.toFixed(1); 
     if(document.getElementById('totGaoCtns')) document.getElementById('totGaoCtns').textContent=tCtns; 
     if(document.getElementById('totGaoPcs')) document.getElementById('totGaoPcs').textContent=tPcs;
-    
     if(document.getElementById('totGaoPcsGOH')) document.getElementById('totGaoPcsGOH').textContent=pGoh;
     if(document.getElementById('totGaoPcsFTW')) document.getElementById('totGaoPcsFTW').textContent=pFtw;
     if(document.getElementById('totGaoPcsACC')) document.getElementById('totGaoPcsACC').textContent=pAcc;
@@ -1063,7 +1046,6 @@
     window.google.script.run.withSuccessHandler((res) => {
       stopLoadingMsg('recMsgArea', timer); isRecLoaded = true; fetchAndUpdateSyncTime('ReceivedSyncProcess', 'lastRecRefreshedTime');
       let tScnd=0, tScn=0; document.getElementById('totRecRows').textContent = res.rowCount||0;
-      
       let catKey = res.headers.find(h => h.toUpperCase().trim() === "CAT");
       let soKey = res.headers.find(h => h.toUpperCase().trim() === "S/O");
 
@@ -1080,21 +1062,16 @@
         h+=`<tr>`; 
         res.headers.forEach(c => {
           let v = i[c] !== undefined ? i[c] : ""; 
-          const cln = c ? c.toString().trim().toUpperCase() : ""; 
-          let cls = "";
-          let inlineStyle = "";
+          const cln = c ? c.toString().trim().toUpperCase() : ""; let cls = ""; let inlineStyle = "";
 
           if (cln === "SCND") { cls="text-green"; tScnd+=(parseFloat(v)||0); }
           else if (cln === "-SCN") { cls="text-red"; tScn+=(parseFloat(String(v).replace(/^-/,''))||0); if(v&&v!=="0"&&v!=="-"&&!String(v).startsWith("-")) v="-"+v; }
           
           if (c === soKey && specialStyle !== "") inlineStyle = specialStyle;
-
           if (v === 0 || String(v).trim() === "0") v = ""; 
           h+=`<td class="${cls}" style="${inlineStyle}">${v}</td>`;
-        }); 
-        h+=`</tr>`;
+        }); h+=`</tr>`;
       }); h+=`</tbody></table>`;
-      
       document.getElementById('totRecScnd').textContent = Number.isInteger(tScnd)?tScnd:tScnd.toFixed(2); document.getElementById('totRecScn').textContent = Number.isInteger(tScn)?"-"+tScn:"-"+tScn.toFixed(2);
       document.getElementById('recSummaryBox').style.display = "flex"; document.getElementById('recTableContainer').innerHTML = h;
     }).withFailureHandler(e => { stopLoadingMsg('recMsgArea', timer); document.getElementById('recMsgArea').textContent="ERROR:"+e.message; }).getRecData();
@@ -1119,8 +1096,7 @@
     }).withFailureHandler(e => { stopLoadingMsg('dbMsgArea', timer); document.getElementById('dbMsgArea').textContent="ERROR:"+e.message; }).getDbData();
   }
 
-  // 🌟 MAP 行號多重篩選邏輯 (Multi-select Filter)
-  let activeMapFilters = new Set();
+  const activeMapFilters = new Set();
 
   function filterMap(group) {
     const allBtn = document.querySelector('#mapFilterGroup .filter-btn-compact[data-filter="ALL"]');
@@ -1131,47 +1107,25 @@
       allBtn.classList.add('active');
     } else {
       const targetBtn = document.querySelector(`#mapFilterGroup .filter-btn-compact[data-filter="${group}"]`);
-      
-      // 切換選取狀態 (Toggle)
-      if (activeMapFilters.has(group)) {
-        activeMapFilters.delete(group);
-        targetBtn.classList.remove('active');
-      } else {
-        activeMapFilters.add(group);
-        targetBtn.classList.add('active');
-      }
-
-      // 判斷是否需要變回 ALL
-      if (activeMapFilters.size === 0) {
-        allBtn.classList.add('active');
-      } else {
-        allBtn.classList.remove('active');
-      }
+      if (activeMapFilters.has(group)) { activeMapFilters.delete(group); targetBtn.classList.remove('active'); } 
+      else { activeMapFilters.add(group); targetBtn.classList.add('active'); }
+      if (activeMapFilters.size === 0) { allBtn.classList.add('active'); } 
+      else { allBtn.classList.remove('active'); }
     }
 
-    // 執行篩選顯示隱藏
     const rows = document.querySelectorAll('.map-data-row');
     rows.forEach(r => {
-      // 找出這列屬於哪個 group
       let rowGroup = null;
       for (let i = 1; i <= 9; i++) {
         let g = "0" + i;
         if (r.classList.contains(`group-${g}`)) { rowGroup = g; break; }
       }
 
-      if (activeMapFilters.size === 0) {
-        r.style.display = ''; // ALL
-      } else {
-        if (rowGroup && activeMapFilters.has(rowGroup)) {
-          r.style.display = '';
-        } else {
-          r.style.display = 'none';
-        }
-      }
+      if (activeMapFilters.size === 0) { r.style.display = ''; } 
+      else { if (rowGroup && activeMapFilters.has(rowGroup)) { r.style.display = ''; } else { r.style.display = 'none'; } }
     });
   }
 
-  // 🌟 新增：載入與渲染 MAP 熱力圖地圖資料
   function loadMapData(force) {
     if (isMapLoaded && !force) return;
     let timer = startLoadingMsg('mapMsgArea', 'MAP LAYOUT');
@@ -1182,27 +1136,20 @@
         document.getElementById('mapMsgArea').textContent = "NO MAP DATA FOUND";
         return;
       }
-
       const grid = res.grid;
       document.getElementById('mapSummaryBox').style.display = "flex";
-      document.getElementById('mapFilterGroup').style.display = "flex"; // 顯示篩選列
+      document.getElementById('mapFilterGroup').style.display = "flex"; 
 
       let h = `<table class="compact-table map-table">`;
       let currentRowGroup = "HEADER";
 
       grid.forEach((row, rIdx) => {
-        // 追蹤當前的行號 (Row Group: 01, 02... 09)
         let colA = String(row[0]).trim();
-        if (rIdx > 0 && colA !== "") {
-          currentRowGroup = colA; 
-        }
+        if (rIdx > 0 && colA !== "") { currentRowGroup = colA; }
 
-        // 當層次(colB)為 "1" 時，加入底部虛線分隔樣式
         let colB = String(row[1]).trim();
         let trClass = rIdx > 0 ? `map-data-row group-${currentRowGroup}` : "";
-        if (colB === "1") {
-          trClass += " map-row-separator";
-        }
+        if (colB === "1") { trClass += " map-row-separator"; }
 
         h += `<tr class="${trClass}">`;
 
@@ -1211,39 +1158,27 @@
           let cellClass = "";
           let tag = (rIdx === 0 || cIdx === 0) ? "th" : "td";
 
-          // 判斷第 2 欄 (層次) 賦予特殊顏色
           if (rIdx > 0 && cIdx === 1) {
             if (valStr === "3") cellClass = "lvl-3";
             else if (valStr === "2") cellClass = "lvl-2";
             else if (valStr === "1") cellClass = "lvl-1";
           }
 
-          if (rIdx === 0 || cIdx === 0 || cIdx === 1) {
-            // 表頭與凍結的兩列不參與熱力圖渲染，直接套用
-            h += `<${tag} class="${cellClass}">${valStr}</${tag}>`;
-          } else {
-            // 資料區域熱力圖與空值處理
+          if (rIdx === 0 || cIdx === 0 || cIdx === 1) { h += `<${tag} class="${cellClass}">${valStr}</${tag}>`; } 
+          else {
             let num = parseFloat(valStr);
             if (isNaN(num) || num === 0 || valStr === "") {
-              cellClass = "map-zero";
-              valStr = "."; // 替換 0 為 .
-            } else if (num < 10) {
-              cellClass = "map-low";
-            } else if (num < 30) {
-              cellClass = "map-mid";
-            } else {
-              cellClass = "map-high";
-            }
+              cellClass = "map-zero"; valStr = "."; 
+            } else if (num < 10) { cellClass = "map-low"; } 
+            else if (num < 30) { cellClass = "map-mid"; } 
+            else { cellClass = "map-high"; }
             h += `<td class="${cellClass}">${valStr}</td>`;
           }
         });
         h += `</tr>`;
       });
       h += `</table>`;
-
       document.getElementById('mapTableContainer').innerHTML = h;
-      
-      // 載入完成後預設顯示 ALL
       filterMap('ALL');
       
     }).withFailureHandler(e => {
@@ -1259,7 +1194,6 @@
     const b = document.getElementById('auditLoadBtn'); const msg = document.getElementById('auditMsgArea');
     b.disabled = true; b.innerHTML = '<i class="ph ph-spinner ph-spin"></i>'; 
     document.getElementById('feedbackTitle').innerHTML = '<i class="ph ph-barcode"></i> AWAITING SCAN...'; document.getElementById('feedbackDetails').innerHTML = 'SYS: 0 | SCN: 0';
-    
     let timer = startLoadingMsg('auditMsgArea', 'AUDIT DATA');
 
     window.google.script.run.withSuccessHandler((res) => {
@@ -1358,7 +1292,7 @@
   function resetAuditSession() { document.getElementById('resetConfirmModal').style.display = 'flex'; }
   function closeResetModal() { document.getElementById('resetConfirmModal').style.display = 'none'; }
   function confirmResetAuditSession() { closeResetModal(); auditState.scannedCounts = {}; auditState.scanHistoryStack = []; document.getElementById('scanFeedbackBanner').style.borderColor='var(--border-light)'; document.getElementById('feedbackTitle').innerHTML = '<i class="ph ph-barcode"></i> AWAITING SCAN...'; document.getElementById('feedbackDetails').innerHTML = 'SYS: 0 | SCN: 0'; renderAuditComparison(); }
-  function filterAuditResult(t) { auditState.activeFilter = t; document.querySelectorAll('#auditFilterGroup .filter-btn-compact').forEach(b => b.classList.remove('active')); document.getElementById('filter' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active'); renderAuditComparison(); }
+  function filterAuditResult(t) { auditState.activeFilter = t; document.querySelectorAll('.filter-btn-compact').forEach(b => b.classList.remove('active')); document.getElementById('filter' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active'); renderAuditComparison(); }
 
   function renderAuditComparison() {
     const cont = document.getElementById('auditResultContainer'); cont.innerHTML = "";
