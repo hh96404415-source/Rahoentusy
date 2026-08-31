@@ -644,28 +644,25 @@
     const tabs = Array.from(document.querySelectorAll('.tab-btn'));
     
     // 🌟 完全物理排序 (Absolute DOM Reordering)
-    // 嚴格依照後端權限陣列的順序重新排列按鈕
     tabs.sort((a, b) => {
       const aTarget = a.getAttribute('data-target');
       const bTarget = b.getAttribute('data-target');
       const aIndex = perms.indexOf(aTarget);
       const bIndex = perms.indexOf(bTarget);
       
-      // 若兩者都在權限陣列中，依據索引排序
       if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
-      // 若只有一個在權限陣列中，存在的排前面
       if (aIndex !== -1) return -1;
       if (bIndex !== -1) return 1;
       return 0;
     });
 
-    // 清空現有容器，並按新順序重新插入
+    // 清空並依序塞回
     tabBar.innerHTML = '';
     tabs.forEach(tab => {
       const target = tab.getAttribute('data-target');
       if (perms.includes(target)) {
         tab.style.display = 'flex';
-        tabBar.appendChild(tab); // 物理插入 DOM
+        tabBar.appendChild(tab);
       }
     });
 
