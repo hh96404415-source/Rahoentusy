@@ -403,6 +403,7 @@
 
   <div id="gaoView" class="view-section" style="display: none;">
     <div id="gaoMsgArea" class="message"></div>
+    
     <div class="summary-box-compact" id="gaoSummaryBox" style="display: none;">
       <div class="summary-item-compact">ROWS:<span id="totGaoRows">0</span></div>
       <div class="summary-item-compact">CBM:<span id="totGaoCbm" style="color:var(--accent-blue);">0</span></div>
@@ -418,6 +419,17 @@
         <button class="icon-btn" style="min-width: 24px; height:24px;" onclick="loadGaoDataList(true)"><i class="ph ph-arrows-clockwise" style="font-size:12px;"></i></button>
       </div>
     </div>
+
+    <!-- 🌟 DI (GAO) 多選篩選過濾列 -->
+    <div id="gaoFilterGroup" class="filter-group-compact" style="display: none; flex-wrap: wrap; margin-bottom: 4px;">
+      <button class="filter-btn-compact active" data-filter="ALL" onclick="filterGao('ALL')">ALL</button>
+      <button class="filter-btn-compact" data-filter="GOH" style="color:#d946ef;" onclick="filterGao('GOH')">GOH</button>
+      <button class="filter-btn-compact" data-filter="FTW" style="color:#ff8c00;" onclick="filterGao('FTW')">FTW</button>
+      <button class="filter-btn-compact" data-filter="ACC" style="color:#ff003c;" onclick="filterGao('ACC')">ACC</button>
+      <button class="filter-btn-compact" data-filter="BDW" style="color:#86efac;" onclick="filterGao('BDW')">BDW</button>
+      <button class="filter-btn-compact" data-filter="OTH" style="color:var(--text-main);" onclick="filterGao('OTH')">OTH</button>
+    </div>
+
     <div class="compact-table-wrapper"><div id="gaoTableContainer"></div></div>
   </div>
 
@@ -971,10 +983,21 @@
       let genderValue = genderKey ? String(i[genderKey] || "").trim().toUpperCase() : "";
       
       let specialStyle = "";
-      if (pcValue.includes("GOH")) specialStyle = "color:#d946ef; font-weight:700;"; 
-      else if (genderValue.includes("FOOTWEAR")) specialStyle = "color:#ff8c00; font-weight:700;"; 
-      else if (genderValue.includes("ACCESSORY")) specialStyle = "color:#ff003c; font-weight:700;"; 
-      else if (genderValue.includes("BDW")) specialStyle = "color:#86efac; font-weight:700;"; 
+      let categoryClass = "cat-oth"; // 預設類別
+      
+      if (pcValue.includes("GOH")) {
+        specialStyle = "color:#d946ef; font-weight:700;"; 
+        categoryClass = "cat-goh";
+      } else if (genderValue.includes("FOOTWEAR")) {
+        specialStyle = "color:#ff8c00; font-weight:700;"; 
+        categoryClass = "cat-ftw";
+      } else if (genderValue.includes("ACCESSORY")) {
+        specialStyle = "color:#ff003c; font-weight:700;"; 
+        categoryClass = "cat-acc";
+      } else if (genderValue.includes("BDW")) {
+        specialStyle = "color:#86efac; font-weight:700;"; 
+        categoryClass = "cat-bdw";
+      }
 
       if(!isT && i["S/O"] && i["S/O"] !== "-") { 
         tCbm += parseFloat(i["CBM"])||0; 
@@ -989,7 +1012,8 @@
         else pOth += pcsVal;
       }
       
-      h+=`<tr class="${isT?'gao-total-row':''}">`;
+      // 加入類別 Class 供過濾器使用 (Total列使用 gao-total-row 以便過濾時判斷)
+      h+=`<tr class="${isT ? 'gao-total-row' : ('gao-data-row ' + categoryClass)}">`;
       res.headers.forEach((c, colIndex) => {
         let v = i[c] !== undefined ? i[c] : ""; const cln = c ? c.toString().trim().toUpperCase() : ""; let cls = ""; const vOriginal = String(v).trim();
         if (colIndex === 0 && vOriginal.includes("週一") && !isT) cls = "highlight-monday";
@@ -1015,7 +1039,14 @@
     if(document.getElementById('totGaoPcsOTH')) document.getElementById('totGaoPcsOTH').textContent=pOth;
     
     if(document.getElementById('gaoSummaryBox')) document.getElementById('gaoSummaryBox').style.display = "flex"; 
-    if(document.getElementById('gaoTableContainer')) document.getElementById('gaoTableContainer').innerHTML = h;
+    
+    // 🌟 解除 Filter Group 隱藏
+    if(document.getElementById('gaoFilterGroup')) document.getElementById('gaoFilterGroup').style.display = "flex";
+    
+    if(document.getElementById('gaoTableContainer')) {
+      document.getElementById('gaoTableContainer').innerHTML = h;
+      applyGaoFilterVisibility(); // 渲染完畢後，套用目前的篩選狀態
+    }
   }
 
   function loadGaoDataList(force) {
@@ -1039,6 +1070,64 @@
        stopLoadingMsg(msgId, timer);
        if(!cachedDataStr) document.getElementById(msgId).textContent="ERROR:"+e.message;
     }).getGaoData();
+  }
+
+  // ==========================================
+  // DI (GAO) 多選篩選邏輯
+  // ==========================================
+  const activeGaoFilters = new Set();
+
+  function filterGao(category) {
+    const allBtn = document.querySelector('#gaoFilterGroup .filter-btn-compact[data-filter="ALL"]');
+    
+    if (category === 'ALL') {
+      activeGaoFilters.clear();
+      document.querySelectorAll('#gaoFilterGroup .filter-btn-compact').forEach(btn => btn.classList.remove('active'));
+      allBtn.classList.add('active');
+    } else {
+      const targetBtn = document.querySelector(`#gaoFilterGroup .filter-btn-compact[data-filter="${category}"]`);
+      if (activeGaoFilters.has(category)) { 
+        activeGaoFilters.delete(category); 
+        targetBtn.classList.remove('active'); 
+      } else { 
+        activeGaoFilters.add(category); 
+        targetBtn.classList.add('active'); 
+      }
+      
+      // 如果全部都沒選，預設回到 ALL 狀態
+      if (activeGaoFilters.size === 0) { 
+        allBtn.classList.add('active'); 
+      } else { 
+        allBtn.classList.remove('active'); 
+      }
+    }
+    applyGaoFilterVisibility();
+  }
+
+  function applyGaoFilterVisibility() {
+    const rows = document.querySelectorAll('.gao-data-row');
+    const totalRows = document.querySelectorAll('.gao-total-row');
+
+    if (activeGaoFilters.size === 0) {
+      // 顯示全部 (ALL)
+      rows.forEach(r => r.style.display = '');
+      totalRows.forEach(r => r.style.display = ''); // 顯示 Total 列
+    } else {
+      // 根據選擇過濾
+      rows.forEach(r => {
+        let isVisible = false;
+        if (activeGaoFilters.has('GOH') && r.classList.contains('cat-goh')) isVisible = true;
+        if (activeGaoFilters.has('FTW') && r.classList.contains('cat-ftw')) isVisible = true;
+        if (activeGaoFilters.has('ACC') && r.classList.contains('cat-acc')) isVisible = true;
+        if (activeGaoFilters.has('BDW') && r.classList.contains('cat-bdw')) isVisible = true;
+        if (activeGaoFilters.has('OTH') && r.classList.contains('cat-oth')) isVisible = true;
+        
+        r.style.display = isVisible ? '' : 'none';
+      });
+      
+      // 在進行細部過濾時，選擇先隱藏 Total 列，避免造成總數對不上的混淆
+      totalRows.forEach(r => r.style.display = 'none'); 
+    }
   }
 
   function loadRecDataList(force) {
