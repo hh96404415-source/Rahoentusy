@@ -177,11 +177,11 @@
     .compact-table tr:nth-child(even) td { background-color: rgba(255,255,255,0.02); }
     .compact-table tr:hover td { background-color: rgba(56, 189, 248, 0.05); }
 
+    /* 🌟 MAP 熱力圖專屬格線樣式 (視覺壓縮版) */
     .map-table th, .map-table td {
       min-width: 24px; height: 24px; padding: 1px; font-size: 13px; text-align: center;
       border: 1px solid rgba(255, 255, 255, 0.05); font-family: 'Roboto Mono', monospace;
     }
-    /* Fixed Column Styles */
     .map-table th { position: sticky; top: 0; z-index: 4; background: var(--bg-deep); color: var(--accent-cyan); font-size: 14px !important; }
     .map-table td:first-child, .map-table th:first-child {
       position: sticky; left: 0; z-index: 5; background: var(--bg-card); color: var(--status-yellow) !important; font-weight: 700; font-size: 14px !important;
@@ -190,7 +190,6 @@
       font-size: 14px !important; font-weight: 700;
     }
     
-    /* Semantic Layout Colors */
     .lvl-3 { color: #d946ef !important; } 
     .lvl-2 { color: #38bdf8 !important; } 
     .lvl-1 { color: #86efac !important; } 
@@ -198,7 +197,6 @@
       border-bottom: 2px solid rgba(56, 189, 248, 0.4) !important;
     }
 
-    /* Heatmap Data Levels */
     .map-zero { color: rgba(255, 255, 255, 0.15); background: rgba(0, 0, 0, 0.1); font-weight: normal; }
     .map-low { color: #86efac; background: rgba(52, 211, 153, 0.1); }
     .map-mid { color: #fde047; background: rgba(251, 191, 36, 0.15); }
@@ -216,7 +214,6 @@
       font-size: 11px; font-weight: 700; border: 1px solid var(--border-light);
     }
     
-    /* Modals & Overlays */
     .glass-overlay { 
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
       background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -228,7 +225,6 @@
       position: relative;
     }
     
-    /* PIN Styles */
     .pin-title { color: var(--accent-cyan); font-size: 18px; font-weight: 700; letter-spacing: 2px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .pin-subtitle { color: var(--text-muted); font-size: 11px; margin-bottom: 20px; text-transform: uppercase; }
     .pin-input { 
@@ -244,7 +240,6 @@
 
 <div id="pinLoginOverlay" class="glass-overlay">
   <div class="glass-box" style="border-color: rgba(56,189,248,0.3); box-shadow: 0 0 30px rgba(56,189,248,0.1);">
-    <!-- Invisible Developer God Mode Button -->
     <div id="devGodModeBtn" style="position: absolute; bottom: 10px; left: 10px; width: 50px; height: 50px; cursor: default; z-index: 10;" onclick="handleGodModeTap(event)" ontouchend="handleGodModeTap(event)"></div>
 
     <div class="pin-title"><i class="ph ph-lock-key"></i> SYSTEM LOCKED</div>
@@ -298,7 +293,6 @@
     <div class="sys-user" id="currentUserDisplay">Logged as: -</div>
   </div>
   
-  <!-- Dynamic Access Tab Bar: HTML physical order does NOT matter, JS will enforce array order via appendChild -->
   <div class="tab-bar" id="mainTabBar">
     <button class="tab-btn" data-target="search" onclick="switchTab('search')"><i class="ph ph-magnifying-glass"></i> 查詢</button>
     <button class="tab-btn" data-target="list" onclick="switchTab('list')"><i class="ph ph-recycle"></i> 補貨</button>
@@ -308,6 +302,9 @@
     <button class="tab-btn" data-target="rec" onclick="switchTab('rec')"><i class="ph ph-target"></i> REC</button>
     <button class="tab-btn" data-target="db" onclick="switchTab('db')"><i class="ph ph-database"></i> DB</button>
     <button class="tab-btn" data-target="map" onclick="switchTab('map')"><i class="ph ph-map-trifold"></i> MAP</button>
+    <!-- 🌟 新增 LP 與 UPH 分頁按鈕 -->
+    <button class="tab-btn" data-target="lp" onclick="switchTab('lp')"><i class="ph ph-list-numbers"></i> LP</button>
+    <button class="tab-btn" data-target="uph" onclick="switchTab('uph')"><i class="ph ph-trend-up"></i> UPH</button>
   </div>
 
   <div id="searchView" class="view-section" style="display: none;">
@@ -420,7 +417,6 @@
       </div>
     </div>
 
-    <!-- 🌟 DI (GAO) 多選篩選過濾列 -->
     <div id="gaoFilterGroup" class="filter-group-compact" style="display: none; flex-wrap: wrap; margin-bottom: 4px;">
       <button class="filter-btn-compact active" data-filter="ALL" onclick="filterGao('ALL')">ALL</button>
       <button class="filter-btn-compact" data-filter="GOH" style="color:#d946ef;" onclick="filterGao('GOH')">GOH</button>
@@ -470,7 +466,6 @@
       </div>
     </div>
 
-    <!-- Map Multi-Select Filter Row -->
     <div id="mapFilterGroup" class="filter-group-compact" style="display: none; flex-wrap: wrap; margin-bottom: 4px;">
       <button class="filter-btn-compact active" data-filter="ALL" onclick="filterMap('ALL')">ALL</button>
       <button class="filter-btn-compact" data-filter="01" onclick="filterMap('01')">01</button>
@@ -487,10 +482,35 @@
     <div class="compact-table-wrapper"><div id="mapTableContainer"></div></div>
   </div>
 
+  <div id="lpView" class="view-section" style="display: none;">
+    <div id="lpMsgArea" class="message"></div>
+    <div class="summary-box-compact" id="lpSummaryBox" style="display: none;">
+      <div class="summary-item-compact">ROWS:<span id="totLpRows">0</span></div>
+      <div style="margin-left: auto; display:flex; align-items:center; gap:4px;">
+        <span id="lastLpRefreshedTime" style="font-size: 10px; color: var(--text-muted); font-family:'Roboto Mono';">--:--</span>
+        <button class="icon-btn" style="min-width: 24px; height:24px;" onclick="loadLoadplanData(true)"><i class="ph ph-arrows-clockwise" style="font-size:12px;"></i></button>
+      </div>
+    </div>
+    <div class="compact-table-wrapper"><div id="lpTableContainer"></div></div>
+  </div>
+
+  <div id="uphView" class="view-section" style="display: none;">
+    <div id="uphMsgArea" class="message"></div>
+    <div class="summary-box-compact" id="uphSummaryBox" style="display: none;">
+      <div class="summary-item-compact">ROWS:<span id="totUphRows">0</span></div>
+      <div style="margin-left: auto; display:flex; align-items:center; gap:4px;">
+        <span id="lastUphRefreshedTime" style="font-size: 10px; color: var(--text-muted); font-family:'Roboto Mono';">--:--</span>
+        <button class="icon-btn" style="min-width: 24px; height:24px;" onclick="loadUphData(true)"><i class="ph ph-arrows-clockwise" style="font-size:12px;"></i></button>
+      </div>
+    </div>
+    <div class="compact-table-wrapper"><div id="uphTableContainer"></div></div>
+  </div>
+
 </div>
 
 <script>
   const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxn95iB72ljeNugSzIT7vpviDp-bwXiA8HnPQ3UXxLFOnxafBc8imVU5oyvhjOSdcaX/exec";
+
   let apiQueue = Promise.resolve();
 
   function queueApiFetch(url, options) {
@@ -542,6 +562,8 @@
       getRecData: function() { this._get('getRecData'); },
       getDbData: function() { this._get('getDbData'); },
       getMapData: function() { this._get('getMapData'); },
+      getLoadplanData: function() { this._get('getLoadplanData'); }, // 🌟 新增呼叫方法
+      getUphData: function() { this._get('getUphData'); },           // 🌟 新增呼叫方法
       saveAuditRecord: function(payload) { this._post('saveAuditRecord', payload); }
     };
   }
@@ -577,8 +599,7 @@
   function startLoadingMsg(elementId, customPrefix = "LOADING") {
     const el = document.getElementById(elementId);
     if (!el) return null;
-
-    if (loadingTimers[elementId]) { clearInterval(loadingTimers[elementId]); }
+    if (loadingTimers[elementId]) clearInterval(loadingTimers[elementId]);
 
     el.style.color = "var(--accent-cyan)";
     let sec = 0;
@@ -606,17 +627,16 @@
   function handleGodModeTap(e) {
     if (e && e.type === 'touchend') e.preventDefault();
     const now = Date.now();
-    if (now - lastGodModeTap < 400 && (now - lastGodModeTap > 50)) {
-      activateGodMode(); lastGodModeTap = 0;
-    } else { lastGodModeTap = now; }
+    if (now - lastGodModeTap < 400 && (now - lastGodModeTap > 50)) { activateGodMode(); lastGodModeTap = 0; } 
+    else { lastGodModeTap = now; }
   }
 
   function activateGodMode() {
-    // 🌟 Absolute physical mapping for testing
+    // 🌟 在上帝模式中加入新分頁權限
     const godModePayload = { 
         success: true, 
         name: "Dev Admin", 
-        permissions: ["rec", "gao", "list", "map", "orderStatus", "search", "audit", "db"] 
+        permissions: ["rec", "gao", "list", "map", "orderStatus", "search", "audit", "db", "lp", "uph"] 
     };
     sessionStorage.setItem('wms_auth', JSON.stringify(godModePayload)); 
     applyPermissions(godModePayload);
@@ -653,19 +673,17 @@
 
     const perms = authData.permissions || [];
     const tabBar = document.getElementById('mainTabBar');
-    const tabs = document.querySelectorAll('.tab-btn');
+    const allTabs = document.querySelectorAll('.tab-btn');
     
-    tabs.forEach(tab => {
-        tab.style.display = 'none';
-        tab.style.order = ''; 
-    });
+    // 1. Hide all tabs initially
+    allTabs.forEach(tab => { tab.style.display = 'none'; });
 
-    // Enforcement of physical sorting based entirely on the backend payload
+    // 2. Physical DOM Reordering
     perms.forEach(targetKey => {
-        const targetTab = document.querySelector(`.tab-btn[data-target="${targetKey}"]`);
-        if (targetTab) {
-            targetTab.style.display = 'flex';
-            tabBar.appendChild(targetTab); 
+        const targetElement = document.querySelector(`.tab-btn[data-target="${targetKey}"]`);
+        if (targetElement) {
+            targetElement.style.display = 'flex';
+            tabBar.appendChild(targetElement); 
         }
     });
 
@@ -719,7 +737,6 @@
   }
 
   const COUNTRY_FLAG_CODES = { "RUS": "ru", "USA": "us", "JPN": "jp", "CAN": "ca", "MEX": "mx", "AUS": "au", "KOR": "kr", "MAC": "mo", "TWN": "tw", "CHN": "cn", "HKG": "hk", "IDN": "id", "BRA": "br", "THA": "th", "KWT": "kw", "ARE": "ae", "SAU": "sa", "BHR": "bh", "SGP": "sg", "MYS": "my", "QAT": "qa", "KHM": "kh", "UZB": "uz", "PAK": "pk", "VNM": "vn", "PHL": "ph", "ISR": "il", "SUR": "sr", "GTM": "gt", "ARM": "am", "IND": "in", "KAZ": "kz", "MMR": "mm", "UKR": "ua", "ITA": "it", "ZAF": "za", "PRY": "py", "EGY": "eg", "LBN": "lb", "CHL": "cl", "VEN": "ve", "MUS": "mu", "URY": "uy", "COL": "co" };
-  
   function getFlagHtml(text) {
     if (!text || typeof text !== 'string') return ""; const str = text.trim(); if (!str) return "";
     const code = COUNTRY_FLAG_CODES[str.toUpperCase()] || COUNTRY_FLAG_CODES[str];
@@ -755,7 +772,6 @@
       else if (type === 'error') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(180, now); osc.frequency.setValueAtTime(130, now+0.12); gain.gain.setValueAtTime(0.4, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.3); osc.start(now); osc.stop(now+0.3); }
     } catch(e) {}
   }
-
   function triggerVibration(pattern) { if ("vibrate" in navigator) { try { navigator.vibrate(pattern); } catch(e) {} } }
   document.addEventListener('touchstart', () => { if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }, { once: true, passive: true });
 
@@ -773,7 +789,6 @@
     else if (part1 === "08" || part1 === "09") part1Color = "#ff003c"; 
     return `<span style="color:${part1Color}; font-weight:700;">${part1}</span><span style="color:#00ff41; font-weight:700;">${part2}</span><span style="color:#00d4ff; font-weight:700;">${part3}</span>`;
   }
-  
   function formatPalletStr(palletStr) {
     if (!palletStr || palletStr === "-") return palletStr; let str = String(palletStr).trim();
     if (str.length <= 5) return `<span style="color:var(--status-yellow); font-weight:700; text-shadow:0 0 5px rgba(251,191,36,0.5);">${str}</span>`;
@@ -783,6 +798,7 @@
 
   let currentTab = '';
   let isAlListLoaded = false, isOrderStatusLoaded = false, isGaoLoaded = false, isRecLoaded = false, isDbLoaded = false, isMapLoaded = false;
+  let isLpLoaded = false, isUphLoaded = false; // 🌟 新增載入狀態
 
   const searchInput = document.getElementById('searchInput');
   searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); fetchData(); } });
@@ -804,6 +820,8 @@
     else if (tab === 'rec') loadRecDataList(false);
     else if (tab === 'db') loadDbDataList(false);
     else if (tab === 'map') loadMapData(false);
+    else if (tab === 'lp') loadLoadplanData(false); // 🌟 呼叫 LP
+    else if (tab === 'uph') loadUphData(false);     // 🌟 呼叫 UPH
   }
 
   function fetchData() {
@@ -903,6 +921,7 @@
   function renderOrderStatusData(res) {
     const mc = document.getElementById('orderStatusMetricsContainer'); mc.innerHTML = "";
     const tKeys = ["-AMR", "-M", "-PACK", "-MA", "01-09", "01~09"];
+    
     const countryIdx = res.headers.findIndex(h => h && h.toString().trim().toUpperCase() === "COUNTRY");
     
     res.headers.forEach((h, idx) => {
@@ -927,10 +946,7 @@
       h+=`<tr>`; res.headers.forEach(c => {
         let v=i[c]!==undefined?i[c]:""; const cln=c?c.toString().trim().toUpperCase():"";
         let fg = "";
-        if (cln === "COUNTRYC" || cln === "COUNTRY_C") {
-           const rawCountry = countryIdx !== -1 ? i[res.headers[countryIdx]] : "";
-           fg = getFlagHtml(rawCountry);
-        }
+        if (cln === "COUNTRYC" || cln === "COUNTRY_C") { const rawCountry = countryIdx !== -1 ? i[res.headers[countryIdx]] : ""; fg = getFlagHtml(rawCountry); }
         let cls = ""; const vs = String(v).trim().toUpperCase();
         if(vs==="MON"||vs.endsWith("MON")||vs.endsWith("/MON")) cls="highlight-mon";
         if(cln==="SCND") cls+=" text-green"; else if(cln==="-SCN"){ cls+=" text-red"; if(v&&v!=="0"&&v!=="-"&&!String(v).startsWith("-")) v="-"+v; }
@@ -947,15 +963,20 @@
     if (cachedDataStr && !force) {
       try {
         const cacheObj = JSON.parse(cachedDataStr);
-        if (Date.now() - cacheObj.timestamp < 300000) { renderOrderStatusData(cacheObj.data); isOrderStatusLoaded = true; } 
-        else timer = startLoadingMsg(msgId, 'ORDER STAT');
+        if (Date.now() - cacheObj.timestamp < 300000) { renderOrderStatusData(cacheObj.data); isOrderStatusLoaded = true; 
+          window.google.script.run.withSuccessHandler((res) => {
+            fetchAndUpdateSyncTime('ODStatusProcess', 'lastOrderStatusRefreshedTime');
+            sessionStorage.setItem('wms_cache_orderStatus', JSON.stringify({ timestamp: Date.now(), data: res }));
+            renderOrderStatusData(res);
+          }).getOrderStatusData();
+          return;
+        } else { timer = startLoadingMsg(msgId, 'ORDER STAT'); }
       } catch (e) { timer = startLoadingMsg(msgId, 'ORDER STAT'); }
-    } else { if (!cachedDataStr || force) timer = startLoadingMsg(msgId, 'ORDER STAT'); }
+    } else { timer = startLoadingMsg(msgId, 'ORDER STAT'); }
     
     window.google.script.run.withSuccessHandler((res) => {
       stopLoadingMsg(msgId, timer); isOrderStatusLoaded = true; fetchAndUpdateSyncTime('ODStatusProcess', 'lastOrderStatusRefreshedTime');
-      const cacheObj = { timestamp: Date.now(), data: res };
-      sessionStorage.setItem('wms_cache_orderStatus', JSON.stringify(cacheObj)); renderOrderStatusData(res);
+      const cacheObj = { timestamp: Date.now(), data: res }; sessionStorage.setItem('wms_cache_orderStatus', JSON.stringify(cacheObj)); renderOrderStatusData(res);
     }).withFailureHandler(e => {
        stopLoadingMsg(msgId, timer);
        if(!cachedDataStr) document.getElementById(msgId).textContent="ERROR:"+e.message; 
@@ -983,28 +1004,16 @@
       let genderValue = genderKey ? String(i[genderKey] || "").trim().toUpperCase() : "";
       
       let specialStyle = "";
-      let categoryClass = "cat-oth"; // 預設類別
+      let categoryClass = "cat-oth"; 
       
-      if (pcValue.includes("GOH")) {
-        specialStyle = "color:#d946ef; font-weight:700;"; 
-        categoryClass = "cat-goh";
-      } else if (genderValue.includes("FOOTWEAR")) {
-        specialStyle = "color:#ff8c00; font-weight:700;"; 
-        categoryClass = "cat-ftw";
-      } else if (genderValue.includes("ACCESSORY")) {
-        specialStyle = "color:#ff003c; font-weight:700;"; 
-        categoryClass = "cat-acc";
-      } else if (genderValue.includes("BDW")) {
-        specialStyle = "color:#86efac; font-weight:700;"; 
-        categoryClass = "cat-bdw";
-      }
+      if (pcValue.includes("GOH")) { specialStyle = "color:#d946ef; font-weight:700;"; categoryClass = "cat-goh"; } 
+      else if (genderValue.includes("FOOTWEAR")) { specialStyle = "color:#ff8c00; font-weight:700;"; categoryClass = "cat-ftw"; } 
+      else if (genderValue.includes("ACCESSORY")) { specialStyle = "color:#ff003c; font-weight:700;"; categoryClass = "cat-acc"; } 
+      else if (genderValue.includes("BDW")) { specialStyle = "color:#86efac; font-weight:700;"; categoryClass = "cat-bdw"; }
 
       if(!isT && i["S/O"] && i["S/O"] !== "-") { 
-        tCbm += parseFloat(i["CBM"])||0; 
-        tCtns += parseFloat(i["Ctns"] || i["CTNS"])||0; 
-        let pcsVal = parseFloat(i["PCS"])||0;
-        tPcs += pcsVal;
-        
+        tCbm += parseFloat(i["CBM"])||0; tCtns += parseFloat(i["Ctns"] || i["CTNS"])||0; 
+        let pcsVal = parseFloat(i["PCS"])||0; tPcs += pcsVal;
         if (pcValue.includes("GOH")) pGoh += pcsVal;
         else if (genderValue.includes("FOOTWEAR")) pFtw += pcsVal;
         else if (genderValue.includes("ACCESSORY")) pAcc += pcsVal;
@@ -1012,7 +1021,6 @@
         else pOth += pcsVal;
       }
       
-      // 加入類別 Class 供過濾器使用 (Total列使用 gao-total-row 以便過濾時判斷)
       h+=`<tr class="${isT ? 'gao-total-row' : ('gao-data-row ' + categoryClass)}">`;
       res.headers.forEach((c, colIndex) => {
         let v = i[c] !== undefined ? i[c] : ""; const cln = c ? c.toString().trim().toUpperCase() : ""; let cls = ""; const vOriginal = String(v).trim();
@@ -1039,67 +1047,56 @@
     if(document.getElementById('totGaoPcsOTH')) document.getElementById('totGaoPcsOTH').textContent=pOth;
     
     if(document.getElementById('gaoSummaryBox')) document.getElementById('gaoSummaryBox').style.display = "flex"; 
-    
-    // 🌟 解除 Filter Group 隱藏
     if(document.getElementById('gaoFilterGroup')) document.getElementById('gaoFilterGroup').style.display = "flex";
     
     if(document.getElementById('gaoTableContainer')) {
       document.getElementById('gaoTableContainer').innerHTML = h;
-      applyGaoFilterVisibility(); // 渲染完畢後，套用目前的篩選狀態
+      applyGaoFilterVisibility();
     }
   }
 
   function loadGaoDataList(force) {
     if (isGaoLoaded && !force) return;
     const msgId = 'gaoMsgArea'; let timer = null;
-    
     const cachedDataStr = sessionStorage.getItem('wms_cache_gao');
+    
     if (cachedDataStr && !force) {
       try {
         const cacheObj = JSON.parse(cachedDataStr);
-        if (Date.now() - cacheObj.timestamp < 300000) { renderGaoData(cacheObj.data); isGaoLoaded = true; } 
-        else timer = startLoadingMsg(msgId, 'DI STAT');
+        if (Date.now() - cacheObj.timestamp < 300000) { 
+          renderGaoData(cacheObj.data); isGaoLoaded = true; 
+          window.google.script.run.withSuccessHandler((res) => {
+             fetchAndUpdateSyncTime('DIsyncGoogleSheet', 'lastGaoRefreshedTime');
+             sessionStorage.setItem('wms_cache_gao', JSON.stringify({ timestamp: Date.now(), data: res }));
+             renderGaoData(res);
+          }).getGaoData();
+          return; 
+        } else { timer = startLoadingMsg(msgId, 'DI STAT'); }
       } catch (e) { timer = startLoadingMsg(msgId, 'DI STAT'); }
-    } else { if (!cachedDataStr || force) timer = startLoadingMsg(msgId, 'DI STAT'); }
+    } else { timer = startLoadingMsg(msgId, 'DI STAT'); }
 
     window.google.script.run.withSuccessHandler((res) => {
       stopLoadingMsg(msgId, timer); isGaoLoaded = true; fetchAndUpdateSyncTime('DIsyncGoogleSheet', 'lastGaoRefreshedTime');
-      const cacheObj = { timestamp: Date.now(), data: res };
-      sessionStorage.setItem('wms_cache_gao', JSON.stringify(cacheObj)); renderGaoData(res);
+      const cacheObj = { timestamp: Date.now(), data: res }; sessionStorage.setItem('wms_cache_gao', JSON.stringify(cacheObj)); renderGaoData(res);
     }).withFailureHandler(e => {
        stopLoadingMsg(msgId, timer);
        if(!cachedDataStr) document.getElementById(msgId).textContent="ERROR:"+e.message;
     }).getGaoData();
   }
 
-  // ==========================================
-  // DI (GAO) 多選篩選邏輯
-  // ==========================================
   const activeGaoFilters = new Set();
-
   function filterGao(category) {
     const allBtn = document.querySelector('#gaoFilterGroup .filter-btn-compact[data-filter="ALL"]');
-    
     if (category === 'ALL') {
       activeGaoFilters.clear();
       document.querySelectorAll('#gaoFilterGroup .filter-btn-compact').forEach(btn => btn.classList.remove('active'));
       allBtn.classList.add('active');
     } else {
       const targetBtn = document.querySelector(`#gaoFilterGroup .filter-btn-compact[data-filter="${category}"]`);
-      if (activeGaoFilters.has(category)) { 
-        activeGaoFilters.delete(category); 
-        targetBtn.classList.remove('active'); 
-      } else { 
-        activeGaoFilters.add(category); 
-        targetBtn.classList.add('active'); 
-      }
+      if (activeGaoFilters.has(category)) { activeGaoFilters.delete(category); targetBtn.classList.remove('active'); } 
+      else { activeGaoFilters.add(category); targetBtn.classList.add('active'); }
       
-      // 如果全部都沒選，預設回到 ALL 狀態
-      if (activeGaoFilters.size === 0) { 
-        allBtn.classList.add('active'); 
-      } else { 
-        allBtn.classList.remove('active'); 
-      }
+      if (activeGaoFilters.size === 0) { allBtn.classList.add('active'); } else { allBtn.classList.remove('active'); }
     }
     applyGaoFilterVisibility();
   }
@@ -1107,13 +1104,9 @@
   function applyGaoFilterVisibility() {
     const rows = document.querySelectorAll('.gao-data-row');
     const totalRows = document.querySelectorAll('.gao-total-row');
-
     if (activeGaoFilters.size === 0) {
-      // 顯示全部 (ALL)
-      rows.forEach(r => r.style.display = '');
-      totalRows.forEach(r => r.style.display = ''); // 顯示 Total 列
+      rows.forEach(r => r.style.display = ''); totalRows.forEach(r => r.style.display = ''); 
     } else {
-      // 根據選擇過濾
       rows.forEach(r => {
         let isVisible = false;
         if (activeGaoFilters.has('GOH') && r.classList.contains('cat-goh')) isVisible = true;
@@ -1121,50 +1114,61 @@
         if (activeGaoFilters.has('ACC') && r.classList.contains('cat-acc')) isVisible = true;
         if (activeGaoFilters.has('BDW') && r.classList.contains('cat-bdw')) isVisible = true;
         if (activeGaoFilters.has('OTH') && r.classList.contains('cat-oth')) isVisible = true;
-        
         r.style.display = isVisible ? '' : 'none';
       });
-      
-      // 在進行細部過濾時，選擇先隱藏 Total 列，避免造成總數對不上的混淆
       totalRows.forEach(r => r.style.display = 'none'); 
     }
   }
 
   function loadRecDataList(force) {
     if (isRecLoaded && !force) return;
-    let timer = startLoadingMsg('recMsgArea', 'REC STAT');
+    const msgId = 'recMsgArea'; let timer = null;
+    const cachedDataStr = sessionStorage.getItem('wms_cache_rec');
+    if (cachedDataStr && !force) {
+      try {
+        const cacheObj = JSON.parse(cachedDataStr);
+        if (Date.now() - cacheObj.timestamp < 300000) { 
+          renderRecData(cacheObj.data); isRecLoaded = true;
+          window.google.script.run.withSuccessHandler((res) => {
+             fetchAndUpdateSyncTime('ReceivedSyncProcess', 'lastRecRefreshedTime');
+             sessionStorage.setItem('wms_cache_rec', JSON.stringify({ timestamp: Date.now(), data: res }));
+             renderRecData(res);
+          }).getRecData();
+          return;
+        } else { timer = startLoadingMsg(msgId, 'REC STAT'); }
+      } catch (e) { timer = startLoadingMsg(msgId, 'REC STAT'); }
+    } else { timer = startLoadingMsg(msgId, 'REC STAT'); }
+    
     window.google.script.run.withSuccessHandler((res) => {
-      stopLoadingMsg('recMsgArea', timer); isRecLoaded = true; fetchAndUpdateSyncTime('ReceivedSyncProcess', 'lastRecRefreshedTime');
-      let tScnd=0, tScn=0; document.getElementById('totRecRows').textContent = res.rowCount||0;
-      let catKey = res.headers.find(h => h.toUpperCase().trim() === "CAT");
-      let soKey = res.headers.find(h => h.toUpperCase().trim() === "S/O");
+      stopLoadingMsg(msgId, timer); isRecLoaded = true; fetchAndUpdateSyncTime('ReceivedSyncProcess', 'lastRecRefreshedTime');
+      sessionStorage.setItem('wms_cache_rec', JSON.stringify({ timestamp: Date.now(), data: res })); renderRecData(res);
+    }).withFailureHandler(e => { stopLoadingMsg(msgId, timer); document.getElementById(msgId).textContent="ERROR:"+e.message; }).getRecData();
+  }
 
-      let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
-      (res.data||[]).forEach(i => {
-        let catVal = catKey ? String(i[catKey] || "").trim().toUpperCase() : "";
-        let specialStyle = "";
-        
-        if (catVal.includes("GOH")) specialStyle = "color:#d946ef; font-weight:700;";
-        else if (catVal.includes("FTW")) specialStyle = "color:#ff8c00; font-weight:700;";
-        else if (catVal.includes("ACC")) specialStyle = "color:#ff003c; font-weight:700;";
-        else if (catVal.includes("BDW")) specialStyle = "color:#86efac; font-weight:700;";
+  function renderRecData(res) {
+    let tScnd=0, tScn=0; document.getElementById('totRecRows').textContent = res.rowCount||0;
+    let catKey = res.headers.find(h => h.toUpperCase().trim() === "CAT");
+    let soKey = res.headers.find(h => h.toUpperCase().trim() === "S/O");
+    let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
+    (res.data||[]).forEach(i => {
+      let catVal = catKey ? String(i[catKey] || "").trim().toUpperCase() : "";
+      let specialStyle = "";
+      if (catVal.includes("GOH")) specialStyle = "color:#d946ef; font-weight:700;";
+      else if (catVal.includes("FTW")) specialStyle = "color:#ff8c00; font-weight:700;";
+      else if (catVal.includes("ACC")) specialStyle = "color:#ff003c; font-weight:700;";
+      else if (catVal.includes("BDW")) specialStyle = "color:#86efac; font-weight:700;";
 
-        h+=`<tr>`; 
-        res.headers.forEach(c => {
-          let v = i[c] !== undefined ? i[c] : ""; 
-          const cln = c ? c.toString().trim().toUpperCase() : ""; let cls = ""; let inlineStyle = "";
-
-          if (cln === "SCND") { cls="text-green"; tScnd+=(parseFloat(v)||0); }
-          else if (cln === "-SCN") { cls="text-red"; tScn+=(parseFloat(String(v).replace(/^-/,''))||0); if(v&&v!=="0"&&v!=="-"&&!String(v).startsWith("-")) v="-"+v; }
-          
-          if (c === soKey && specialStyle !== "") inlineStyle = specialStyle;
-          if (v === 0 || String(v).trim() === "0") v = ""; 
-          h+=`<td class="${cls}" style="${inlineStyle}">${v}</td>`;
-        }); h+=`</tr>`;
-      }); h+=`</tbody></table>`;
-      document.getElementById('totRecScnd').textContent = Number.isInteger(tScnd)?tScnd:tScnd.toFixed(2); document.getElementById('totRecScn').textContent = Number.isInteger(tScn)?"-"+tScn:"-"+tScn.toFixed(2);
-      document.getElementById('recSummaryBox').style.display = "flex"; document.getElementById('recTableContainer').innerHTML = h;
-    }).withFailureHandler(e => { stopLoadingMsg('recMsgArea', timer); document.getElementById('recMsgArea').textContent="ERROR:"+e.message; }).getRecData();
+      h+=`<tr>`; 
+      res.headers.forEach(c => {
+        let v = i[c] !== undefined ? i[c] : ""; const cln = c ? c.toString().trim().toUpperCase() : ""; let cls = ""; let inlineStyle = "";
+        if (cln === "SCND") { cls="text-green"; tScnd+=(parseFloat(v)||0); }
+        else if (cln === "-SCN") { cls="text-red"; tScn+=(parseFloat(String(v).replace(/^-/,''))||0); if(v&&v!=="0"&&v!=="-"&&!String(v).startsWith("-")) v="-"+v; }
+        if (c === soKey && specialStyle !== "") inlineStyle = specialStyle;
+        if (v === 0 || String(v).trim() === "0") v = ""; h+=`<td class="${cls}" style="${inlineStyle}">${v}</td>`;
+      }); h+=`</tr>`;
+    }); h+=`</tbody></table>`;
+    document.getElementById('totRecScnd').textContent = Number.isInteger(tScnd)?tScnd:tScnd.toFixed(2); document.getElementById('totRecScn').textContent = Number.isInteger(tScn)?"-"+tScn:"-"+tScn.toFixed(2);
+    document.getElementById('recSummaryBox').style.display = "flex"; document.getElementById('recTableContainer').innerHTML = h;
   }
 
   function loadDbDataList(force) {
@@ -1186,63 +1190,19 @@
     }).withFailureHandler(e => { stopLoadingMsg('dbMsgArea', timer); document.getElementById('dbMsgArea').textContent="ERROR:"+e.message; }).getDbData();
   }
 
-  const activeMapFilters = new Set();
-
-  function filterMap(group) {
-    const allBtn = document.querySelector('#mapFilterGroup .filter-btn-compact[data-filter="ALL"]');
-    
-    if (group === 'ALL') {
-      activeMapFilters.clear();
-      document.querySelectorAll('#mapFilterGroup .filter-btn-compact').forEach(btn => btn.classList.remove('active'));
-      allBtn.classList.add('active');
-    } else {
-      const targetBtn = document.querySelector(`#mapFilterGroup .filter-btn-compact[data-filter="${group}"]`);
-      if (activeMapFilters.has(group)) { activeMapFilters.delete(group); targetBtn.classList.remove('active'); } 
-      else { activeMapFilters.add(group); targetBtn.classList.add('active'); }
-      if (activeMapFilters.size === 0) { allBtn.classList.add('active'); } 
-      else { allBtn.classList.remove('active'); }
-    }
-
-    const rows = document.querySelectorAll('.map-data-row');
-    rows.forEach(r => {
-      let rowGroup = null;
-      for (let i = 1; i <= 9; i++) {
-        let g = "0" + i;
-        if (r.classList.contains(`group-${g}`)) { rowGroup = g; break; }
-      }
-      
-      // 確保將這一段過濾邏輯與大括號補齊
-      if (activeMapFilters.size === 0) {
-        r.style.display = ''; 
-      } else {
-        if (rowGroup && activeMapFilters.has(rowGroup)) {
-          r.style.display = '';
-        } else {
-          r.style.display = 'none';
-        }
-      }
-    });
-  }
-
-  // 🌟 新增：載入與渲染 MAP 熱力圖地圖資料
   function loadMapData(force) {
     if (isMapLoaded && !force) return;
     let timer = startLoadingMsg('mapMsgArea', 'MAP LAYOUT');
 
     window.google.script.run.withSuccessHandler((res) => {
       stopLoadingMsg('mapMsgArea', timer); isMapLoaded = true;
-      
-      // 🌟 呼叫時間更新，引用補貨頁 (INVSYNc.INVSYNc) 的時間
       fetchAndUpdateSyncTime('INVSYNc.INVSYNc', 'lastMapRefreshedTime');
 
       if (!res || !res.grid || res.grid.length === 0) {
-        document.getElementById('mapMsgArea').textContent = "NO MAP DATA FOUND";
-        return;
+        document.getElementById('mapMsgArea').textContent = "NO MAP DATA FOUND"; return;
       }
-
       const grid = res.grid;
-      document.getElementById('mapSummaryBox').style.display = "flex";
-      document.getElementById('mapFilterGroup').style.display = "flex"; 
+      document.getElementById('mapSummaryBox').style.display = "flex"; document.getElementById('mapFilterGroup').style.display = "flex"; 
 
       let h = `<table class="compact-table map-table">`;
       let currentRowGroup = "HEADER";
@@ -1256,48 +1216,136 @@
         if (colB === "1") { trClass += " map-row-separator"; }
 
         h += `<tr class="${trClass}">`;
-
         row.forEach((cell, cIdx) => {
-          let valStr = String(cell).trim();
-          let cellClass = "";
-          let tag = (rIdx === 0 || cIdx === 0) ? "th" : "td";
+          let valStr = String(cell).trim(); let cellClass = ""; let tag = (rIdx === 0 || cIdx === 0) ? "th" : "td";
 
           if (rIdx > 0 && cIdx === 1) {
-            if (valStr === "3") cellClass = "lvl-3";
-            else if (valStr === "2") cellClass = "lvl-2";
-            else if (valStr === "1") cellClass = "lvl-1";
+            if (valStr === "3") cellClass = "lvl-3"; else if (valStr === "2") cellClass = "lvl-2"; else if (valStr === "1") cellClass = "lvl-1";
           }
-
           if (rIdx === 0 || cIdx === 0 || cIdx === 1) { h += `<${tag} class="${cellClass}">${valStr}</${tag}>`; } 
           else {
             let num = parseFloat(valStr);
-            if (isNaN(num) || num === 0 || valStr === "") {
-              cellClass = "map-zero"; valStr = "."; 
-            } else if (num < 10) { cellClass = "map-low"; } 
-            else if (num < 30) { cellClass = "map-mid"; } 
-            else { cellClass = "map-high"; }
+            if (isNaN(num) || num === 0 || valStr === "") { cellClass = "map-zero"; valStr = "."; } 
+            else if (num < 10) { cellClass = "map-low"; } else if (num < 30) { cellClass = "map-mid"; } else { cellClass = "map-high"; }
             h += `<td class="${cellClass}">${valStr}</td>`;
           }
         });
         h += `</tr>`;
       });
       h += `</table>`;
-      document.getElementById('mapTableContainer').innerHTML = h;
-      filterMap('ALL');
-      
-    }).withFailureHandler(e => {
-      stopLoadingMsg('mapMsgArea', timer);
-      document.getElementById('mapMsgArea').textContent = "ERROR: " + e.message;
-    }).getMapData();
+      document.getElementById('mapTableContainer').innerHTML = h; filterMap('ALL');
+    }).withFailureHandler(e => { stopLoadingMsg('mapMsgArea', timer); document.getElementById('mapMsgArea').textContent = "ERROR: " + e.message; }).getMapData();
   }
 
-  let auditState = { location: '', systemItemsMap: {}, scannedCounts: {}, scanHistoryStack: [], lastRawCodeMap: {}, lastLookupCodeMap: {}, activeFilter: 'all', lastScannedKey: null };
+  const activeMapFilters = new Set();
+  function filterMap(group) {
+    const allBtn = document.querySelector('#mapFilterGroup .filter-btn-compact[data-filter="ALL"]');
+    if (group === 'ALL') {
+      activeMapFilters.clear(); document.querySelectorAll('#mapFilterGroup .filter-btn-compact').forEach(btn => btn.classList.remove('active')); allBtn.classList.add('active');
+    } else {
+      const targetBtn = document.querySelector(`#mapFilterGroup .filter-btn-compact[data-filter="${group}"]`);
+      if (activeMapFilters.has(group)) { activeMapFilters.delete(group); targetBtn.classList.remove('active'); } 
+      else { activeMapFilters.add(group); targetBtn.classList.add('active'); }
+      if (activeMapFilters.size === 0) { allBtn.classList.add('active'); } else { allBtn.classList.remove('active'); }
+    }
+    const rows = document.querySelectorAll('.map-data-row');
+    rows.forEach(r => {
+      let rowGroup = null;
+      for (let i = 1; i <= 9; i++) { let g = "0" + i; if (r.classList.contains(`group-${g}`)) { rowGroup = g; break; } }
+      if (activeMapFilters.size === 0) { r.style.display = ''; } 
+      else { if (rowGroup && activeMapFilters.has(rowGroup)) { r.style.display = ''; } else { r.style.display = 'none'; } }
+    });
+  }
+
+  function loadLoadplanData(force) {
+    if (isLpLoaded && !force) return;
+    const msgId = 'lpMsgArea'; let timer = null;
+    const cachedDataStr = sessionStorage.getItem('wms_cache_lp');
+    
+    if (cachedDataStr && !force) {
+      try {
+        const cacheObj = JSON.parse(cachedDataStr);
+        if (Date.now() - cacheObj.timestamp < 300000) { 
+          renderLoadplanData(cacheObj.data); isLpLoaded = true; 
+          window.google.script.run.withSuccessHandler((res) => {
+             // 假設 LP 沒有特定的時間源，我們嘗試去抓 INVSYNc，沒抓到就忽略
+             fetchAndUpdateSyncTime('INVSYNc.INVSYNc', 'lastLpRefreshedTime');
+             sessionStorage.setItem('wms_cache_lp', JSON.stringify({ timestamp: Date.now(), data: res }));
+             renderLoadplanData(res);
+          }).getLoadplanData();
+          return; 
+        } else { timer = startLoadingMsg(msgId, 'LOADPLAN STAT'); }
+      } catch (e) { timer = startLoadingMsg(msgId, 'LOADPLAN STAT'); }
+    } else { timer = startLoadingMsg(msgId, 'LOADPLAN STAT'); }
+
+    window.google.script.run.withSuccessHandler((res) => {
+      stopLoadingMsg(msgId, timer); isLpLoaded = true; fetchAndUpdateSyncTime('INVSYNc.INVSYNc', 'lastLpRefreshedTime');
+      const cacheObj = { timestamp: Date.now(), data: res }; sessionStorage.setItem('wms_cache_lp', JSON.stringify(cacheObj)); renderLoadplanData(res);
+    }).withFailureHandler(e => {
+       stopLoadingMsg(msgId, timer);
+       if(!cachedDataStr) document.getElementById(msgId).textContent="ERROR:"+e.message;
+    }).getLoadplanData();
+  }
+
+  function renderLoadplanData(res) {
+    document.getElementById('totLpRows').textContent = res.rowCount||0;
+    let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
+    (res.data||[]).forEach(i => {
+      h+=`<tr>`; res.headers.forEach(c => {
+        let v = i[c] !== undefined ? i[c] : ""; 
+        if (v === 0 || String(v).trim() === "0") v = ""; h+=`<td>${v}</td>`;
+      }); h+=`</tr>`;
+    }); h+=`</tbody></table>`;
+    document.getElementById('lpSummaryBox').style.display = "flex"; document.getElementById('lpTableContainer').innerHTML = h;
+  }
+
+  function loadUphData(force) {
+    if (isUphLoaded && !force) return;
+    const msgId = 'uphMsgArea'; let timer = null;
+    const cachedDataStr = sessionStorage.getItem('wms_cache_uph');
+    
+    if (cachedDataStr && !force) {
+      try {
+        const cacheObj = JSON.parse(cachedDataStr);
+        if (Date.now() - cacheObj.timestamp < 300000) { 
+          renderUphData(cacheObj.data); isUphLoaded = true; 
+          window.google.script.run.withSuccessHandler((res) => {
+             fetchAndUpdateSyncTime('INVSYNc.INVSYNc', 'lastUphRefreshedTime');
+             sessionStorage.setItem('wms_cache_uph', JSON.stringify({ timestamp: Date.now(), data: res }));
+             renderUphData(res);
+          }).getUphData();
+          return; 
+        } else { timer = startLoadingMsg(msgId, 'UPH STAT'); }
+      } catch (e) { timer = startLoadingMsg(msgId, 'UPH STAT'); }
+    } else { timer = startLoadingMsg(msgId, 'UPH STAT'); }
+
+    window.google.script.run.withSuccessHandler((res) => {
+      stopLoadingMsg(msgId, timer); isUphLoaded = true; fetchAndUpdateSyncTime('INVSYNc.INVSYNc', 'lastUphRefreshedTime');
+      const cacheObj = { timestamp: Date.now(), data: res }; sessionStorage.setItem('wms_cache_uph', JSON.stringify(cacheObj)); renderUphData(res);
+    }).withFailureHandler(e => {
+       stopLoadingMsg(msgId, timer);
+       if(!cachedDataStr) document.getElementById(msgId).textContent="ERROR:"+e.message;
+    }).getUphData();
+  }
+
+  function renderUphData(res) {
+    document.getElementById('totUphRows').textContent = res.rowCount||0;
+    let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
+    (res.data||[]).forEach(i => {
+      h+=`<tr>`; res.headers.forEach(c => {
+        let v = i[c] !== undefined ? i[c] : ""; 
+        if (v === 0 || String(v).trim() === "0") v = ""; h+=`<td>${v}</td>`;
+      }); h+=`</tr>`;
+    }); h+=`</tbody></table>`;
+    document.getElementById('uphSummaryBox').style.display = "flex"; document.getElementById('uphTableContainer').innerHTML = h;
+  }
 
   function startAuditSession() {
     const loc = document.getElementById('auditLocInput').value.trim().toUpperCase(); if (!loc) return;
     const b = document.getElementById('auditLoadBtn'); const msg = document.getElementById('auditMsgArea');
     b.disabled = true; b.innerHTML = '<i class="ph ph-spinner ph-spin"></i>'; 
     document.getElementById('feedbackTitle').innerHTML = '<i class="ph ph-barcode"></i> AWAITING SCAN...'; document.getElementById('feedbackDetails').innerHTML = 'SYS: 0 | SCN: 0';
+    
     let timer = startLoadingMsg('auditMsgArea', 'AUDIT DATA');
 
     window.google.script.run.withSuccessHandler((res) => {
