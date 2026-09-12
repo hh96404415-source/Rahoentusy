@@ -293,19 +293,8 @@
     <div class="sys-user" id="currentUserDisplay">Logged as: -</div>
   </div>
   
-  <div class="tab-bar" id="mainTabBar">
-    <button class="tab-btn" data-target="search" onclick="switchTab('search')"><i class="ph ph-magnifying-glass"></i> 查詢</button>
-    <button class="tab-btn" data-target="list" onclick="switchTab('list')"><i class="ph ph-recycle"></i> 補貨</button>
-    <button class="tab-btn" data-target="audit" onclick="switchTab('audit')"><i class="ph ph-clipboard-text"></i> 盤點</button>
-    <button class="tab-btn" data-target="orderStatus" onclick="switchTab('orderStatus')"><i class="ph ph-package"></i> 訂單</button>
-    <button class="tab-btn" data-target="gao" onclick="switchTab('gao')"><i class="ph ph-truck"></i> DI</button>
-    <button class="tab-btn" data-target="rec" onclick="switchTab('rec')"><i class="ph ph-target"></i> REC</button>
-    <button class="tab-btn" data-target="db" onclick="switchTab('db')"><i class="ph ph-database"></i> DB</button>
-    <button class="tab-btn" data-target="map" onclick="switchTab('map')"><i class="ph ph-map-trifold"></i> MAP</button>
-    <!-- 🌟 新增 LP 與 UPH 分頁按鈕 -->
-    <button class="tab-btn" data-target="lp" onclick="switchTab('lp')"><i class="ph ph-list-numbers"></i> LP</button>
-    <button class="tab-btn" data-target="uph" onclick="switchTab('uph')"><i class="ph ph-trend-up"></i> UPH</button>
-  </div>
+  <!-- 🌟 動態導覽列容器 (內容將由 JS 全自動生成) -->
+  <div class="tab-bar" id="mainTabBar"></div>
 
   <div id="searchView" class="view-section" style="display: none;">
     <div class="search-box">
@@ -562,8 +551,8 @@
       getRecData: function() { this._get('getRecData'); },
       getDbData: function() { this._get('getDbData'); },
       getMapData: function() { this._get('getMapData'); },
-      getLoadplanData: function() { this._get('getLoadplanData'); }, // 🌟 新增呼叫方法
-      getUphData: function() { this._get('getUphData'); },           // 🌟 新增呼叫方法
+      getLoadplanData: function() { this._get('getLoadplanData'); },
+      getUphData: function() { this._get('getUphData'); },
       saveAuditRecord: function(payload) { this._post('saveAuditRecord', payload); }
     };
   }
@@ -631,12 +620,12 @@
     else { lastGodModeTap = now; }
   }
 
+  // 🌟 新的 God Mode 設定：照著 A/C 表的標準排序放入陣列，確保生成正確
   function activateGodMode() {
-    // 🌟 在上帝模式中加入新分頁權限
     const godModePayload = { 
         success: true, 
         name: "Dev Admin", 
-        permissions: ["rec", "gao", "list", "map", "orderStatus", "search", "audit", "db", "lp", "uph"] 
+        permissions: ["rec", "gao", "lp", "uph", "list", "map", "orderStatus", "search", "audit", "db"] 
     };
     sessionStorage.setItem('wms_auth', JSON.stringify(godModePayload)); 
     applyPermissions(godModePayload);
@@ -666,6 +655,21 @@
       .verifyPinCode(pin);
   }
 
+  // 🌟 動態導覽列表頭對照資訊
+  const TAB_INFO = {
+    "search": { label: "查詢", icon: "ph-magnifying-glass" },
+    "list": { label: "補貨", icon: "ph-recycle" },
+    "audit": { label: "盤點", icon: "ph-clipboard-text" },
+    "orderStatus": { label: "訂單", icon: "ph-package" },
+    "gao": { label: "DI", icon: "ph-truck" },
+    "rec": { label: "REC", icon: "ph-target" },
+    "db": { label: "DB", icon: "ph-database" },
+    "map": { label: "MAP", icon: "ph-map-trifold" },
+    "lp": { label: "LP", icon: "ph-list-numbers" },
+    "uph": { label: "UPH", icon: "ph-trend-up" }
+  };
+
+  // 🌟 全動態生成的 applyPermissions，徹底解決物理排序漏件問題
   function applyPermissions(authData) {
     document.getElementById('pinLoginOverlay').style.display = 'none';
     document.getElementById('mainContainer').style.display = 'block';
@@ -673,18 +677,21 @@
 
     const perms = authData.permissions || [];
     const tabBar = document.getElementById('mainTabBar');
-    const allTabs = document.querySelectorAll('.tab-btn');
     
-    // 1. Hide all tabs initially
-    allTabs.forEach(tab => { tab.style.display = 'none'; });
+    // 清空導覽列，預防重複渲染
+    tabBar.innerHTML = '';
 
-    // 2. Physical DOM Reordering
+    // 根據後端回傳的陣列順序，動態建立按鈕並塞入
     perms.forEach(targetKey => {
-        const targetElement = document.querySelector(`.tab-btn[data-target="${targetKey}"]`);
-        if (targetElement) {
-            targetElement.style.display = 'flex';
-            tabBar.appendChild(targetElement); 
-        }
+      const info = TAB_INFO[targetKey];
+      if (info) {
+        const btn = document.createElement('button');
+        btn.className = 'tab-btn';
+        btn.setAttribute('data-target', targetKey);
+        btn.onclick = () => switchTab(targetKey);
+        btn.innerHTML = `<i class="ph ${info.icon}"></i> ${info.label}`;
+        tabBar.appendChild(btn); 
+      }
     });
 
     if (perms.length > 0) { switchTab(perms[0]); } 
@@ -798,7 +805,7 @@
 
   let currentTab = '';
   let isAlListLoaded = false, isOrderStatusLoaded = false, isGaoLoaded = false, isRecLoaded = false, isDbLoaded = false, isMapLoaded = false;
-  let isLpLoaded = false, isUphLoaded = false; // 🌟 新增載入狀態
+  let isLpLoaded = false, isUphLoaded = false; 
 
   const searchInput = document.getElementById('searchInput');
   searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); fetchData(); } });
@@ -820,8 +827,8 @@
     else if (tab === 'rec') loadRecDataList(false);
     else if (tab === 'db') loadDbDataList(false);
     else if (tab === 'map') loadMapData(false);
-    else if (tab === 'lp') loadLoadplanData(false); // 🌟 呼叫 LP
-    else if (tab === 'uph') loadUphData(false);     // 🌟 呼叫 UPH
+    else if (tab === 'lp') loadLoadplanData(false); 
+    else if (tab === 'uph') loadUphData(false);     
   }
 
   function fetchData() {
@@ -1268,7 +1275,6 @@
         if (Date.now() - cacheObj.timestamp < 300000) { 
           renderLoadplanData(cacheObj.data); isLpLoaded = true; 
           window.google.script.run.withSuccessHandler((res) => {
-             // 假設 LP 沒有特定的時間源，我們嘗試去抓 INVSYNc，沒抓到就忽略
              fetchAndUpdateSyncTime('INVSYNc.INVSYNc', 'lastLpRefreshedTime');
              sessionStorage.setItem('wms_cache_lp', JSON.stringify({ timestamp: Date.now(), data: res }));
              renderLoadplanData(res);
@@ -1300,12 +1306,9 @@
       let currentDate = i[dateColKey] !== undefined ? String(i[dateColKey]).trim() : "";
       let isFirstRow = (idx === 0);
       
-      // 判斷是否為「新的一天」的開頭
       let isNewDateGroup = (!isFirstRow && currentDate !== "" && currentDate !== prevDate);
-      
       if (currentDate !== "") prevDate = currentDate; 
 
-      // 畫出跨日分隔線
       let trStyle = isNewDateGroup ? "border-top: 2px solid rgba(56, 189, 248, 0.6);" : "";
 
       h+=`<tr style="${trStyle}">`; 
@@ -1316,34 +1319,23 @@
         let tdStyle = "";
         let displayValue = v;
 
-        // 多行折疊設定與 🌟 關鍵字高亮 🌟
         if (cln === "IDETAILS" || cln === "ODETAILS") {
           tdStyle = `max-width: 25vw; min-width: 150px; white-space: normal; word-break: break-word; text-align: left; line-height: 1.4; padding: 8px 6px;`;
           
           let formattedStr = String(v);
           
-          // 1. 貨櫃型號 (亮紫色, 支援直引號'、捲引號’、無引號、與45HQ/20GP/20'等變體)
           formattedStr = formattedStr.replace(/(40['’]?\s*HQ|20['’]?\s*GP|45['’]?\s*HQ|40['’]|20['’])/gi, '<span style="color:#a855f7; font-weight:700;">$1</span>');
-          
-          // 2. DI 分類 (同步 DI 分頁顏色)
           formattedStr = formattedStr.replace(/\b(GOH)\b/gi, '<span style="color:#d946ef; font-weight:700;">$1</span>');
           formattedStr = formattedStr.replace(/\b(FTW)\b/gi, '<span style="color:#ff8c00; font-weight:700;">$1</span>');
           formattedStr = formattedStr.replace(/\b(ACC)\b/gi, '<span style="color:#ff003c; font-weight:700;">$1</span>');
           formattedStr = formattedStr.replace(/\b(BDW)\b/gi, '<span style="color:#86efac; font-weight:700;">$1</span>');
-          
-          // 3. SI 指示 (亮黃色)
           formattedStr = formattedStr.replace(/\b(SI)\b/gi, '<span style="color:#fde047; font-weight:700;">$1</span>');
-          
-          // 4. 單位 ctns, pcs, cbm (青藍色) - 移除 \b 讓緊黏著數字的 12CTNS 也能被抓到
           formattedStr = formattedStr.replace(/(ctns|pcs|cbm)/gi, '<span style="color:var(--accent-cyan);">$1</span>');
-          
-          // 5. 季節 SS, FW (珊瑚粉紅)
           formattedStr = formattedStr.replace(/\b(SS|FW)/gi, '<span style="color:#fb7185; font-weight:700;">$1</span>');
           
           displayValue = formattedStr;
         }
 
-        // 日期視覺優化：新日期高亮，重複日期淡化
         if (c === dateColKey) {
             if (isFirstRow || isNewDateGroup) {
                 displayValue = `<span style="color: var(--accent-cyan); font-weight: bold;">${v}</span>`;
