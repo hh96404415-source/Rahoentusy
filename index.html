@@ -1289,14 +1289,78 @@
 
   function renderLoadplanData(res) {
     document.getElementById('totLpRows').textContent = res.rowCount||0;
-    let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
-    (res.data||[]).forEach(i => {
-      h+=`<tr>`; res.headers.forEach(c => {
+    let h = `<table class="compact-table"><thead><tr>`; 
+    res.headers.forEach(c => h+=`<th>${c}</th>`); 
+    h+=`</tr></thead><tbody>`;
+    
+    let prevDate = null; 
+    let dateColKey = res.headers.find(h => h.toUpperCase().trim() === "DATE") || res.headers[0]; 
+
+    (res.data||[]).forEach((i, idx) => {
+      let currentDate = i[dateColKey] !== undefined ? String(i[dateColKey]).trim() : "";
+      let isFirstRow = (idx === 0);
+      
+      // 判斷是否為「新的一天」的開頭
+      let isNewDateGroup = (!isFirstRow && currentDate !== "" && currentDate !== prevDate);
+      
+      if (currentDate !== "") prevDate = currentDate; 
+
+      // 畫出跨日分隔線
+      let trStyle = isNewDateGroup ? "border-top: 2px solid rgba(56, 189, 248, 0.6);" : "";
+
+      h+=`<tr style="${trStyle}">`; 
+      
+      res.headers.forEach(c => {
         let v = i[c] !== undefined ? i[c] : ""; 
-        if (v === 0 || String(v).trim() === "0") v = ""; h+=`<td>${v}</td>`;
-      }); h+=`</tr>`;
-    }); h+=`</tbody></table>`;
-    document.getElementById('lpSummaryBox').style.display = "flex"; document.getElementById('lpTableContainer').innerHTML = h;
+        let cln = c ? c.toString().trim().toUpperCase() : "";
+        let tdStyle = "";
+        let displayValue = v;
+
+        // 多行折疊設定與 🌟 關鍵字高亮 🌟
+        if (cln === "IDETAILS" || cln === "ODETAILS") {
+          tdStyle = `max-width: 25vw; min-width: 150px; white-space: normal; word-break: break-word; text-align: left; line-height: 1.4; padding: 8px 6px;`;
+          
+          let formattedStr = String(v);
+          
+          // 1. 貨櫃型號 (亮紫色, 支援直引號'、捲引號’、無引號、與45HQ/20GP/20'等變體)
+          formattedStr = formattedStr.replace(/(40['’]?\s*HQ|20['’]?\s*GP|45['’]?\s*HQ|40['’]|20['’])/gi, '<span style="color:#a855f7; font-weight:700;">$1</span>');
+          
+          // 2. DI 分類 (同步 DI 分頁顏色)
+          formattedStr = formattedStr.replace(/\b(GOH)\b/gi, '<span style="color:#d946ef; font-weight:700;">$1</span>');
+          formattedStr = formattedStr.replace(/\b(FTW)\b/gi, '<span style="color:#ff8c00; font-weight:700;">$1</span>');
+          formattedStr = formattedStr.replace(/\b(ACC)\b/gi, '<span style="color:#ff003c; font-weight:700;">$1</span>');
+          formattedStr = formattedStr.replace(/\b(BDW)\b/gi, '<span style="color:#86efac; font-weight:700;">$1</span>');
+          
+          // 3. SI 指示 (亮黃色)
+          formattedStr = formattedStr.replace(/\b(SI)\b/gi, '<span style="color:#fde047; font-weight:700;">$1</span>');
+          
+          // 4. 單位 ctns, pcs, cbm (青藍色) - 移除 \b 讓緊黏著數字的 12CTNS 也能被抓到
+          formattedStr = formattedStr.replace(/(ctns|pcs|cbm)/gi, '<span style="color:var(--accent-cyan);">$1</span>');
+          
+          // 5. 季節 SS, FW (珊瑚粉紅)
+          formattedStr = formattedStr.replace(/\b(SS|FW)/gi, '<span style="color:#fb7185; font-weight:700;">$1</span>');
+          
+          displayValue = formattedStr;
+        }
+
+        // 日期視覺優化：新日期高亮，重複日期淡化
+        if (c === dateColKey) {
+            if (isFirstRow || isNewDateGroup) {
+                displayValue = `<span style="color: var(--accent-cyan); font-weight: bold;">${v}</span>`;
+            } else {
+                displayValue = `<span style="opacity: 0.2;">${v}</span>`; 
+            }
+        }
+
+        if (displayValue === 0 || String(displayValue).trim() === "0") displayValue = ""; 
+        h+=`<td style="${tdStyle}">${displayValue}</td>`;
+      }); 
+      h+=`</tr>`;
+    }); 
+    h+=`</tbody></table>`;
+    
+    document.getElementById('lpSummaryBox').style.display = "flex"; 
+    document.getElementById('lpTableContainer').innerHTML = h;
   }
 
   function loadUphData(force) {
