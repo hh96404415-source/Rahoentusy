@@ -654,8 +654,7 @@
       .withFailureHandler(function(err) { btn.disabled = false; btn.innerHTML = 'ACCESS GRANTED'; msg.textContent = "NETWORK ERROR"; })
       .verifyPinCode(pin);
   }
-
-  // 🌟 動態導覽列表頭對照資訊
+  // 🌟 動態導覽列表頭對照資訊 (加入 Icon 設定)
   const TAB_INFO = {
     "search": { label: "查詢", icon: "ph-magnifying-glass" },
     "list": { label: "補貨", icon: "ph-recycle" },
@@ -689,6 +688,7 @@
         btn.className = 'tab-btn';
         btn.setAttribute('data-target', targetKey);
         btn.onclick = () => switchTab(targetKey);
+        // 🌟 在這裡將 Icon 與文字一起塞入按鈕
         btn.innerHTML = `<i class="ph ${info.icon}"></i> ${info.label}`;
         tabBar.appendChild(btn); 
       }
@@ -1154,6 +1154,12 @@
 
   function renderRecData(res) {
     let tScnd=0, tScn=0; document.getElementById('totRecRows').textContent = res.rowCount||0;
+    
+    // 🌟 新增：渲染 UPD 數值
+    if (document.getElementById('totRecUpd')) {
+      document.getElementById('totRecUpd').textContent = res.updValue || "--";
+    }
+    
     let catKey = res.headers.find(h => h.toUpperCase().trim() === "CAT");
     let soKey = res.headers.find(h => h.toUpperCase().trim() === "S/O");
     let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
@@ -1320,7 +1326,8 @@
         let displayValue = v;
 
         if (cln === "IDETAILS" || cln === "ODETAILS") {
-          tdStyle = `max-width: 25vw; min-width: 150px; white-space: normal; word-break: break-word; text-align: left; line-height: 1.4; padding: 8px 6px;`;
+          // 🌟 在這裡加入 font-size: 14px; 
+          tdStyle = `max-width: 25vw; min-width: 150px; white-space: normal; word-break: break-word; text-align: left; line-height: 1.4; padding: 8px 6px; font-size: 14px;`;
           
           let formattedStr = String(v);
           
