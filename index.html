@@ -52,66 +52,28 @@
       100% { background-position: 0% 50%; }
     }
 
-    .container {
-      width: 100%; max-width: 800px; margin: 0 auto;
-      padding: 6px; 
-    }
+    .container { width: 100%; max-width: 800px; margin: 0 auto; padding: 6px; }
 
-    .sys-header {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 4px 6px;
-    }
-    .sys-title {
-      font-size: 18px; font-weight: 700; color: var(--text-main); margin: 0;
-      text-shadow: 0 0 12px rgba(255, 255, 255, 0.2); display: flex; align-items: center; gap: 6px;
-      cursor: pointer; transition: color 0.2s ease;
-    }
+    .sys-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 4px 6px; }
+    .sys-title { font-size: 18px; font-weight: 700; color: var(--text-main); margin: 0; text-shadow: 0 0 12px rgba(255, 255, 255, 0.2); display: flex; align-items: center; gap: 6px; cursor: pointer; transition: color 0.2s ease; }
     .sys-title:hover { color: var(--accent-cyan); }
     .sys-user { font-size: 11px; color: var(--accent-cyan); font-family: 'Roboto Mono', monospace; }
     
-    .tab-bar {
-      display: flex; gap: 4px; margin-bottom: 8px; border-bottom: 1px solid var(--border-light); overflow-x: auto;
-    }
+    .tab-bar { display: flex; gap: 4px; margin-bottom: 8px; border-bottom: 1px solid var(--border-light); overflow-x: auto; }
     .tab-bar::-webkit-scrollbar { display: none; }
-    .tab-btn {
-      flex: 1; min-width: max-content; padding: 8px 6px; font-size: 12px; font-weight: 700;
-      background: transparent; color: var(--text-muted); border: none; border-bottom: 2px solid transparent;
-      cursor: pointer; text-align: center; transition: all 0.2s ease;
-      display: flex; align-items: center; justify-content: center; gap: 4px;
-    }
+    .tab-btn { flex: 1; min-width: max-content; padding: 8px 6px; font-size: 12px; font-weight: 700; background: transparent; color: var(--text-muted); border: none; border-bottom: 2px solid transparent; cursor: pointer; text-align: center; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 4px; }
     .tab-btn i { font-size: 16px; }
-    .tab-btn.active {
-      color: var(--accent-cyan); border-bottom-color: var(--accent-cyan);
-      text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
-    }
+    .tab-btn.active { color: var(--accent-cyan); border-bottom-color: var(--accent-cyan); text-shadow: 0 0 10px rgba(56, 189, 248, 0.4); }
 
     .search-box { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: nowrap; }
-    
-    input[type="text"] {
-      flex: 1; min-width: 50px; padding: 8px 12px; font-size: 16px !important;
-      background-color: var(--bg-deep); color: var(--text-main); 
-      border: 1px solid var(--bg-hover); border-radius: 6px; 
-      font-family: 'Roboto Mono', monospace;
-    }
-    input[type="text"]:focus {
-      outline: none; border-color: var(--accent-cyan); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
-    }
+    input[type="text"], input[type="password"] { flex: 1; min-width: 50px; padding: 8px 12px; font-size: 16px !important; background-color: var(--bg-deep); color: var(--text-main); border: 1px solid var(--bg-hover); border-radius: 6px; font-family: 'Roboto Mono', monospace; }
+    input[type="text"]:focus, input[type="password"]:focus { outline: none; border-color: var(--accent-cyan); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
 
-    button {
-      padding: 8px 12px; font-size: 13px !important; background-color: var(--bg-card); 
-      color: var(--text-main); border: 1px solid var(--border-light); border-radius: 6px; 
-      cursor: pointer; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 4px;
-      transition: all 0.2s ease;
-    }
-    button.primary-btn {
-      background-color: var(--accent-blue); border-color: var(--accent-blue); color: #fff;
-      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
-    }
+    button { padding: 8px 12px; font-size: 13px !important; background-color: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-light); border-radius: 6px; cursor: pointer; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.2s ease; }
+    button.primary-btn { background-color: var(--accent-blue); border-color: var(--accent-blue); color: #fff; box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3); }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .icon-btn {
-      padding: 0 !important; font-size: 16px !important; background: var(--bg-card);
-      border: 1px solid var(--bg-hover); border-radius: 6px; min-width: 38px; max-width: 38px;
-    }
+    .icon-btn { padding: 0 !important; font-size: 16px !important; background: var(--bg-card); border: 1px solid var(--bg-hover); border-radius: 6px; min-width: 38px; max-width: 38px; }
     .icon-btn i { font-size: 18px; }
     .icon-btn:hover { background: var(--bg-hover); }
 
@@ -120,83 +82,33 @@
     .btn-reset { color: var(--status-red); border-color: rgba(251, 113, 133, 0.3); }
     .btn-sync { color: var(--status-green); border-color: rgba(52, 211, 153, 0.3); }
 
-    .summary-box-compact {
-      display: flex; flex-wrap: wrap; justify-content: flex-start; align-items: center;
-      gap: 4px; margin-bottom: 4px; padding: 4px 6px; 
-      background-color: var(--bg-card); border-radius: 4px; border: 1px solid var(--border-light);
-    }
-    .summary-item-compact {
-      font-size: 10px; font-weight: 700; color: var(--text-muted); display: flex; align-items: baseline; gap: 3px;
-    }
-    .summary-item-compact span {
-      font-size: 12px; font-family: 'Roboto Mono', monospace; color: var(--accent-cyan);
-    }
+    .summary-box-compact { display: flex; flex-wrap: wrap; justify-content: flex-start; align-items: center; gap: 4px; margin-bottom: 4px; padding: 4px 6px; background-color: var(--bg-card); border-radius: 4px; border: 1px solid var(--border-light); }
+    .summary-item-compact { font-size: 10px; font-weight: 700; color: var(--text-muted); display: flex; align-items: baseline; gap: 3px; }
+    .summary-item-compact span { font-size: 12px; font-family: 'Roboto Mono', monospace; color: var(--accent-cyan); }
 
-    .filter-group-compact {
-      display: flex; gap: 4px; padding: 2px 0;
-    }
-    .filter-btn-compact {
-      flex: 1; padding: 2px 0; font-size: 10px !important; background: var(--bg-deep); 
-      border: 1px solid var(--border-light); color: var(--text-muted); border-radius: 4px; 
-      display: flex; flex-direction: row; align-items: baseline; justify-content: center; gap: 3px;
-    }
+    .filter-group-compact { display: flex; gap: 4px; padding: 2px 0; }
+    .filter-btn-compact { flex: 1; padding: 2px 0; font-size: 10px !important; background: var(--bg-deep); border: 1px solid var(--border-light); color: var(--text-muted); border-radius: 4px; display: flex; flex-direction: row; align-items: baseline; justify-content: center; gap: 3px; }
     .filter-btn-compact span { font-size: 12px; font-family: 'Roboto Mono', monospace; }
-    .filter-btn-compact.active {
-      background: var(--bg-card); border-color: var(--accent-cyan); color: var(--accent-cyan);
-    }
+    .filter-btn-compact.active { background: var(--bg-card); border-color: var(--accent-cyan); color: var(--accent-cyan); }
 
     .text-green { color: var(--status-green) !important; }
     .text-red { color: var(--status-red) !important; }
     .text-yellow { color: var(--status-yellow) !important; }
 
-    .camera-wrapper {
-        width: 100%; max-height: 140px; border-radius: 6px; overflow: hidden; background: #000;
-        margin-bottom: 8px; border: 1px solid var(--bg-hover);
-    }
-    .camera-wrapper video { width: 100% !important; height: 140px !important; object-fit: cover !important; }
-    
-    .card-list { display: flex; flex-direction: column; gap: 8px; }
-    .inventory-card { 
-      background: var(--bg-card); border-radius: 6px; padding: 8px; 
-      border-left: 4px solid var(--accent-cyan); box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; border-bottom: 1px solid var(--border-light); padding-bottom: 4px; }
-    .card-primary { font-size: 16px; font-family: 'Roboto Mono', monospace; font-weight: 700; color: #fff; }
-    .card-qty { font-size: 12px; font-family: 'Roboto Mono', monospace; color: var(--accent-cyan); background: rgba(56, 189, 248, 0.1); padding: 2px 6px; border-radius: 4px; }
-    .card-footer { font-size: 11px; color: var(--text-muted); display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-    .card-footer span { color: var(--text-main); font-family: 'Roboto Mono', monospace; }
-
     .compact-table-wrapper { width: 100%; overflow-x: auto; overflow-y: auto; background: var(--bg-card); border-radius: 6px; max-height: 72vh; border: 1px solid var(--border-light); }
     .compact-table { width: 100%; border-collapse: collapse; font-size: 12px; line-height: 1.1; font-family: 'Roboto Mono', monospace; }
-    .compact-table th { 
-      background: var(--bg-deep); color: var(--text-muted); padding: 4px 6px; font-family: 'Roboto Condensed', sans-serif;
-      text-align: center; font-size: 9px !important; text-transform: uppercase; letter-spacing: 0.5px;
-      position: sticky; top: 0; z-index: 3; border-bottom: 1px solid var(--border-light);
-    }
+    .compact-table th { background: var(--bg-deep); color: var(--text-muted); padding: 4px 6px; font-family: 'Roboto Condensed', sans-serif; text-align: center; font-size: 9px !important; text-transform: uppercase; letter-spacing: 0.5px; position: sticky; top: 0; z-index: 3; border-bottom: 1px solid var(--border-light); }
     .compact-table td { padding: 4px 6px; border-bottom: 1px solid var(--border-light); color: var(--text-main); text-align: center; white-space: nowrap; }
     .compact-table tr:nth-child(even) td { background-color: rgba(255,255,255,0.02); }
     .compact-table tr:hover td { background-color: rgba(56, 189, 248, 0.05); }
 
-    /* 🌟 MAP 熱力圖專屬格線樣式 (視覺壓縮版) */
-    .map-table th, .map-table td {
-      min-width: 24px; height: 24px; padding: 1px; font-size: 13px; text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.05); font-family: 'Roboto Mono', monospace;
-    }
+    .map-table th, .map-table td { min-width: 24px; height: 24px; padding: 1px; font-size: 13px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.05); font-family: 'Roboto Mono', monospace; }
     .map-table th { position: sticky; top: 0; z-index: 4; background: var(--bg-deep); color: var(--accent-cyan); font-size: 14px !important; }
-    .map-table td:first-child, .map-table th:first-child {
-      position: sticky; left: 0; z-index: 5; background: var(--bg-card); color: var(--status-yellow) !important; font-weight: 700; font-size: 14px !important;
-    }
-    .map-table td:nth-child(2), .map-table th:nth-child(2) {
-      font-size: 14px !important; font-weight: 700;
-    }
+    .map-table td:first-child, .map-table th:first-child { position: sticky; left: 0; z-index: 5; background: var(--bg-card); color: var(--status-yellow) !important; font-weight: 700; font-size: 14px !important; }
+    .map-table td:nth-child(2), .map-table th:nth-child(2) { font-size: 14px !important; font-weight: 700; }
     
-    .lvl-3 { color: #d946ef !important; } 
-    .lvl-2 { color: #38bdf8 !important; } 
-    .lvl-1 { color: #86efac !important; } 
-    .map-row-separator td, .map-row-separator th {
-      border-bottom: 2px solid rgba(56, 189, 248, 0.4) !important;
-    }
-
+    .lvl-3 { color: #d946ef !important; } .lvl-2 { color: #38bdf8 !important; } .lvl-1 { color: #86efac !important; } 
+    .map-row-separator td, .map-row-separator th { border-bottom: 2px solid rgba(56, 189, 248, 0.4) !important; }
     .map-zero { color: rgba(255, 255, 255, 0.15); background: rgba(0, 0, 0, 0.1); font-weight: normal; }
     .map-low { color: #86efac; background: rgba(52, 211, 153, 0.1); }
     .map-mid { color: #fde047; background: rgba(251, 191, 36, 0.15); }
@@ -208,32 +120,27 @@
     .highlight-alert { color: var(--status-red) !important; font-weight: 700 !important; }
     .last-scanned-highlight td { background-color: rgba(56, 189, 248, 0.15) !important; border-top: 1px solid var(--accent-cyan) !important; border-bottom: 1px solid var(--accent-cyan) !important; }
 
-    .scan-feedback-banner { 
-      background: var(--bg-deep); border-radius: 4px; padding: 4px 8px; margin-top: 4px; margin-bottom: 6px;
-      display: flex; justify-content: space-between; align-items: center; 
-      font-size: 11px; font-weight: 700; border: 1px solid var(--border-light);
-    }
+    .scan-feedback-banner { background: var(--bg-deep); border-radius: 4px; padding: 4px 8px; margin-top: 4px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700; border: 1px solid var(--border-light); }
     
-    .glass-overlay { 
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-      background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-      display: flex; justify-content: center; align-items: center; z-index: 99999; flex-direction: column;
-    }
-    .glass-box { 
-      background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
-      padding: 24px; border-radius: 12px; width: 90%; max-width: 340px; text-align: center;
-      position: relative;
-    }
+    .glass-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 99999; flex-direction: column; }
+    .glass-box { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); padding: 24px; border-radius: 12px; width: 90%; max-width: 340px; text-align: center; position: relative; }
     
     .pin-title { color: var(--accent-cyan); font-size: 18px; font-weight: 700; letter-spacing: 2px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .pin-subtitle { color: var(--text-muted); font-size: 11px; margin-bottom: 20px; text-transform: uppercase; }
-    .pin-input { 
-      width: 100%; text-align: center; font-size: 24px !important; letter-spacing: 8px; 
-      background: rgba(0,0,0,0.2) !important; border-color: var(--accent-cyan) !important; margin-bottom: 16px;
-    }
+    .pin-input { width: 100%; text-align: center; font-size: 24px !important; letter-spacing: 8px; background: rgba(0,0,0,0.2) !important; border-color: var(--accent-cyan) !important; margin-bottom: 16px; }
     .pin-error { color: var(--status-red); font-size: 12px; margin-top: 12px; min-height: 18px; font-family: 'Roboto Mono'; }
-
     .message { font-size: 12px; color: var(--status-red); font-weight: bold; margin-bottom: 8px; text-align: center; }
+
+    .camera-wrapper { width: 100%; max-height: 140px; border-radius: 6px; overflow: hidden; background: #000; margin-bottom: 8px; border: 1px solid var(--bg-hover); }
+    .camera-wrapper video { width: 100% !important; height: 140px !important; object-fit: cover !important; }
+    
+    .card-list { display: flex; flex-direction: column; gap: 8px; }
+    .inventory-card { background: var(--bg-card); border-radius: 6px; padding: 8px; border-left: 4px solid var(--accent-cyan); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; border-bottom: 1px solid var(--border-light); padding-bottom: 4px; }
+    .card-primary { font-size: 16px; font-family: 'Roboto Mono', monospace; font-weight: 700; color: #fff; }
+    .card-qty { font-size: 12px; font-family: 'Roboto Mono', monospace; color: var(--accent-cyan); background: rgba(56, 189, 248, 0.1); padding: 2px 6px; border-radius: 4px; }
+    .card-footer { font-size: 11px; color: var(--text-muted); display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+    .card-footer span { color: var(--text-main); font-family: 'Roboto Mono', monospace; }
   </style>
 </head>
 <body>
@@ -241,7 +148,6 @@
 <div id="pinLoginOverlay" class="glass-overlay">
   <div class="glass-box" style="border-color: rgba(56,189,248,0.3); box-shadow: 0 0 30px rgba(56,189,248,0.1);">
     <div id="devGodModeBtn" style="position: absolute; bottom: 10px; left: 10px; width: 50px; height: 50px; cursor: default; z-index: 10;" onclick="handleGodModeTap(event)" ontouchend="handleGodModeTap(event)"></div>
-
     <div class="pin-title"><i class="ph ph-lock-key"></i> SYSTEM LOCKED</div>
     <div class="pin-subtitle">Awaiting Authorization_</div>
     <input type="password" id="pinInput" class="pin-input" placeholder="••••" onkeydown="if(event.key === 'Enter') attemptLogin()">
@@ -293,9 +199,10 @@
     <div class="sys-user" id="currentUserDisplay">Logged as: -</div>
   </div>
   
-  <!-- 🌟 動態導覽列容器 (內容將由 JS 全自動生成) -->
+  <!-- 全動態生成的導覽列 (Data-Driven UI) -->
   <div class="tab-bar" id="mainTabBar"></div>
 
+  <!-- Search View -->
   <div id="searchView" class="view-section" style="display: none;">
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="Enter LOC or Barcode" autofocus>
@@ -310,6 +217,7 @@
     <div id="cardContainer" class="card-list"></div>
   </div>
 
+  <!-- List View (補貨) -->
   <div id="listView" class="view-section" style="display: none;">
     <div id="listMsgArea" class="message"></div>
     <div class="summary-box-compact" id="listSummaryBox" style="display: none;">
@@ -324,6 +232,7 @@
     <div class="compact-table-wrapper"><div id="listTableContainer"></div></div>
   </div>
 
+  <!-- Audit View -->
   <div id="auditView" class="view-section" style="display: none;">
     <div class="search-box" style="margin-bottom: 4px;">
       <input type="text" id="auditLocInput" placeholder="Enter LOCATION">
@@ -343,7 +252,6 @@
         <button class="icon-btn btn-sync" onclick="openSyncConfirmModal()"><i class="ph ph-cloud-arrow-up"></i></button>
         <button id="soundToggleBtn" class="icon-btn" onclick="toggleAuditSound()"><i class="ph ph-speaker-high"></i></button>
       </div>
-
       <div id="barcodeReader" class="camera-wrapper" style="display:none; margin-top: 6px;"></div>
       <button id="stopBarcodeScanBtn" style="display:none; width: 100%; margin-top: 4px; background: var(--bg-hover);" onclick="stopBarcodeScanner()">CLOSE CAMERA</button>
       
@@ -352,9 +260,7 @@
         <div id="feedbackDetails">SYS: 0 | SCN: 0</div>
       </div>
     </div>
-
     <div id="auditMsgArea" class="message"></div>
-
     <div class="summary-box-compact" id="auditSummaryBox" style="display: none;">
       <div class="summary-item-compact">PLC:<span id="auditSysPlc">0</span></div>
       <div class="summary-item-compact">TAGC:<span id="auditSysTag">0</span></div>
@@ -364,17 +270,16 @@
       <div class="summary-item-compact text-red">🔴MIS:<span id="auditMissingQty" class="text-red">0</span></div>
       <div class="summary-item-compact text-yellow">🟡EXT:<span id="auditExtraQty" class="text-yellow">0</span></div>
     </div>
-
     <div id="auditFilterGroup" class="filter-group-compact" style="display: none;">
       <button class="filter-btn-compact active" id="filterAll" onclick="filterAuditResult('all')">ALL<span id="fAll">(0)</span></button>
       <button class="filter-btn-compact text-red" id="filterMissing" onclick="filterAuditResult('missing')">🔴 MIS<span id="fMis">(0)</span></button>
       <button class="filter-btn-compact text-yellow" id="filterExtra" onclick="filterAuditResult('extra')">🟡 EXT<span id="fExt">(0)</span></button>
       <button class="filter-btn-compact text-green" id="filterMatch" onclick="filterAuditResult('match')">🟢 MCH<span id="fMat">(0)</span></button>
     </div>
-
     <div id="auditResultContainer"></div>
   </div>
 
+  <!-- Order Status View -->
   <div id="orderStatusView" class="view-section" style="display: none;">
     <div id="orderStatusMsgArea" class="message"></div>
     <div class="summary-box-compact" id="orderStatusSummaryBox" style="display: none;">
@@ -387,9 +292,9 @@
     <div class="compact-table-wrapper"><div id="orderStatusTableContainer"></div></div>
   </div>
 
+  <!-- GAO (DI) View -->
   <div id="gaoView" class="view-section" style="display: none;">
     <div id="gaoMsgArea" class="message"></div>
-    
     <div class="summary-box-compact" id="gaoSummaryBox" style="display: none;">
       <div class="summary-item-compact">ROWS:<span id="totGaoRows">0</span></div>
       <div class="summary-item-compact">CBM:<span id="totGaoCbm" style="color:var(--accent-blue);">0</span></div>
@@ -405,7 +310,6 @@
         <button class="icon-btn" style="min-width: 24px; height:24px;" onclick="loadGaoDataList(true)"><i class="ph ph-arrows-clockwise" style="font-size:12px;"></i></button>
       </div>
     </div>
-
     <div id="gaoFilterGroup" class="filter-group-compact" style="display: none; flex-wrap: wrap; margin-bottom: 4px;">
       <button class="filter-btn-compact active" data-filter="ALL" onclick="filterGao('ALL')">ALL</button>
       <button class="filter-btn-compact" data-filter="GOH" style="color:#d946ef;" onclick="filterGao('GOH')">GOH</button>
@@ -414,16 +318,17 @@
       <button class="filter-btn-compact" data-filter="BDW" style="color:#86efac;" onclick="filterGao('BDW')">BDW</button>
       <button class="filter-btn-compact" data-filter="OTH" style="color:var(--text-main);" onclick="filterGao('OTH')">OTH</button>
     </div>
-
     <div class="compact-table-wrapper"><div id="gaoTableContainer"></div></div>
   </div>
 
+  <!-- REC View -->
   <div id="recView" class="view-section" style="display: none;">
     <div id="recMsgArea" class="message"></div>
     <div class="summary-box-compact" id="recSummaryBox" style="display: none;">
       <div class="summary-item-compact">ROWS:<span id="totRecRows">0</span></div>
       <div class="summary-item-compact">SCND:<span id="totRecScnd" class="text-green">0</span></div>
       <div class="summary-item-compact text-red">-SCN:<span id="totRecScn" class="text-red">0</span></div>
+      <div class="summary-item-compact" style="margin-left: 8px;">UPD:<span id="totRecUpd" style="color: var(--accent-cyan);">--</span></div>
       <div style="margin-left: auto; display:flex; align-items:center; gap:4px;">
         <span id="lastRecRefreshedTime" style="font-size: 10px; color: var(--text-muted); font-family:'Roboto Mono';">--:--</span>
         <button class="icon-btn" style="min-width: 24px; height:24px;" onclick="loadRecDataList(true)"><i class="ph ph-arrows-clockwise" style="font-size:12px;"></i></button>
@@ -432,6 +337,7 @@
     <div class="compact-table-wrapper"><div id="recTableContainer"></div></div>
   </div>
   
+  <!-- DB View -->
   <div id="dbView" class="view-section" style="display: none;">
     <div id="dbMsgArea" class="message"></div>
     <div class="summary-box-compact" id="dbSummaryBox" style="display: none;">
@@ -444,9 +350,9 @@
     <div class="compact-table-wrapper"><div id="dbTableContainer"></div></div>
   </div>
 
+  <!-- MAP View -->
   <div id="mapView" class="view-section" style="display: none;">
     <div id="mapMsgArea" class="message"></div>
-    
     <div class="summary-box-compact" id="mapSummaryBox" style="display: none;">
       <div class="summary-item-compact" style="flex: 1;">MAP LAYOUT: <span id="totMapCells">MAP1-9 (A1:AO28)</span></div>
       <div style="display:flex; align-items:center; gap:4px;">
@@ -454,7 +360,6 @@
         <button class="icon-btn" style="min-width: 24px; height:24px;" onclick="loadMapData(true)"><i class="ph ph-arrows-clockwise" style="font-size:12px;"></i></button>
       </div>
     </div>
-
     <div id="mapFilterGroup" class="filter-group-compact" style="display: none; flex-wrap: wrap; margin-bottom: 4px;">
       <button class="filter-btn-compact active" data-filter="ALL" onclick="filterMap('ALL')">ALL</button>
       <button class="filter-btn-compact" data-filter="01" onclick="filterMap('01')">01</button>
@@ -467,10 +372,10 @@
       <button class="filter-btn-compact" data-filter="08" onclick="filterMap('08')">08</button>
       <button class="filter-btn-compact" data-filter="09" onclick="filterMap('09')">09</button>
     </div>
-
     <div class="compact-table-wrapper"><div id="mapTableContainer"></div></div>
   </div>
 
+  <!-- LP View -->
   <div id="lpView" class="view-section" style="display: none;">
     <div id="lpMsgArea" class="message"></div>
     <div class="summary-box-compact" id="lpSummaryBox" style="display: none;">
@@ -483,6 +388,7 @@
     <div class="compact-table-wrapper"><div id="lpTableContainer"></div></div>
   </div>
 
+  <!-- UPH View -->
   <div id="uphView" class="view-section" style="display: none;">
     <div id="uphMsgArea" class="message"></div>
     <div class="summary-box-compact" id="uphSummaryBox" style="display: none;">
@@ -499,7 +405,6 @@
 
 <script>
   const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxn95iB72ljeNugSzIT7vpviDp-bwXiA8HnPQ3UXxLFOnxafBc8imVU5oyvhjOSdcaX/exec";
-
   let apiQueue = Promise.resolve();
 
   function queueApiFetch(url, options) {
@@ -507,10 +412,7 @@
       apiQueue = apiQueue.then(() => {
         return fetch(url, options)
           .then(res => { if (!res.ok) throw new Error('Network Error'); return res.json(); })
-          .then(data => {
-            if (data && data.error) throw new Error(data.error);
-            resolve(data);
-          })
+          .then(data => { if (data && data.error) throw new Error(data.error); resolve(data); })
           .catch(err => reject(err));
       });
     });
@@ -518,13 +420,11 @@
 
   function createGasRunner() {
     return {
-      _onSuccess: null,
-      _onFailure: null,
+      _onSuccess: null, _onFailure: null,
       withSuccessHandler: function(callback) { this._onSuccess = callback; return this; },
       withFailureHandler: function(callback) { this._onFailure = callback; return this; },
       _get: function(action, params = {}) {
-        const successCb = this._onSuccess;
-        const failureCb = this._onFailure;
+        const successCb = this._onSuccess; const failureCb = this._onFailure;
         let url = new URL(GAS_WEB_APP_URL);
         url.searchParams.append('action', action);
         for (let key in params) { url.searchParams.append(key, params[key]); }
@@ -533,14 +433,11 @@
           .catch(err => { if (failureCb) failureCb(err); });
       },
       _post: function(action, payload) {
-        const successCb = this._onSuccess;
-        const failureCb = this._onFailure;
+        const successCb = this._onSuccess; const failureCb = this._onFailure;
         queueApiFetch(GAS_WEB_APP_URL, {
           method: 'POST', mode: 'cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({ action: action, payload: payload })
-        })
-        .then(data => { if (successCb) successCb(data); })
-        .catch(err => { if (failureCb) failureCb(err); });
+        }).then(data => { if (successCb) successCb(data); }).catch(err => { if (failureCb) failureCb(err); });
       },
       verifyPinCode: function(pin) { this._get('verifyPinCode', { pin: pin }); },
       searchSupplierSku: function(sku) { this._get('searchSupplierSku', { sku: sku }); },
@@ -557,54 +454,32 @@
     };
   }
 
-  window.google = {
-    script: {
-      get run() { return createGasRunner(); }
-    }
-  };
+  window.google = { script: { get run() { return createGasRunner(); } } };
 
   function showSystemQrCode() {
     const overlay = document.getElementById('qrModalOverlay');
     const container = document.getElementById('sysQrCodeContainer');
-    overlay.style.display = 'flex';
-    container.innerHTML = '';
-    new QRCode(container, {
-      text: "https://hh96404415-source.github.io/Rahoentusy/",
-      width: 180,
-      height: 180,
-      colorDark : "#000000",
-      colorLight : "#ffffff",
-      correctLevel : QRCode.CorrectLevel.M
-    });
+    overlay.style.display = 'flex'; container.innerHTML = '';
+    new QRCode(container, { text: "https://hh96404415-source.github.io/Rahoentusy/", width: 180, height: 180, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.M });
   }
 
-  function closeSystemQrCode(e) {
-    if (e && e.target !== e.currentTarget) return; 
-    document.getElementById('qrModalOverlay').style.display = 'none';
-  }
+  function closeSystemQrCode(e) { if (e && e.target !== e.currentTarget) return; document.getElementById('qrModalOverlay').style.display = 'none'; }
 
   const loadingTimers = {};
-  
   function startLoadingMsg(elementId, customPrefix = "LOADING") {
     const el = document.getElementById(elementId);
     if (!el) return null;
     if (loadingTimers[elementId]) clearInterval(loadingTimers[elementId]);
-
     el.style.color = "var(--accent-cyan)";
-    let sec = 0;
-    const steps = ["CONNECTING...", "QUERYING...", "FETCHING...", "PROCESSING...", "FINALIZING..."];
+    let sec = 0; const steps = ["CONNECTING...", "QUERYING...", "FETCHING...", "PROCESSING...", "FINALIZING..."];
     el.innerHTML = `<i class="ph ph-spinner ph-spin"></i> ${customPrefix}: ${steps[0]}`;
-    
     const timerId = setInterval(() => {
-      sec++;
-      let stepText = sec < steps.length ? steps[sec] : "AWAITING SERVER...";
+      sec++; let stepText = sec < steps.length ? steps[sec] : "AWAITING SERVER...";
       el.innerHTML = `<i class="ph ph-spinner ph-spin"></i> ${customPrefix}: ${stepText} <span style="color:var(--text-muted); font-family:'Roboto Mono'; font-size:10px;">(${sec}s)</span>`;
     }, 1000);
-    
     loadingTimers[elementId] = timerId;
     return timerId;
   }
-
   function stopLoadingMsg(elementId, timerId) {
     if (timerId) clearInterval(timerId);
     if (loadingTimers[elementId]) clearInterval(loadingTimers[elementId]);
@@ -620,7 +495,6 @@
     else { lastGodModeTap = now; }
   }
 
-  // 🌟 新的 God Mode 設定：照著 A/C 表的標準排序放入陣列，確保生成正確
   function activateGodMode() {
     const godModePayload = { 
         success: true, 
@@ -654,7 +528,7 @@
       .withFailureHandler(function(err) { btn.disabled = false; btn.innerHTML = 'ACCESS GRANTED'; msg.textContent = "NETWORK ERROR"; })
       .verifyPinCode(pin);
   }
-  // 🌟 動態導覽列表頭對照資訊 (加入 Icon 設定)
+
   const TAB_INFO = {
     "search": { label: "查詢", icon: "ph-magnifying-glass" },
     "list": { label: "補貨", icon: "ph-recycle" },
@@ -668,7 +542,6 @@
     "uph": { label: "UPH", icon: "ph-trend-up" }
   };
 
-  // 🌟 全動態生成的 applyPermissions，徹底解決物理排序漏件問題
   function applyPermissions(authData) {
     document.getElementById('pinLoginOverlay').style.display = 'none';
     document.getElementById('mainContainer').style.display = 'block';
@@ -677,10 +550,8 @@
     const perms = authData.permissions || [];
     const tabBar = document.getElementById('mainTabBar');
     
-    // 清空導覽列，預防重複渲染
+    // 全動態生成：清空現有標籤，依據後端陣列順序產生按鈕
     tabBar.innerHTML = '';
-
-    // 根據後端回傳的陣列順序，動態建立按鈕並塞入
     perms.forEach(targetKey => {
       const info = TAB_INFO[targetKey];
       if (info) {
@@ -688,7 +559,6 @@
         btn.className = 'tab-btn';
         btn.setAttribute('data-target', targetKey);
         btn.onclick = () => switchTab(targetKey);
-        // 🌟 在這裡將 Icon 與文字一起塞入按鈕
         btn.innerHTML = `<i class="ph ${info.icon}"></i> ${info.label}`;
         tabBar.appendChild(btn); 
       }
@@ -892,7 +762,6 @@
   function loadAlList(force) {
     if (isAlListLoaded && !force) return;
     let loadTimer = startLoadingMsg('listMsgArea', 'LIST');
-    
     window.google.script.run.withSuccessHandler((res) => {
       stopLoadingMsg('listMsgArea', loadTimer); isAlListLoaded = true; fetchAndUpdateSyncTime('INVSYNc.INVSYNc', 'lastRefreshedTime');
       document.getElementById('totListLocs').textContent = res.locsCount||0; document.getElementById('totListRows').textContent = res.plCount||0; document.getElementById('totListAlQty').textContent = res.totalAlQty||0;
@@ -928,7 +797,6 @@
   function renderOrderStatusData(res) {
     const mc = document.getElementById('orderStatusMetricsContainer'); mc.innerHTML = "";
     const tKeys = ["-AMR", "-M", "-PACK", "-MA", "01-09", "01~09"];
-    
     const countryIdx = res.headers.findIndex(h => h && h.toString().trim().toUpperCase() === "COUNTRY");
     
     res.headers.forEach((h, idx) => {
@@ -965,12 +833,12 @@
   function loadOrderStatusList(force) {
     if (isOrderStatusLoaded && !force) return;
     const msgId = 'orderStatusMsgArea'; let timer = null;
-    
     const cachedDataStr = sessionStorage.getItem('wms_cache_orderStatus');
     if (cachedDataStr && !force) {
       try {
         const cacheObj = JSON.parse(cachedDataStr);
-        if (Date.now() - cacheObj.timestamp < 300000) { renderOrderStatusData(cacheObj.data); isOrderStatusLoaded = true; 
+        if (Date.now() - cacheObj.timestamp < 300000) { 
+          renderOrderStatusData(cacheObj.data); isOrderStatusLoaded = true; 
           window.google.script.run.withSuccessHandler((res) => {
             fetchAndUpdateSyncTime('ODStatusProcess', 'lastOrderStatusRefreshedTime');
             sessionStorage.setItem('wms_cache_orderStatus', JSON.stringify({ timestamp: Date.now(), data: res }));
@@ -991,11 +859,8 @@
   }
 
   function renderGaoData(res) {
-    let tCbm=0, tCtns=0, tPcs=0; 
-    let pGoh=0, pFtw=0, pAcc=0, pBdw=0, pOth=0;
-    
+    let tCbm=0, tCtns=0, tPcs=0; let pGoh=0, pFtw=0, pAcc=0, pBdw=0, pOth=0;
     if (document.getElementById('totGaoRows')) document.getElementById('totGaoRows').textContent = res.rowCount||0;
-    
     let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
     
     let planKey = res.headers.find(h => h.toUpperCase().trim() === "PLAN");
@@ -1010,9 +875,7 @@
       let pcValue = pcKey ? String(i[pcKey] || "").trim().toUpperCase() : ""; 
       let genderValue = genderKey ? String(i[genderKey] || "").trim().toUpperCase() : "";
       
-      let specialStyle = "";
-      let categoryClass = "cat-oth"; 
-      
+      let specialStyle = ""; let categoryClass = "cat-oth"; 
       if (pcValue.includes("GOH")) { specialStyle = "color:#d946ef; font-weight:700;"; categoryClass = "cat-goh"; } 
       else if (genderValue.includes("FOOTWEAR")) { specialStyle = "color:#ff8c00; font-weight:700;"; categoryClass = "cat-ftw"; } 
       else if (genderValue.includes("ACCESSORY")) { specialStyle = "color:#ff003c; font-weight:700;"; categoryClass = "cat-acc"; } 
@@ -1021,11 +884,7 @@
       if(!isT && i["S/O"] && i["S/O"] !== "-") { 
         tCbm += parseFloat(i["CBM"])||0; tCtns += parseFloat(i["Ctns"] || i["CTNS"])||0; 
         let pcsVal = parseFloat(i["PCS"])||0; tPcs += pcsVal;
-        if (pcValue.includes("GOH")) pGoh += pcsVal;
-        else if (genderValue.includes("FOOTWEAR")) pFtw += pcsVal;
-        else if (genderValue.includes("ACCESSORY")) pAcc += pcsVal;
-        else if (genderValue.includes("BDW")) pBdw += pcsVal;
-        else pOth += pcsVal;
+        if (pcValue.includes("GOH")) pGoh += pcsVal; else if (genderValue.includes("FOOTWEAR")) pFtw += pcsVal; else if (genderValue.includes("ACCESSORY")) pAcc += pcsVal; else if (genderValue.includes("BDW")) pBdw += pcsVal; else pOth += pcsVal;
       }
       
       h+=`<tr class="${isT ? 'gao-total-row' : ('gao-data-row ' + categoryClass)}">`;
@@ -1035,11 +894,9 @@
         else if (cln === "SCND") cls = "text-green"; 
         else if (cln === "-SCN") { cls = "text-red"; if(v && v !== "0" && v !== "-" && !String(v).startsWith("-")) v = "-" + v; }
         if (c === soKey && isPlanN && !isT) cls += " highlight-alert";
-        
         let tdStyle = "";
         if (vOriginal === "0" || vOriginal === "0.0") { cls = ""; tdStyle = "color: rgba(255, 255, 255, 0.1) !important;"; } 
         else if (!isT && specialStyle !== "" && targetColorColumns.includes(cln)) tdStyle = specialStyle;
-
         h+=`<td class="${cls.trim()}" style="${tdStyle}">${v}</td>`;
       }); h+=`</tr>`;
     }); h+=`</tbody></table>`;
@@ -1055,18 +912,12 @@
     
     if(document.getElementById('gaoSummaryBox')) document.getElementById('gaoSummaryBox').style.display = "flex"; 
     if(document.getElementById('gaoFilterGroup')) document.getElementById('gaoFilterGroup').style.display = "flex";
-    
-    if(document.getElementById('gaoTableContainer')) {
-      document.getElementById('gaoTableContainer').innerHTML = h;
-      applyGaoFilterVisibility();
-    }
+    if(document.getElementById('gaoTableContainer')) { document.getElementById('gaoTableContainer').innerHTML = h; applyGaoFilterVisibility(); }
   }
 
   function loadGaoDataList(force) {
     if (isGaoLoaded && !force) return;
-    const msgId = 'gaoMsgArea'; let timer = null;
-    const cachedDataStr = sessionStorage.getItem('wms_cache_gao');
-    
+    const msgId = 'gaoMsgArea'; let timer = null; const cachedDataStr = sessionStorage.getItem('wms_cache_gao');
     if (cachedDataStr && !force) {
       try {
         const cacheObj = JSON.parse(cachedDataStr);
@@ -1074,8 +925,7 @@
           renderGaoData(cacheObj.data); isGaoLoaded = true; 
           window.google.script.run.withSuccessHandler((res) => {
              fetchAndUpdateSyncTime('DIsyncGoogleSheet', 'lastGaoRefreshedTime');
-             sessionStorage.setItem('wms_cache_gao', JSON.stringify({ timestamp: Date.now(), data: res }));
-             renderGaoData(res);
+             sessionStorage.setItem('wms_cache_gao', JSON.stringify({ timestamp: Date.now(), data: res })); renderGaoData(res);
           }).getGaoData();
           return; 
         } else { timer = startLoadingMsg(msgId, 'DI STAT'); }
@@ -1085,35 +935,27 @@
     window.google.script.run.withSuccessHandler((res) => {
       stopLoadingMsg(msgId, timer); isGaoLoaded = true; fetchAndUpdateSyncTime('DIsyncGoogleSheet', 'lastGaoRefreshedTime');
       const cacheObj = { timestamp: Date.now(), data: res }; sessionStorage.setItem('wms_cache_gao', JSON.stringify(cacheObj)); renderGaoData(res);
-    }).withFailureHandler(e => {
-       stopLoadingMsg(msgId, timer);
-       if(!cachedDataStr) document.getElementById(msgId).textContent="ERROR:"+e.message;
-    }).getGaoData();
+    }).withFailureHandler(e => { stopLoadingMsg(msgId, timer); if(!cachedDataStr) document.getElementById(msgId).textContent="ERROR:"+e.message; }).getGaoData();
   }
 
   const activeGaoFilters = new Set();
   function filterGao(category) {
     const allBtn = document.querySelector('#gaoFilterGroup .filter-btn-compact[data-filter="ALL"]');
     if (category === 'ALL') {
-      activeGaoFilters.clear();
-      document.querySelectorAll('#gaoFilterGroup .filter-btn-compact').forEach(btn => btn.classList.remove('active'));
-      allBtn.classList.add('active');
+      activeGaoFilters.clear(); document.querySelectorAll('#gaoFilterGroup .filter-btn-compact').forEach(btn => btn.classList.remove('active')); allBtn.classList.add('active');
     } else {
       const targetBtn = document.querySelector(`#gaoFilterGroup .filter-btn-compact[data-filter="${category}"]`);
       if (activeGaoFilters.has(category)) { activeGaoFilters.delete(category); targetBtn.classList.remove('active'); } 
       else { activeGaoFilters.add(category); targetBtn.classList.add('active'); }
-      
       if (activeGaoFilters.size === 0) { allBtn.classList.add('active'); } else { allBtn.classList.remove('active'); }
     }
     applyGaoFilterVisibility();
   }
 
   function applyGaoFilterVisibility() {
-    const rows = document.querySelectorAll('.gao-data-row');
-    const totalRows = document.querySelectorAll('.gao-total-row');
-    if (activeGaoFilters.size === 0) {
-      rows.forEach(r => r.style.display = ''); totalRows.forEach(r => r.style.display = ''); 
-    } else {
+    const rows = document.querySelectorAll('.gao-data-row'); const totalRows = document.querySelectorAll('.gao-total-row');
+    if (activeGaoFilters.size === 0) { rows.forEach(r => r.style.display = ''); totalRows.forEach(r => r.style.display = ''); } 
+    else {
       rows.forEach(r => {
         let isVisible = false;
         if (activeGaoFilters.has('GOH') && r.classList.contains('cat-goh')) isVisible = true;
@@ -1129,8 +971,7 @@
 
   function loadRecDataList(force) {
     if (isRecLoaded && !force) return;
-    const msgId = 'recMsgArea'; let timer = null;
-    const cachedDataStr = sessionStorage.getItem('wms_cache_rec');
+    const msgId = 'recMsgArea'; let timer = null; const cachedDataStr = sessionStorage.getItem('wms_cache_rec');
     if (cachedDataStr && !force) {
       try {
         const cacheObj = JSON.parse(cachedDataStr);
@@ -1138,8 +979,7 @@
           renderRecData(cacheObj.data); isRecLoaded = true;
           window.google.script.run.withSuccessHandler((res) => {
              fetchAndUpdateSyncTime('ReceivedSyncProcess', 'lastRecRefreshedTime');
-             sessionStorage.setItem('wms_cache_rec', JSON.stringify({ timestamp: Date.now(), data: res }));
-             renderRecData(res);
+             sessionStorage.setItem('wms_cache_rec', JSON.stringify({ timestamp: Date.now(), data: res })); renderRecData(res);
           }).getRecData();
           return;
         } else { timer = startLoadingMsg(msgId, 'REC STAT'); }
@@ -1153,12 +993,9 @@
   }
 
   function renderRecData(res) {
-    let tScnd=0, tScn=0; document.getElementById('totRecRows').textContent = res.rowCount||0;
-    
-    // 🌟 新增：渲染 UPD 數值
-    if (document.getElementById('totRecUpd')) {
-      document.getElementById('totRecUpd').textContent = res.updValue || "--";
-    }
+    let tScnd=0, tScn=0; 
+    document.getElementById('totRecRows').textContent = res.rowCount||0;
+    if (document.getElementById('totRecUpd')) { document.getElementById('totRecUpd').textContent = res.updValue || "--"; }
     
     let catKey = res.headers.find(h => h.toUpperCase().trim() === "CAT");
     let soKey = res.headers.find(h => h.toUpperCase().trim() === "S/O");
@@ -1166,11 +1003,7 @@
     (res.data||[]).forEach(i => {
       let catVal = catKey ? String(i[catKey] || "").trim().toUpperCase() : "";
       let specialStyle = "";
-      if (catVal.includes("GOH")) specialStyle = "color:#d946ef; font-weight:700;";
-      else if (catVal.includes("FTW")) specialStyle = "color:#ff8c00; font-weight:700;";
-      else if (catVal.includes("ACC")) specialStyle = "color:#ff003c; font-weight:700;";
-      else if (catVal.includes("BDW")) specialStyle = "color:#86efac; font-weight:700;";
-
+      if (catVal.includes("GOH")) specialStyle = "color:#d946ef; font-weight:700;"; else if (catVal.includes("FTW")) specialStyle = "color:#ff8c00; font-weight:700;"; else if (catVal.includes("ACC")) specialStyle = "color:#ff003c; font-weight:700;"; else if (catVal.includes("BDW")) specialStyle = "color:#86efac; font-weight:700;";
       h+=`<tr>`; 
       res.headers.forEach(c => {
         let v = i[c] !== undefined ? i[c] : ""; const cln = c ? c.toString().trim().toUpperCase() : ""; let cls = ""; let inlineStyle = "";
@@ -1206,35 +1039,19 @@
   function loadMapData(force) {
     if (isMapLoaded && !force) return;
     let timer = startLoadingMsg('mapMsgArea', 'MAP LAYOUT');
-
     window.google.script.run.withSuccessHandler((res) => {
-      stopLoadingMsg('mapMsgArea', timer); isMapLoaded = true;
-      fetchAndUpdateSyncTime('INVSYNc.INVSYNc', 'lastMapRefreshedTime');
-
-      if (!res || !res.grid || res.grid.length === 0) {
-        document.getElementById('mapMsgArea').textContent = "NO MAP DATA FOUND"; return;
-      }
-      const grid = res.grid;
-      document.getElementById('mapSummaryBox').style.display = "flex"; document.getElementById('mapFilterGroup').style.display = "flex"; 
-
-      let h = `<table class="compact-table map-table">`;
-      let currentRowGroup = "HEADER";
-
+      stopLoadingMsg('mapMsgArea', timer); isMapLoaded = true; fetchAndUpdateSyncTime('INVSYNc.INVSYNc', 'lastMapRefreshedTime');
+      if (!res || !res.grid || res.grid.length === 0) { document.getElementById('mapMsgArea').textContent = "NO MAP DATA FOUND"; return; }
+      const grid = res.grid; document.getElementById('mapSummaryBox').style.display = "flex"; document.getElementById('mapFilterGroup').style.display = "flex"; 
+      let h = `<table class="compact-table map-table">`; let currentRowGroup = "HEADER";
       grid.forEach((row, rIdx) => {
-        let colA = String(row[0]).trim();
-        if (rIdx > 0 && colA !== "") { currentRowGroup = colA; }
-
-        let colB = String(row[1]).trim();
-        let trClass = rIdx > 0 ? `map-data-row group-${currentRowGroup}` : "";
+        let colA = String(row[0]).trim(); if (rIdx > 0 && colA !== "") { currentRowGroup = colA; }
+        let colB = String(row[1]).trim(); let trClass = rIdx > 0 ? `map-data-row group-${currentRowGroup}` : "";
         if (colB === "1") { trClass += " map-row-separator"; }
-
         h += `<tr class="${trClass}">`;
         row.forEach((cell, cIdx) => {
           let valStr = String(cell).trim(); let cellClass = ""; let tag = (rIdx === 0 || cIdx === 0) ? "th" : "td";
-
-          if (rIdx > 0 && cIdx === 1) {
-            if (valStr === "3") cellClass = "lvl-3"; else if (valStr === "2") cellClass = "lvl-2"; else if (valStr === "1") cellClass = "lvl-1";
-          }
+          if (rIdx > 0 && cIdx === 1) { if (valStr === "3") cellClass = "lvl-3"; else if (valStr === "2") cellClass = "lvl-2"; else if (valStr === "1") cellClass = "lvl-1"; }
           if (rIdx === 0 || cIdx === 0 || cIdx === 1) { h += `<${tag} class="${cellClass}">${valStr}</${tag}>`; } 
           else {
             let num = parseFloat(valStr);
@@ -1245,8 +1062,7 @@
         });
         h += `</tr>`;
       });
-      h += `</table>`;
-      document.getElementById('mapTableContainer').innerHTML = h; filterMap('ALL');
+      h += `</table>`; document.getElementById('mapTableContainer').innerHTML = h; filterMap('ALL');
     }).withFailureHandler(e => { stopLoadingMsg('mapMsgArea', timer); document.getElementById('mapMsgArea').textContent = "ERROR: " + e.message; }).getMapData();
   }
 
@@ -1263,18 +1079,14 @@
     }
     const rows = document.querySelectorAll('.map-data-row');
     rows.forEach(r => {
-      let rowGroup = null;
-      for (let i = 1; i <= 9; i++) { let g = "0" + i; if (r.classList.contains(`group-${g}`)) { rowGroup = g; break; } }
-      if (activeMapFilters.size === 0) { r.style.display = ''; } 
-      else { if (rowGroup && activeMapFilters.has(rowGroup)) { r.style.display = ''; } else { r.style.display = 'none'; } }
+      let rowGroup = null; for (let i = 1; i <= 9; i++) { let g = "0" + i; if (r.classList.contains(`group-${g}`)) { rowGroup = g; break; } }
+      if (activeMapFilters.size === 0) { r.style.display = ''; } else { if (rowGroup && activeMapFilters.has(rowGroup)) { r.style.display = ''; } else { r.style.display = 'none'; } }
     });
   }
 
   function loadLoadplanData(force) {
     if (isLpLoaded && !force) return;
-    const msgId = 'lpMsgArea'; let timer = null;
-    const cachedDataStr = sessionStorage.getItem('wms_cache_lp');
-    
+    const msgId = 'lpMsgArea'; let timer = null; const cachedDataStr = sessionStorage.getItem('wms_cache_lp');
     if (cachedDataStr && !force) {
       try {
         const cacheObj = JSON.parse(cachedDataStr);
@@ -1282,10 +1094,8 @@
           renderLoadplanData(cacheObj.data); isLpLoaded = true; 
           window.google.script.run.withSuccessHandler((res) => {
              fetchAndUpdateSyncTime('INVSYNc.INVSYNc', 'lastLpRefreshedTime');
-             sessionStorage.setItem('wms_cache_lp', JSON.stringify({ timestamp: Date.now(), data: res }));
-             renderLoadplanData(res);
-          }).getLoadplanData();
-          return; 
+             sessionStorage.setItem('wms_cache_lp', JSON.stringify({ timestamp: Date.now(), data: res })); renderLoadplanData(res);
+          }).getLoadplanData(); return; 
         } else { timer = startLoadingMsg(msgId, 'LOADPLAN STAT'); }
       } catch (e) { timer = startLoadingMsg(msgId, 'LOADPLAN STAT'); }
     } else { timer = startLoadingMsg(msgId, 'LOADPLAN STAT'); }
@@ -1293,17 +1103,12 @@
     window.google.script.run.withSuccessHandler((res) => {
       stopLoadingMsg(msgId, timer); isLpLoaded = true; fetchAndUpdateSyncTime('INVSYNc.INVSYNc', 'lastLpRefreshedTime');
       const cacheObj = { timestamp: Date.now(), data: res }; sessionStorage.setItem('wms_cache_lp', JSON.stringify(cacheObj)); renderLoadplanData(res);
-    }).withFailureHandler(e => {
-       stopLoadingMsg(msgId, timer);
-       if(!cachedDataStr) document.getElementById(msgId).textContent="ERROR:"+e.message;
-    }).getLoadplanData();
+    }).withFailureHandler(e => { stopLoadingMsg(msgId, timer); if(!cachedDataStr) document.getElementById(msgId).textContent="ERROR:"+e.message; }).getLoadplanData();
   }
 
   function renderLoadplanData(res) {
     document.getElementById('totLpRows').textContent = res.rowCount||0;
-    let h = `<table class="compact-table"><thead><tr>`; 
-    res.headers.forEach(c => h+=`<th>${c}</th>`); 
-    h+=`</tr></thead><tbody>`;
+    let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
     
     let prevDate = null; 
     let dateColKey = res.headers.find(h => h.toUpperCase().trim() === "DATE") || res.headers[0]; 
@@ -1311,27 +1116,20 @@
     (res.data||[]).forEach((i, idx) => {
       let currentDate = i[dateColKey] !== undefined ? String(i[dateColKey]).trim() : "";
       let isFirstRow = (idx === 0);
-      
       let isNewDateGroup = (!isFirstRow && currentDate !== "" && currentDate !== prevDate);
       if (currentDate !== "") prevDate = currentDate; 
-
       let trStyle = isNewDateGroup ? "border-top: 2px solid rgba(56, 189, 248, 0.6);" : "";
-
       h+=`<tr style="${trStyle}">`; 
       
       res.headers.forEach(c => {
         let v = i[c] !== undefined ? i[c] : ""; 
         let cln = c ? c.toString().trim().toUpperCase() : "";
-        let tdStyle = "";
-        let displayValue = v;
+        let tdStyle = ""; let displayValue = v;
 
         if (cln === "IDETAILS" || cln === "ODETAILS") {
-          // 🌟 在這裡加入 font-size: 14px; 
           tdStyle = `max-width: 25vw; min-width: 150px; white-space: normal; word-break: break-word; text-align: left; line-height: 1.4; padding: 8px 6px; font-size: 14px;`;
-          
           let formattedStr = String(v);
-          
-          formattedStr = formattedStr.replace(/(40['’]?\s*HQ|20['’]?\s*GP|45['’]?\s*HQ|40['’]|20['’])/gi, '<span style="color:#a855f7; font-weight:700;">$1</span>');
+          formattedStr = formattedStr.replace(/(40['’]?\s*HQ|45HQ|20['’]?\s*GP|20['’]?|40['’]?)/gi, '<span style="color:#a855f7; font-weight:700;">$1</span>');
           formattedStr = formattedStr.replace(/\b(GOH)\b/gi, '<span style="color:#d946ef; font-weight:700;">$1</span>');
           formattedStr = formattedStr.replace(/\b(FTW)\b/gi, '<span style="color:#ff8c00; font-weight:700;">$1</span>');
           formattedStr = formattedStr.replace(/\b(ACC)\b/gi, '<span style="color:#ff003c; font-weight:700;">$1</span>');
@@ -1339,16 +1137,12 @@
           formattedStr = formattedStr.replace(/\b(SI)\b/gi, '<span style="color:#fde047; font-weight:700;">$1</span>');
           formattedStr = formattedStr.replace(/(ctns|pcs|cbm)/gi, '<span style="color:var(--accent-cyan);">$1</span>');
           formattedStr = formattedStr.replace(/\b(SS|FW)/gi, '<span style="color:#fb7185; font-weight:700;">$1</span>');
-          
           displayValue = formattedStr;
         }
 
         if (c === dateColKey) {
-            if (isFirstRow || isNewDateGroup) {
-                displayValue = `<span style="color: var(--accent-cyan); font-weight: bold;">${v}</span>`;
-            } else {
-                displayValue = `<span style="opacity: 0.2;">${v}</span>`; 
-            }
+            if (isFirstRow || isNewDateGroup) { displayValue = `<span style="color: var(--accent-cyan); font-weight: bold;">${v}</span>`; } 
+            else { displayValue = `<span style="opacity: 0.2;">${v}</span>`; }
         }
 
         if (displayValue === 0 || String(displayValue).trim() === "0") displayValue = ""; 
@@ -1357,16 +1151,12 @@
       h+=`</tr>`;
     }); 
     h+=`</tbody></table>`;
-    
-    document.getElementById('lpSummaryBox').style.display = "flex"; 
-    document.getElementById('lpTableContainer').innerHTML = h;
+    document.getElementById('lpSummaryBox').style.display = "flex"; document.getElementById('lpTableContainer').innerHTML = h;
   }
 
   function loadUphData(force) {
     if (isUphLoaded && !force) return;
-    const msgId = 'uphMsgArea'; let timer = null;
-    const cachedDataStr = sessionStorage.getItem('wms_cache_uph');
-    
+    const msgId = 'uphMsgArea'; let timer = null; const cachedDataStr = sessionStorage.getItem('wms_cache_uph');
     if (cachedDataStr && !force) {
       try {
         const cacheObj = JSON.parse(cachedDataStr);
@@ -1374,10 +1164,8 @@
           renderUphData(cacheObj.data); isUphLoaded = true; 
           window.google.script.run.withSuccessHandler((res) => {
              fetchAndUpdateSyncTime('INVSYNc.INVSYNc', 'lastUphRefreshedTime');
-             sessionStorage.setItem('wms_cache_uph', JSON.stringify({ timestamp: Date.now(), data: res }));
-             renderUphData(res);
-          }).getUphData();
-          return; 
+             sessionStorage.setItem('wms_cache_uph', JSON.stringify({ timestamp: Date.now(), data: res })); renderUphData(res);
+          }).getUphData(); return; 
         } else { timer = startLoadingMsg(msgId, 'UPH STAT'); }
       } catch (e) { timer = startLoadingMsg(msgId, 'UPH STAT'); }
     } else { timer = startLoadingMsg(msgId, 'UPH STAT'); }
@@ -1385,10 +1173,7 @@
     window.google.script.run.withSuccessHandler((res) => {
       stopLoadingMsg(msgId, timer); isUphLoaded = true; fetchAndUpdateSyncTime('INVSYNc.INVSYNc', 'lastUphRefreshedTime');
       const cacheObj = { timestamp: Date.now(), data: res }; sessionStorage.setItem('wms_cache_uph', JSON.stringify(cacheObj)); renderUphData(res);
-    }).withFailureHandler(e => {
-       stopLoadingMsg(msgId, timer);
-       if(!cachedDataStr) document.getElementById(msgId).textContent="ERROR:"+e.message;
-    }).getUphData();
+    }).withFailureHandler(e => { stopLoadingMsg(msgId, timer); if(!cachedDataStr) document.getElementById(msgId).textContent="ERROR:"+e.message; }).getUphData();
   }
 
   function renderUphData(res) {
@@ -1396,8 +1181,7 @@
     let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
     (res.data||[]).forEach(i => {
       h+=`<tr>`; res.headers.forEach(c => {
-        let v = i[c] !== undefined ? i[c] : ""; 
-        if (v === 0 || String(v).trim() === "0") v = ""; h+=`<td>${v}</td>`;
+        let v = i[c] !== undefined ? i[c] : ""; if (v === 0 || String(v).trim() === "0") v = ""; h+=`<td>${v}</td>`;
       }); h+=`</tr>`;
     }); h+=`</tbody></table>`;
     document.getElementById('uphSummaryBox').style.display = "flex"; document.getElementById('uphTableContainer').innerHTML = h;
@@ -1412,27 +1196,19 @@
     let timer = startLoadingMsg('auditMsgArea', 'AUDIT DATA');
 
     window.google.script.run.withSuccessHandler((res) => {
-      stopLoadingMsg('auditMsgArea', timer);
-      b.disabled = false; b.innerHTML = '<i class="ph ph-magnifying-glass"></i>';
+      stopLoadingMsg('auditMsgArea', timer); b.disabled = false; b.innerHTML = '<i class="ph ph-magnifying-glass"></i>';
       if (!res || !res.data || res.data.length === 0) { msg.textContent = `⚠️ NO LOC RECORD (${loc}) - BLIND MODE`; msg.style.color="var(--status-yellow)"; }
       auditState = { location: loc, systemItemsMap: {}, scannedCounts: {}, scanHistoryStack: [], lastRawCodeMap: {}, lastLookupCodeMap: {}, activeFilter: 'all', lastScannedKey: null };
       if (res && res.data) {
         res.data.forEach(item => {
           const key = (item["TAG_ID"] || item["SUPPLIER_SKU"] || item["SKU_ID"] || "UNKNOWN").toString().trim().toUpperCase();
-          if (!auditState.systemItemsMap[key]) {
-            auditState.systemItemsMap[key] = { key: key, sysQty: 0, tag: item["TAG_ID"]||"-", sku: item["SKU_ID"]||"-", barcode: item["SUPPLIER_SKU"]||"-", style: item["Style"]||"-", size: item["Size"]||"-", palletId: item["Pallet ID"]||"-", loc: item["LOCATION_ID"]||loc };
-          }
+          if (!auditState.systemItemsMap[key]) { auditState.systemItemsMap[key] = { key: key, sysQty: 0, tag: item["TAG_ID"]||"-", sku: item["SKU_ID"]||"-", barcode: item["SUPPLIER_SKU"]||"-", style: item["Style"]||"-", size: item["Size"]||"-", palletId: item["Pallet ID"]||"-", loc: item["LOCATION_ID"]||loc }; }
           auditState.systemItemsMap[key].sysQty += (parseFloat(item["QTY"]) || 0);
         });
       }
       document.getElementById('auditScanSection').style.display = 'block'; document.getElementById('auditSummaryBox').style.display = 'flex';
-      document.getElementById('auditFilterGroup').style.display = 'flex'; document.getElementById('auditScanInput').focus();
-      renderAuditComparison();
-    }).withFailureHandler((e) => { 
-      stopLoadingMsg('auditMsgArea', timer);
-      b.disabled = false; b.innerHTML = '<i class="ph ph-magnifying-glass"></i>'; 
-      msg.textContent = "LOAD ERROR: " + e.message; 
-    }).searchLocation(loc);
+      document.getElementById('auditFilterGroup').style.display = 'flex'; document.getElementById('auditScanInput').focus(); renderAuditComparison();
+    }).withFailureHandler((e) => { stopLoadingMsg('auditMsgArea', timer); b.disabled = false; b.innerHTML = '<i class="ph ph-magnifying-glass"></i>'; msg.textContent = "LOAD ERROR: " + e.message; }).searchLocation(loc);
   }
 
   function handleAuditScan(e) { if (e.key === 'Enter') { e.preventDefault(); const i = document.getElementById('auditScanInput'); let v = i.value.trim().toUpperCase(); if (!v) return; processScannedCode(v); i.value = ""; i.focus(); } }
@@ -1444,10 +1220,7 @@
     if (!tk) tk = lk; processAuditItem(tk, rawScanned, lk);
   }
   
-  function incrementAuditItem(tk) {
-    const s = auditState.systemItemsMap[tk]; const raw = (s && s.barcode && s.barcode !== '-') ? s.barcode : tk;
-    processAuditItem(tk, raw, raw.length > 13 ? raw.substring(0, 13) : raw);
-  }
+  function incrementAuditItem(tk) { const s = auditState.systemItemsMap[tk]; const raw = (s && s.barcode && s.barcode !== '-') ? s.barcode : tk; processAuditItem(tk, raw, raw.length > 13 ? raw.substring(0, 13) : raw); }
   
   function processAuditItem(tk, raw, lk) {
     auditState.lastRawCodeMap[tk] = raw; auditState.lastLookupCodeMap[tk] = lk; auditState.scannedCounts[tk] = (auditState.scannedCounts[tk]||0) + 1;
@@ -1483,25 +1256,14 @@
   function confirmFinishAuditSync() { closeSyncModal(); finishAuditSync(); }
   
   function finishAuditSync() {
-    const b = document.getElementById('finishSyncConfirmBtn'); b.disabled = true; 
-    let timer = startLoadingMsg('auditMsgArea', 'SYNCING CLOUD');
-
+    const b = document.getElementById('finishSyncConfirmBtn'); b.disabled = true; let timer = startLoadingMsg('auditMsgArea', 'SYNCING CLOUD');
     const diffs = []; let ts = 0, tc = 0;
     new Set([...Object.keys(auditState.systemItemsMap), ...Object.keys(auditState.scannedCounts)]).forEach(k => {
       const s = auditState.systemItemsMap[k] || { key: k, sysQty: 0, tag: "", sku: "-", barcode: "-", style: "-", size: "-", palletId: "-" };
       const c = auditState.scannedCounts[k] || 0, d = c - s.sysQty; ts += s.sysQty; tc += c;
       if (d !== 0) diffs.push({ key: k, tagId: s.tag!=="-"?s.tag:"", palletId: s.palletId||"-", rawScannedCode: auditState.lastRawCodeMap[k]||"", lookupCode: s.barcode!=="-"?s.barcode:k, sku: s.sku, style: s.style, size: s.size, sysQty: s.sysQty, scannedQty: c, diff: d });
     });
-    window.google.script.run.withSuccessHandler((r) => {
-      stopLoadingMsg('auditMsgArea', timer);
-      b.disabled = false; 
-      const msg = document.getElementById('auditMsgArea'); msg.style.color = "var(--status-green)"; msg.textContent = r.message;
-    }).withFailureHandler((e) => {
-      stopLoadingMsg('auditMsgArea', timer);
-      b.disabled = false; 
-      const msg = document.getElementById('auditMsgArea'); msg.style.color = "var(--status-red)"; msg.textContent = "ERROR: " + e.message; 
-      playScanSound('error');
-    }).saveAuditRecord({ location: auditState.location, totalSysQty: ts, totalScannedQty: tc, hasDiff: diffs.length > 0, items: diffs });
+    window.google.script.run.withSuccessHandler((r) => { stopLoadingMsg('auditMsgArea', timer); b.disabled = false; const msg = document.getElementById('auditMsgArea'); msg.style.color = "var(--status-green)"; msg.textContent = r.message; }).withFailureHandler((e) => { stopLoadingMsg('auditMsgArea', timer); b.disabled = false; const msg = document.getElementById('auditMsgArea'); msg.style.color = "var(--status-red)"; msg.textContent = "ERROR: " + e.message; playScanSound('error'); }).saveAuditRecord({ location: auditState.location, totalSysQty: ts, totalScannedQty: tc, hasDiff: diffs.length > 0, items: diffs });
   }
 
   function resetAuditSession() { document.getElementById('resetConfirmModal').style.display = 'flex'; }
@@ -1511,75 +1273,41 @@
 
   function renderAuditComparison() {
     const cont = document.getElementById('auditResultContainer'); cont.innerHTML = "";
-    let ts=0, tc=0, mc=0, ec=0, mic=0, eic=0, mac=0;
-    const plSet = new Set(), tagSet = new Set(), locSet = new Set();
-    const items = [];
+    let ts=0, tc=0, mc=0, ec=0, mic=0, eic=0, mac=0; const plSet = new Set(), tagSet = new Set(), locSet = new Set(); const items = [];
     
     new Set([...Object.keys(auditState.systemItemsMap), ...Object.keys(auditState.scannedCounts)]).forEach(k => {
       const s = auditState.systemItemsMap[k] || { key: k, sysQty: 0, tag: k, sku: "-", barcode: "-", style: "-", size: "-", palletId: "-", loc: auditState.location };
       const c = auditState.scannedCounts[k] || 0, d = c - s.sysQty; ts += s.sysQty; tc += c;
-      if (s.palletId && s.palletId !== "-") plSet.add(s.palletId);
-      if (s.tag && s.tag !== "-") tagSet.add(s.tag);
-      if (s.loc && s.loc !== "-") locSet.add(s.loc);
-      
-      let st = 'match'; 
-      if (d < 0) { st = 'missing'; mc += Math.abs(d); mic++; } else if (d > 0) { st = 'extra'; ec += d; eic++; } else mac++;
+      if (s.palletId && s.palletId !== "-") plSet.add(s.palletId); if (s.tag && s.tag !== "-") tagSet.add(s.tag); if (s.loc && s.loc !== "-") locSet.add(s.loc);
+      let st = 'match'; if (d < 0) { st = 'missing'; mc += Math.abs(d); mic++; } else if (d > 0) { st = 'extra'; ec += d; eic++; } else mac++;
       items.push({ ...s, scannedQty: c, diff: d, status: st });
     });
 
-    document.getElementById('auditSysPlc').textContent = plSet.size;
-    document.getElementById('auditSysTag').textContent = tagSet.size;
-    document.getElementById('auditSysLoc').textContent = locSet.size;
-    document.getElementById('auditSysQty').textContent = ts;
-    document.getElementById('auditScannedQty').textContent = tc;
-    document.getElementById('auditMissingQty').textContent = mc;
-    document.getElementById('auditExtraQty').textContent = ec;
-    
-    document.getElementById('fAll').textContent = `(${items.length})`;
-    document.getElementById('fMis').textContent = `(${mic})`;
-    document.getElementById('fExt').textContent = `(${eic})`;
-    document.getElementById('fMat').textContent = `(${mac})`;
+    document.getElementById('auditSysPlc').textContent = plSet.size; document.getElementById('auditSysTag').textContent = tagSet.size; document.getElementById('auditSysLoc').textContent = locSet.size; document.getElementById('auditSysQty').textContent = ts; document.getElementById('auditScannedQty').textContent = tc; document.getElementById('auditMissingQty').textContent = mc; document.getElementById('auditExtraQty').textContent = ec;
+    document.getElementById('fAll').textContent = `(${items.length})`; document.getElementById('fMis').textContent = `(${mic})`; document.getElementById('fExt').textContent = `(${eic})`; document.getElementById('fMat').textContent = `(${mac})`;
 
     const filtered = items.filter(i => auditState.activeFilter === 'all' || i.status === auditState.activeFilter);
     if (filtered.length === 0) { cont.innerHTML = `<div style="text-align:center; padding:15px; color:var(--text-muted); font-size:12px;">NO RECORD FOUND</div>`; return; }
 
-    let h = `<div class="compact-table-wrapper"><table class="compact-table">
-      <thead><tr><th style="width:30px;">+</th><th>SYS</th><th>SCN</th><th>PL</th><th>Barcode</th><th>TAG</th><th>LOC</th><th>Style</th><th>Sz</th><th>SKU</th></tr></thead><tbody>`;
-    
+    let h = `<div class="compact-table-wrapper"><table class="compact-table"><thead><tr><th style="width:30px;">+</th><th>SYS</th><th>SCN</th><th>PL</th><th>Barcode</th><th>TAG</th><th>LOC</th><th>Style</th><th>Sz</th><th>SKU</th></tr></thead><tbody>`;
     filtered.forEach(i => {
       const isL = (i.key === auditState.lastScannedKey); const rCls = isL ? 'last-scanned-highlight' : '';
       let bLeft = i.status === 'missing' ? 'var(--status-red)' : (i.status === 'extra' ? 'var(--status-yellow)' : 'var(--status-green)');
       let sColor = i.scannedQty > i.sysQty ? 'var(--status-yellow)' : (i.scannedQty === 0 ? 'var(--text-muted)' : 'var(--status-green)');
-      
-      let plStr = i.palletId !== "-" ? String(i.palletId).trim() : "";
-      let plTail = plStr.length >= 5 ? plStr.slice(-5) : "";
-      let tagStr = i.tag !== "-" ? String(i.tag).trim() : "";
-      let tagTarget = tagStr.length >= 10 ? tagStr.slice(-10, -5) : "";
-      
-      let plDisplay = plStr;
-      let tagDisplay = tagStr;
+      let plStr = i.palletId !== "-" ? String(i.palletId).trim() : ""; let plTail = plStr.length >= 5 ? plStr.slice(-5) : "";
+      let tagStr = i.tag !== "-" ? String(i.tag).trim() : ""; let tagTarget = tagStr.length >= 10 ? tagStr.slice(-10, -5) : "";
+      let plDisplay = plStr; let tagDisplay = tagStr;
       
       if (plTail !== "" && tagTarget !== "" && plTail === tagTarget) {
-        let plPrefix = plStr.slice(0, -5);
-        plDisplay = `<span style="color:var(--text-muted);">${plPrefix}</span><span style="color:var(--status-yellow); font-weight:700; text-shadow:0 0 5px rgba(251,191,36,0.5);">${plTail}</span>`;
-        let tagPrefix = tagStr.slice(0, -10);
-        let tagSuffix = tagStr.slice(-5);
-        tagDisplay = `<span style="color:var(--text-muted);">${tagPrefix}</span><span style="color:var(--status-yellow); font-weight:700; text-shadow:0 0 5px rgba(251,191,36,0.5);">${tagTarget}</span><span style="color:var(--text-muted);">${tagSuffix}</span>`;
-      } else {
-        plDisplay = `<span style="color:var(--text-muted);">${plStr}</span>`;
-        tagDisplay = `<span style="color:var(--text-muted);">${tagStr}</span>`;
-      }
+        let plPrefix = plStr.slice(0, -5); plDisplay = `<span style="color:var(--text-muted);">${plPrefix}</span><span style="color:var(--status-yellow); font-weight:700; text-shadow:0 0 5px rgba(251,191,36,0.5);">${plTail}</span>`;
+        let tagPrefix = tagStr.slice(0, -10); let tagSuffix = tagStr.slice(-5); tagDisplay = `<span style="color:var(--text-muted);">${tagPrefix}</span><span style="color:var(--status-yellow); font-weight:700; text-shadow:0 0 5px rgba(251,191,36,0.5);">${tagTarget}</span><span style="color:var(--text-muted);">${tagSuffix}</span>`;
+      } else { plDisplay = `<span style="color:var(--text-muted);">${plStr}</span>`; tagDisplay = `<span style="color:var(--text-muted);">${tagStr}</span>`; }
 
-      h += `
-        <tr class="${rCls}">
+      h += `<tr class="${rCls}">
           <td style="border-left: 3px solid ${bLeft};"><button class="icon-btn" style="min-width:24px; height:24px;" onclick="incrementAuditItem('${i.key}')"><i class="ph ph-plus" style="font-size:12px;"></i></button></td>
-          <td style="color:var(--text-muted);">${i.sysQty}</td>
-          <td style="color:${sColor}; font-size:14px; font-weight:700;">${i.scannedQty}</td>
-          <td>${plDisplay}</td>
-          <td style="color:var(--accent-cyan); font-size:11px;">${i.barcode!=="-"?i.barcode:""}</td>
-          <td style="text-align:left; font-size:11px;">${tagDisplay}</td>
-          <td style="color:var(--text-muted);">${auditState.location}</td>
-          <td>${i.style}</td><td>${i.size}</td><td>${i.sku}</td>
+          <td style="color:var(--text-muted);">${i.sysQty}</td><td style="color:${sColor}; font-size:14px; font-weight:700;">${i.scannedQty}</td>
+          <td>${plDisplay}</td><td style="color:var(--accent-cyan); font-size:11px;">${i.barcode!=="-"?i.barcode:""}</td><td style="text-align:left; font-size:11px;">${tagDisplay}</td>
+          <td style="color:var(--text-muted);">${auditState.location}</td><td>${i.style}</td><td>${i.size}</td><td>${i.sku}</td>
         </tr>`;
     });
     h += `</tbody></table></div>`; cont.innerHTML = h;
