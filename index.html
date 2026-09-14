@@ -696,6 +696,55 @@
 
     if (perms.length > 0) { switchTab(perms[0]); } 
     else { document.getElementById('msgArea').textContent = "UNAUTHORIZED ACCESS."; }
+
+    // 🚀 啟動背景靜默預載引擎 (延遲 3 秒執行，避免卡住首頁渲染)
+    setTimeout(() => {
+      // 排除不需預載的操作型分頁 (查詢、盤點)
+      const queue = perms.filter(p => !['search', 'audit'].includes(p));
+      silentPrefetchNext(queue);
+    }, 3000);
+  }
+
+  // 🌟 新增：背景靜默預載引擎 (Background Prefetch Engine)
+  function silentPrefetchNext(queue) {
+    if (!queue || queue.length === 0) return;
+    const tab = queue.shift();
+    const cacheKey = 'wms_cache_' + tab;
+    
+    // 如果該分頁已經有快取，直接跳過，抓下一個
+    if (sessionStorage.getItem(cacheKey)) {
+      silentPrefetchNext(queue);
+      return;
+    }
+    
+    // 對應的後端 API 動作名稱
+    let actionName = "";
+    if (tab === 'list') actionName = 'getAlQtyList';
+    else if (tab === 'orderStatus') actionName = 'getOrderStatusData';
+    else if (tab === 'gao') actionName = 'getGaoData';
+    else if (tab === 'rec') actionName = 'getRecData';
+    else if (tab === 'db') actionName = 'getDbData';
+    else if (tab === 'map') actionName = 'getMapData';
+    else if (tab === 'lp') actionName = 'getLoadplanData';
+    else if (tab === 'uph') actionName = 'getUphData';
+
+    if (!actionName || !window.google.script.run[actionName]) {
+      silentPrefetchNext(queue);
+      return;
+    }
+
+    // 發送靜默請求 (不會觸發畫面的 Loading 特效，完全在背景執行)
+    window.google.script.run
+      .withSuccessHandler(res => {
+        if (res && !res.error) {
+           sessionStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data: res }));
+        }
+        silentPrefetchNext(queue); // 成功後，接力抓下一個
+      })
+      .withFailureHandler(e => {
+        silentPrefetchNext(queue); // 失敗也略過，接力抓下一個
+      })
+      [actionName]();
   }
 
   let html5QrCode = null; let barcodeHtml5QrCode = null; let pendingBarcode = null; let lastDetected = null;
@@ -1156,8 +1205,19 @@
     let tScnd=0, tScn=0; document.getElementById('totRecRows').textContent = res.rowCount||0;
     
     let catKey = res.headers.find(h => h.toUpperCase().trim() === "CAT");
-    let soKey = res.headers.find(h => h.toUpperCase().trim() === "S/O");
-    let h = `<table class="compact-table"><thead><tr>`; res.headers.forEach(c => h+=`<th>${c}</th>`); h+=`</tr></thead><tbody>`;
+    // 🌟 讓系統知道，如果表頭包含 UPD/，它就是我們要上色的主力欄位 (原本的 S/O)
+    let soKey = res.headers.find(h => h.toUpperCase().trim() === "S/O" || h.toUpperCase().includes("UPD/"));
+    
+    let h = `<table class="compact-table"><thead><tr>`; 
+    res.headers.forEach(c => {
+      // 🌟 針對包含 "UPD/" 的表頭，進行字體放大與高亮染色
+      if (c && String(c).toUpperCase().includes("UPD/")) {
+        h += `<th style="color:var(--accent-cyan); font-size:16px; font-weight:900; letter-spacing:1px; text-shadow:0 0 10px rgba(56,189,248,0.5);">${c}</th>`;
+      } else {
+        h += `<th>${c}</th>`;
+      }
+    }); 
+    h+=`</tr></thead><tbody>`;
     (res.data||[]).forEach(i => {
       let catVal = catKey ? String(i[catKey] || "").trim().toUpperCase() : "";
       let specialStyle = "";
